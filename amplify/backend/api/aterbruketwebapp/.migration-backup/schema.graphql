@@ -1,5 +1,13 @@
-type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["administrator"]}]) {
-  id: ID! @primaryKey(sortKeyFields: ["version"])
+type Advert
+  @model
+  @key(fields: [ "id", "version" ])
+  @auth(
+    rules: [
+      { allow: private },
+      { allow: groups, groups: ["administrator"] }
+  ])
+{
+  id: ID!
   title: String!
   description: String
   location: String
@@ -77,9 +85,17 @@ type ItemImages {
   alt: String
 }
 
-type Page @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["administrator"]}]) {
+type Page
+  @model
+  @key(fields: [ "slug" ])
+  @auth(
+    rules: [
+      { allow: private, operations: [read] },
+      { allow: groups, groups: ["administrator"] }
+  ])
+{
   id: ID!
-  slug: String! @primaryKey
+  slug: String!
   title: String!
   content: String
 }

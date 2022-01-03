@@ -299,7 +299,7 @@ export type Page = {
 };
 
 export type UpdatePageInput = {
-  id: string,
+  id?: string | null,
   slug: string,
   title?: string | null,
   content?: string | null,
@@ -374,7 +374,7 @@ export enum ModelSortDirection {
 
 export type ModelAdvertConnection = {
   __typename: "ModelAdvertConnection",
-  items?:  Array<Advert | null > | null,
+  items?:  Array<Advert | null >,
   nextToken?: string | null,
 };
 
@@ -390,7 +390,7 @@ export type ModelPageFilterInput = {
 
 export type ModelPageConnection = {
   __typename: "ModelPageConnection",
-  items?:  Array<Page | null > | null,
+  items?:  Array<Page | null >,
   nextToken?: string | null,
 };
 
@@ -681,7 +681,7 @@ export type ListAdvertsQueryVariables = {
 export type ListAdvertsQuery = {
   listAdverts?:  {
     __typename: "ModelAdvertConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Advert",
       id: string,
       title: string,
@@ -728,7 +728,7 @@ export type ListAdvertsQuery = {
       aterbruketId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -760,7 +760,7 @@ export type ListPagesQueryVariables = {
 export type ListPagesQuery = {
   listPages?:  {
     __typename: "ModelPageConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Page",
       id: string,
       slug: string,
@@ -768,7 +768,7 @@ export type ListPagesQuery = {
       content?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
