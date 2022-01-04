@@ -1,9 +1,34 @@
 {
+  "demo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aterbruketwebapp-demo-124547-authRole",
+      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-demo-124547-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-demo-124547-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-aterbruketwebapp-demo-124547-deployment",
+      "UnauthRoleName": "amplify-aterbruketwebapp-demo-124547-unauthRole",
+      "StackName": "amplify-aterbruketwebapp-demo-124547",
+      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-demo-124547/035cef80-1209-11eb-ac37-0af9259ebd65",
+      "AmplifyAppId": "d21bj89y0jdxx1"
+    },
+    "categories": {
+      "function": {
+        "migrateADUser": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-demo-124547-deployment",
+          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        }
+      },
+      "auth": {
+        "aterbruketwebapp75287c9a": {},
+        "userPoolGroups": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-aterbruketwebapp-dev-224145-authRole",
       "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-dev-224145-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/anna-dev",
+      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-dev-224145-authRole",
       "Region": "eu-west-1",
       "DeploymentBucketName": "amplify-aterbruketwebapp-dev-224145-deployment",
       "UnauthRoleName": "amplify-aterbruketwebapp-dev-224145-unauthRole",
@@ -13,12 +38,13 @@
     },
     "categories": {
       "auth": {
-        "aterbruketwebapp75287c9a": {}
+        "aterbruketwebapp75287c9a": {},
+        "userPoolGroups": {}
       },
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-dev-224145-deployment",
-          "s3Key": "amplify-builds/migrateADUser-536a5438575072547853-build.zip"
+          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
         }
       }
     }
@@ -69,7 +95,7 @@
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-rubibox-132529-deployment",
-          "s3Key": "amplify-builds/migrateADUser-536a5438575072547853-build.zip"
+          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
         }
       }
     }
