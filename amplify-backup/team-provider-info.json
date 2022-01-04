@@ -50,31 +50,6 @@
       }
     }
   },
-  "rubibox": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-rubibox-132529-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-rubibox-132529-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-rubibox-132529-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-rubibox-132529-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-rubibox-132529-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-rubibox-132529",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-rubibox-132529/81ba8620-184f-11eb-bbdd-0aa19f5e26ca",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      },
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-rubibox-132529-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        }
-      }
-    }
-  },
   "ericbox": {
     "awscloudformation": {
       "AuthRoleName": "amplify-aterbruketwebapp-ericbox-121222-authRole",
