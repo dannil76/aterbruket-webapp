@@ -139,5 +139,30 @@
         "userPoolGroups": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aterbruketwebapp-prod-143009-authRole",
+      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+      "UnauthRoleName": "amplify-aterbruketwebapp-prod-143009-unauthRole",
+      "StackName": "amplify-aterbruketwebapp-prod-143009",
+      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-prod-143009/70732660-6d62-11ec-a537-06f5bfefc589",
+      "AmplifyAppId": "d21bj89y0jdxx1"
+    },
+    "categories": {
+      "function": {
+        "migrateADUser": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        }
+      },
+      "auth": {
+        "aterbruketwebapp75287c9a": {},
+        "userPoolGroups": {}
+      }
+    }
   }
 }
