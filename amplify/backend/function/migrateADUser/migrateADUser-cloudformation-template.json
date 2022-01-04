@@ -148,6 +148,13 @@
             {
               "Effect": "Allow",
               "Action": [
+                "cognito-idp:*"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
