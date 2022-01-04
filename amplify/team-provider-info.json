@@ -49,32 +49,6 @@
       }
     }
   },
-  "annabox": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-annabox-134822-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-annabox-134822-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-annabox-134822-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-annabox-134822-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-annabox-134822-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-annabox-134822",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-annabox-134822/a77de0f0-1525-11eb-8f0c-0ad2f296a437",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "auth": {
-        "aterbruketwebapp75287c9a_userpool_75287c9a-esandbox": {},
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      },
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-annabox-134822-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        }
-      }
-    }
-  },
   "jhbox": {
     "awscloudformation": {
       "AuthRoleName": "amplify-aterbruketwebapp-jhbox-135848-authRole",
