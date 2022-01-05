@@ -8,7 +8,7 @@ import { AuthState } from "@aws-amplify/ui-components";
 import { sortBy } from "sort-by-typescript";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import { fieldsForm } from "../utils/formUtils";
+import fields from "../utils/formFields";
 import convertToSwe from "../utils/convert";
 import UserContext from "../contexts/UserContext";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
@@ -317,13 +317,13 @@ const Home: FC<Props> = ({
     if (authState === AuthState.SignedIn) {
       fetchItems();
     }
-    return () => {};
+    return () => { };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState, filterValueUpdated, activeSorting]);
 
-  const categoryData = fieldsForm[3];
-  const conditionData = fieldsForm[11];
+  const categoryData = fields[3];
+  const conditionData = fields[11];
   const indexes: number[] = [];
   let filteredSweValues: string[] = [];
 

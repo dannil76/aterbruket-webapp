@@ -6,7 +6,7 @@ import { API } from "aws-amplify";
 import styled from "styled-components";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import { fieldsForm } from "../utils/formUtils";
+import fields from "../utils/formFields";
 import UserContext from "../contexts/UserContext";
 import CardStatics from "./CardStatics";
 import filterStatus from "../hooks/filterStatus";
@@ -74,7 +74,7 @@ const GroupDiv = styled.div`
   .group {
     display: flex;
     flex-direction: row;
-    
+
   }
 
   .amount {
@@ -87,7 +87,7 @@ const GroupDiv = styled.div`
   .iconContainer {
     display: flex;
     flex-direction: column;
-    
+
     color: ${(props) => props.theme.colors.secondaryDark};
   }
 `;
@@ -130,7 +130,7 @@ const Statics: FC = () => {
   useEffect(() => {
     fetchItemsOverTime();
     fetchItems();
-    const found = fieldsForm.find((element) => {
+    const found = fields.find((element) => {
       return element.name === "category";
     });
 
@@ -151,7 +151,7 @@ const Statics: FC = () => {
     }
     setCategorys(saveAllCategorys);
 
-    return () => {};
+    return () => { };
   }, []);
 
   const filterItems = (filterOn: string) => {

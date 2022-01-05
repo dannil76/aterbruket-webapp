@@ -1,4 +1,4 @@
-import { fieldsForm } from "../utils/formUtils";
+import fields from "../utils/formFields";
 
 const minCommonCategory = (obj: any) => {
   let maxValue = Infinity as any;
@@ -32,7 +32,7 @@ const mostCommonCategory = (obj: any) => {
 
 const translate = (word: any) => {
   let translatedGroup = {};
-  const found = fieldsForm.find((element) => {
+  const found = fields.find((element) => {
     return element.name === "category";
   });
 

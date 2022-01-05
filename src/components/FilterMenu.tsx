@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MdCancel } from "react-icons/md";
 import FilterCheckbox from "./FilterCheckbox";
 import SortRadioButtons from "./SortRadioButtons";
-import { fieldsForm } from "../utils/formUtils";
+import fields from "../utils/formFields";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
 
 const FilterCtn = styled.div`
@@ -148,7 +148,7 @@ const FilterMenu: FC<Props> = ({
 
   const handleSaveFilter = () => {
     let categories: any = [];
-    let cateValues: any = [];
+    const cateValues: any = [];
     let conditions: any = [];
 
     Object.entries(saveValues).forEach((entry: any) => {
@@ -245,12 +245,12 @@ const FilterMenu: FC<Props> = ({
         />
         <FilterCheckbox
           setSaveValues={setSaveValues}
-          group={fieldsForm[3]}
+          group={fields[3]}
           saveValues={saveValues}
         />
         <FilterCheckbox
           setSaveValues={setSaveValues}
-          group={fieldsForm[11]}
+          group={fields[11]}
           saveValues={saveValues}
         />
         <button

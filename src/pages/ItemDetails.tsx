@@ -34,7 +34,7 @@ import { createAdvert, updateAdvert } from "../graphql/mutations";
 import Map from "../components/Map";
 import UserContext from "../contexts/UserContext";
 import showDays from "../hooks/showDays";
-import { fieldsForm } from "../utils/formUtils";
+import fields from "../utils/formFields";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
@@ -451,7 +451,7 @@ const ItemDetails: FC<ParamTypes> = () => {
   useEffect(() => {
     fetchItem();
     setItemUpdated(false);
-    return () => {};
+    return () => { };
   }, [itemUpdated]);
 
   let handler: any;
@@ -518,7 +518,7 @@ const ItemDetails: FC<ParamTypes> = () => {
   const translate = (word: string, cat: any) => {
     let sweWord = "";
 
-    fieldsForm.find((el) => {
+    fields.find((el) => {
       if (el.name === cat && el.option) {
         el.option.map((op: any) => {
           if (op.eng[0] === word) {
@@ -626,20 +626,20 @@ const ItemDetails: FC<ParamTypes> = () => {
 
         {item.status ===
           "available" /* && item.giver !== user.attributes.sub */ && (
-          <Button
-            ref={(el: any) => {
-              buttonOutOfScreen.current = el;
-              setRefVisible(!!el);
-            }}
-            className="btn--haffa"
-            onClick={() => {
-              onClickReservBtn();
-            }}
-            type="button"
-          >
-            Haffa!
-          </Button>
-        )}
+            <Button
+              ref={(el: any) => {
+                buttonOutOfScreen.current = el;
+                setRefVisible(!!el);
+              }}
+              className="btn--haffa"
+              onClick={() => {
+                onClickReservBtn();
+              }}
+              type="button"
+            >
+              Haffa!
+            </Button>
+          )}
 
         {item.status === "reserved" && item.reservedBySub === user.sub && (
           <>

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import useForm from "../hooks/useForm";
 import { createAdvert } from "../graphql/mutations";
-import { fieldsForm as fields } from "../utils/formUtils";
+import fields from "../utils/formFields";
 import UserContext from "../contexts/UserContext";
 
 const OpenCamera = React.lazy(() => import("../components/OpenCamera"));

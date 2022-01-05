@@ -4,7 +4,7 @@ import Loader from "react-loader-spinner";
 import Form from "./Form";
 import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
-import { fieldsEditForm as fields } from "../utils/formUtils";
+import fields from "../utils/formFields";
 
 const ItemImg = styled.img`
   width: 300px;
