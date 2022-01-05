@@ -133,7 +133,7 @@ const EditItemForm: FC<Props> = ({
           <button type="button" onClick={() => setEditItem(false)}>
             X
           </button>
-          {/* <ItemImg src={imageURL} /> */}
+          <ItemImg src={imageURL} />
           <Form
             values={values}
             fields={fields}
