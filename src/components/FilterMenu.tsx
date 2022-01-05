@@ -138,6 +138,9 @@ const FilterMenu: FC<Props> = ({
     secText: activeSorting.secText,
   });
   const [showToggle, setShowToggle] = useState(activeSorting.sortTitle);
+  const advertCategories = fields.find((field) => field.name === "category");
+  const advertConditions = fields.find((field) => field.name === "condition");
+
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add(FLITER_OPEN_CLASS);
@@ -245,12 +248,12 @@ const FilterMenu: FC<Props> = ({
         />
         <FilterCheckbox
           setSaveValues={setSaveValues}
-          group={fields[3]}
+          group={advertCategories}
           saveValues={saveValues}
         />
         <FilterCheckbox
           setSaveValues={setSaveValues}
-          group={fields[11]}
+          group={advertConditions}
           saveValues={saveValues}
         />
         <button

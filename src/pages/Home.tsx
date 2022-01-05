@@ -315,17 +315,19 @@ const Home: FC<Props> = ({
     if (authState === AuthState.SignedIn) {
       fetchItems();
     }
-    return () => { };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState, filterValueUpdated, activeSorting]);
 
-  const categoryData = fields[3];
-  const conditionData = fields[11];
+  const categoryData = fields.find((field) => field.name === "category");
+  const conditionData = fields.find((field) => field.name === "condition");
+
   const indexes: number[] = [];
   let filteredSweValues: string[] = [];
 
-  if (categoryData.eng && conditionData.eng) {
+  if (
+    categoryData !== undefined
+    && conditionData !== undefined
+    && categoryData.eng
+    && conditionData.eng) {
     const valuesInEng = [...categoryData.eng, ...conditionData.eng];
     const valuesInSwe = [...categoryData.swe, ...conditionData.swe];
 
