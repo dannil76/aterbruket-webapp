@@ -28,6 +28,7 @@ interface Props {
   item: {
     id: number;
     title: string;
+    advertType: string;
     aterbruketId: string;
     status: string;
     category?: string;
@@ -76,6 +77,7 @@ const EditItemForm: FC<Props> = ({
     {
       id: item.id,
       title: item.title,
+      advertType: item.advertType,
       aterbruketId: item.aterbruketId ? item.aterbruketId : "",
       status: item.status,
       category: item.category,

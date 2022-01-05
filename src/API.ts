@@ -32,6 +32,9 @@ export type CreateAdvertInput = {
   purchasePrice?: string | null,
   company?: string | null,
   aterbruketId?: string | null,
+  advertType?: ItemAdvertType | null,
+  getInstructions?: string | null,
+  leaveInstructions?: string | null,
 };
 
 export enum ItemStatus {
@@ -84,6 +87,12 @@ export type ItemImagesInput = {
   alt?: string | null,
 };
 
+export enum ItemAdvertType {
+  recycle = "recycle",
+  borrow = "borrow",
+}
+
+
 export type ModelAdvertConditionInput = {
   title?: ModelStringInput | null,
   description?: ModelStringInput | null,
@@ -109,6 +118,9 @@ export type ModelAdvertConditionInput = {
   purchasePrice?: ModelStringInput | null,
   company?: ModelStringInput | null,
   aterbruketId?: ModelStringInput | null,
+  advertType?: ModelItemAdvertTypeInput | null,
+  getInstructions?: ModelStringInput | null,
+  leaveInstructions?: ModelStringInput | null,
   and?: Array< ModelAdvertConditionInput | null > | null,
   or?: Array< ModelAdvertConditionInput | null > | null,
   not?: ModelAdvertConditionInput | null,
@@ -181,6 +193,11 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type ModelItemAdvertTypeInput = {
+  eq?: ItemAdvertType | null,
+  ne?: ItemAdvertType | null,
+};
+
 export type Advert = {
   __typename: "Advert",
   id?: string,
@@ -212,6 +229,9 @@ export type Advert = {
   purchasePrice?: string | null,
   company?: string | null,
   aterbruketId?: string | null,
+  advertType?: ItemAdvertType | null,
+  getInstructions?: string | null,
+  leaveInstructions?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -266,6 +286,9 @@ export type UpdateAdvertInput = {
   purchasePrice?: string | null,
   company?: string | null,
   aterbruketId?: string | null,
+  advertType?: ItemAdvertType | null,
+  getInstructions?: string | null,
+  leaveInstructions?: string | null,
 };
 
 export type DeleteAdvertInput = {
@@ -345,6 +368,9 @@ export type ModelAdvertFilterInput = {
   purchasePrice?: ModelStringInput | null,
   company?: ModelStringInput | null,
   aterbruketId?: ModelStringInput | null,
+  advertType?: ModelItemAdvertTypeInput | null,
+  getInstructions?: ModelStringInput | null,
+  leaveInstructions?: ModelStringInput | null,
   and?: Array< ModelAdvertFilterInput | null > | null,
   or?: Array< ModelAdvertFilterInput | null > | null,
   not?: ModelAdvertFilterInput | null,
@@ -445,6 +471,9 @@ export type CreateAdvertMutation = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -501,6 +530,9 @@ export type UpdateAdvertMutation = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -557,6 +589,9 @@ export type DeleteAdvertMutation = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -664,6 +699,9 @@ export type GetAdvertQuery = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -726,6 +764,9 @@ export type ListAdvertsQuery = {
       purchasePrice?: string | null,
       company?: string | null,
       aterbruketId?: string | null,
+      advertType?: ItemAdvertType | null,
+      getInstructions?: string | null,
+      leaveInstructions?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -819,6 +860,9 @@ export type OnCreateAdvertSubscription = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -870,6 +914,9 @@ export type OnUpdateAdvertSubscription = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -921,6 +968,9 @@ export type OnDeleteAdvertSubscription = {
     purchasePrice?: string | null,
     company?: string | null,
     aterbruketId?: string | null,
+    advertType?: ItemAdvertType | null,
+    getInstructions?: string | null,
+    leaveInstructions?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
