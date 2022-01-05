@@ -89,7 +89,6 @@ const FormContainerDiv = styled.div`
       display: flex;
       flex-direction: row-reverse;
       justify-content: flex-end;
-      //margin: 8px 0 8px 0;
       padding: 0 0 0 12px;
 
       .labelP {
@@ -126,6 +125,7 @@ const FormContainerDiv = styled.div`
         color: #a3a3a3;
       }
     }
+
     textarea {
       padding: 16px 0 0 24px;
       height: 192px;
@@ -138,7 +138,13 @@ const FormContainerDiv = styled.div`
       font-style: italic;
       color: #a3a3a3;
     }
+
+    input[type="radio"] {
+      height: auto;
+    }
+
   }
+
   .dimensionsDiv {
     position: relative;
     height: 56px;
@@ -262,25 +268,24 @@ export default function Form(props: {
         </section>
       );
     }
+
     if (field.fieldType === "input" && field.dataType === "checkbox") {
       const data = field.option ? field.option : [];
       const checkboxInput = data.map((x: any) => {
         return (
-          <React.Fragment key={x.name}>
-            <div>
-              <label htmlFor={x.name}>
-                <p className="labelP">{x.swe ? x.swe[0] : x.name}</p>
-              </label>
-              <input
-                type={field.dataType}
-                name={x.name}
-                id={x.name}
-                onChange={(e) => props.handleCheckboxChange(e, field.name)}
-                checked={props.values[field.name][x.name]}
-                disabled={x.disabled}
-              />
-            </div>
-          </React.Fragment>
+          <div key={x.name}>
+            <label htmlFor={x.name}>
+              <p className="labelP">{x.swe ? x.swe[0] : x.name}</p>
+            </label>
+            <input
+              type={field.dataType}
+              name={x.name}
+              id={x.name}
+              onChange={(e) => props.handleCheckboxChange(e, field.name)}
+              checked={props.values[field.name][x.name]}
+              disabled={x.disabled}
+            />
+          </div>
         );
       });
       return (
@@ -305,6 +310,7 @@ export default function Form(props: {
         </section>
       );
     }
+
     if (field.fieldType === "textarea") {
       return (
         <section className="allDiv" key={field.name}>
@@ -326,6 +332,7 @@ export default function Form(props: {
         </section>
       );
     }
+
     if (field.fieldType === "select") {
       const data = field.eng ? field.eng : [];
       return (
@@ -355,6 +362,37 @@ export default function Form(props: {
               );
             })}
           </select>
+        </section>
+      );
+    }
+
+    if (field.fieldType === "radio") {
+      const data = field.option ? field.option : [];
+      const options = data.map(option =>
+        <div key={option.name}>
+          <label htmlFor={option.name}>
+            <p className="labelP">{option.swe}</p>
+          </label>
+          <input
+            type="radio"
+            id={option.name}
+            name={field.name}
+            value={option.name}
+            checked={props.values[field.name] == option.name}
+            onChange={props.handleInputChange}
+          />
+        </div>
+      )
+      return (
+        <section className="allDiv" key={field.name}>
+          <label htmlFor={field.name}>
+            <p className="labelP">{field.title}</p>{" "}
+            {field.required && <span className="required">*</span>}
+          </label>
+
+          <div className="checkboxDiv areaOfUseDiv">
+            {options}
+          </div>
         </section>
       );
     }
