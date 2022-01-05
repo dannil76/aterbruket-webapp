@@ -1,5 +1,25 @@
 export default [
   {
+    name: "advertType",
+    dataType: "text",
+    fieldType: "radio",
+    disabled: false,
+    title: "Den är till för",
+    required: true,
+    option: [
+      {
+        name: "recycle",
+        swe: ["Återbruk"],
+        eng: ["Recycle"],
+      },
+      {
+        name: "borrow",
+        swe: ["Utlåning"],
+        eng: ["Borrow"],
+      },
+    ],
+  },
+  {
     name: "images",
     dataType: "file",
     fieldType: "input",
@@ -213,7 +233,6 @@ export default [
     fieldType: "input",
     disabled: false,
     required: true,
-
     title: "Kontaktperson",
     placeholder: "Kontaktperson",
   },
