@@ -28,6 +28,14 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   purchasePrice: String
   company: String
   aterbruketId: String
+  advertType: ItemAdvertType
+  getInstructions: String
+  returnInstructions: String
+}
+
+enum ItemAdvertType {
+  recycle
+  borrow
 }
 
 enum ItemStatus {
