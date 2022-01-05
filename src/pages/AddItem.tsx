@@ -28,6 +28,7 @@ const AddItem: FC = () => {
   } = useForm(
     {
       title: "",
+      advertType: "recycle",
       status: "available",
       aterbruketId: "",
       category: "",
