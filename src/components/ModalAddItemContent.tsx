@@ -9,7 +9,7 @@ position: absolute;
 bottom: 0;
 background-color: #F5F5F5;
 border-radius: 10px 10px 0 0;
-width: 100%;   
+width: 100%;
 height 157px;
 
 `;
@@ -87,13 +87,9 @@ const ModalBody = styled.div`
 
 type Props = {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlreadyAQRCode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ModalAddItemContent: FC<Props> = ({
-  setModalOpen,
-  setAlreadyAQRCode,
-}: Props) => (
+const ModalAddItemContent: FC<Props> = ({ setModalOpen }: Props) => (
   <Modal>
     <ModalHeader>
       <button
@@ -106,13 +102,12 @@ const ModalAddItemContent: FC<Props> = ({
       <p>Skapa en ny annons</p>
     </ModalHeader>
     <ModalBody>
-      <Link className="link" to="/add">
+      <Link className="link" to="/scan">
         <button
           className="selectBtn scanBtn"
           type="button"
           onClick={() => {
             setModalOpen(false);
-            setAlreadyAQRCode(true);
           }}
         >
           <ImQrcode className="btnIcon" />
@@ -125,7 +120,6 @@ const ModalAddItemContent: FC<Props> = ({
           type="button"
           onClick={() => {
             setModalOpen(false);
-            setAlreadyAQRCode(false);
           }}
         >
           <MdAdd className="btnIcon" />

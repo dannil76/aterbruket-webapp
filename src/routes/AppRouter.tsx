@@ -7,6 +7,7 @@ import BG from "../pics/onboarding_bg_x2.png";
 
 const About = React.lazy(() => import("../pages/About"));
 const AddItem = React.lazy(() => import("../pages/AddItem"));
+const ScanCode = React.lazy(() => import("../pages/ScanCode"));
 const Haffat = React.lazy(() => import("../pages/Haffat"));
 const Header = React.lazy(() => import("../components/Header"));
 const Home = React.lazy(() => import("../pages/Home"));
@@ -96,7 +97,6 @@ const Separator = styled.div`
 
 const AppRouter: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [alreadyAQRCode, setAlreadyAQRCode] = useState(false);
   const [qrCamera, setQrCamera] = useState({ delay: 500, result: "" });
 
   return (
@@ -126,20 +126,16 @@ const AppRouter: FC = () => {
               <Home
                 modalOpen={modalOpen}
                 setModalOpen={setModalOpen}
-                setAlreadyAQRCode={setAlreadyAQRCode}
                 qrCamera={qrCamera}
                 setQrCamera={setQrCamera}
               />
             )}
           />
+          <Route path="/add" component={() => <AddItem />} />
           <Route
-            path="/add"
+            path="/scan"
             component={() => (
-              <AddItem
-                alreadyAQRCode={alreadyAQRCode}
-                qrCamera={qrCamera}
-                setQrCamera={setQrCamera}
-              />
+              <ScanCode qrCamera={qrCamera} setQrCamera={setQrCamera} />
             )}
           />
           <Route path="/haffat" component={Haffat} />

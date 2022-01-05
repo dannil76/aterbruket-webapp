@@ -175,7 +175,6 @@ interface Item {
 type Props = {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlreadyAQRCode: React.Dispatch<React.SetStateAction<boolean>>;
   qrCamera: IQrCamera;
   setQrCamera: React.Dispatch<
     React.SetStateAction<{
@@ -188,7 +187,6 @@ type Props = {
 const Home: FC<Props> = ({
   modalOpen,
   setModalOpen,
-  setAlreadyAQRCode,
   qrCamera,
   setQrCamera,
 }: Props) => {
@@ -362,10 +360,7 @@ const Home: FC<Props> = ({
         ) : (
           <>
             <Modal modalOpen={modalOpen}>
-              <ModalAddItemContent
-                setModalOpen={setModalOpen}
-                setAlreadyAQRCode={setAlreadyAQRCode}
-              />
+              <ModalAddItemContent setModalOpen={setModalOpen} />
             </Modal>
             <ScanBtn
               id="scanBtn"
@@ -435,7 +430,6 @@ const Home: FC<Props> = ({
               type="button"
               onClick={() => {
                 setModalOpen(true);
-                setAlreadyAQRCode(false);
               }}
             >
               <MdNewReleases />
