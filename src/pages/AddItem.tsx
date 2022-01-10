@@ -37,7 +37,7 @@ const AddItem: FC = () => {
       width: "",
       length: "",
       color: "",
-      condition: "",
+      condition: undefined,
       areaOfUse: { indoors: false, outside: false },
       material: {
         metal: false,
@@ -58,6 +58,9 @@ const AddItem: FC = () => {
       version: 0,
       revisions: 0,
       purchasePrice: "",
+      missingItemsInformation: "",
+      pickUpInformation: "",
+      returnInformation: "",
     },
     createAdvert
   );

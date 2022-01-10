@@ -38,7 +38,6 @@ interface Props {
     location?: string;
     contactPerson?: string;
     giver: string;
-
     email?: string;
     phoneNumber?: number;
     climateImpact: number;
@@ -46,6 +45,9 @@ interface Props {
     revisions: number;
     company?: string;
     purchasePrice: number;
+    missingItemsInformation?: string;
+    pickUpInformation?: string;
+    returnInformation?: string;
   };
   setRegive: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -102,6 +104,9 @@ const RegiveForm: FC<Props> = ({
       revisions: item.revisions + 1,
       purchasePrice: item.purchasePrice ? item.purchasePrice : "",
       giver: user.sub,
+      missingItemsInformation: item.missingItemsInformation ?? "",
+      pickUpInformation: item.pickUpInformation ?? "",
+      returnInformation: item.returnInformation ?? "",
     },
     updateAdvert
   );

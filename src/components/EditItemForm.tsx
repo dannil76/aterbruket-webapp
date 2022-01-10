@@ -52,6 +52,9 @@ interface Props {
     images: [{ url: string }];
     purchasePrice: number;
     company?: string;
+    missingItemsInformation?: string;
+    pickUpInformation?: string;
+    returnInformation?: string;
   };
   setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -70,7 +73,6 @@ const EditItemForm: FC<Props> = ({
     handleSubmit,
     handleCheckboxChange,
     redirect,
-    result,
     file,
     fileUploading,
   } = useForm(
@@ -109,6 +111,9 @@ const EditItemForm: FC<Props> = ({
       version: 0,
       revisions: item.revisions + 1,
       purchasePrice: item.purchasePrice,
+      missingItemsInformation: item.missingItemsInformation ?? "",
+      pickUpInformation: item.pickUpInformation ?? "",
+      returnInformation: item.returnInformation ?? "",
     },
     updateAdvert
   );
