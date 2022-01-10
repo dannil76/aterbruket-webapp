@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import { IFields } from "../interfaces/IForm";
 import Button from "./Button";
 import "react-toastify/dist/ReactToastify.css";
+import compare from "../utils/compare";
 
 const FormContainerDiv = styled.div`
   width: 100%;
@@ -206,6 +207,14 @@ export default function Form(props: {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   const fields = props.fields.map((field: IFields) => {
+
+    if (field.condition !== undefined) {
+      const { field: fieldName, value, operator } = field.condition;
+      if (compare(value, operator, props.values[fieldName]) === false) {
+        return;
+      }
+    }
+
     const dimensions = ["width", "height", "length"];
 
     if (field.fieldType === "input" && field.dataType !== "checkbox") {
