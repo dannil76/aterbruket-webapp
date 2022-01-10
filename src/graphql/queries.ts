@@ -46,8 +46,9 @@ export const getAdvert = /* GraphQL */ `
       company
       aterbruketId
       advertType
-      getInstructions
-      leaveInstructions
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
       createdAt
       updatedAt
     }
@@ -112,8 +113,9 @@ export const listAdverts = /* GraphQL */ `
         company
         aterbruketId
         advertType
-        getInstructions
-        leaveInstructions
+        missingItemsInformation
+        pickUpInformation
+        returnInformation
         createdAt
         updatedAt
       }

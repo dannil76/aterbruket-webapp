@@ -9,6 +9,13 @@ export interface IFields {
   option?: IOption[];
   swe?: string[] | undefined;
   eng?: string[] | undefined;
+  condition?: ConditionLogic | undefined;
+}
+
+interface ConditionLogic {
+  field: string;
+  operator: string;
+  value: string | boolean | number;
 }
 
 interface IOption {

@@ -49,8 +49,9 @@ export const createAdvert = /* GraphQL */ `
       company
       aterbruketId
       advertType
-      getInstructions
-      leaveInstructions
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
       createdAt
       updatedAt
     }
@@ -103,8 +104,9 @@ export const updateAdvert = /* GraphQL */ `
       company
       aterbruketId
       advertType
-      getInstructions
-      leaveInstructions
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
       createdAt
       updatedAt
     }
@@ -157,8 +159,9 @@ export const deleteAdvert = /* GraphQL */ `
       company
       aterbruketId
       advertType
-      getInstructions
-      leaveInstructions
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
       createdAt
       updatedAt
     }
