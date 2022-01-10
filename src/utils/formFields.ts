@@ -43,6 +43,11 @@ export default [
     disabled: false,
     title: "Återbruket ID",
     placeholder: "ex. 4435A",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "category",
@@ -99,6 +104,11 @@ export default [
     disabled: false,
     title: "Antal",
     placeholder: "Hur många?",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "height",
@@ -107,6 +117,11 @@ export default [
     disabled: false,
     title: "Höjd",
     placeholder: "34 cm",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "width",
@@ -115,6 +130,11 @@ export default [
     disabled: false,
     title: "Bredd",
     placeholder: "34 cm",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "length",
@@ -123,6 +143,11 @@ export default [
     disabled: false,
     title: "Djup",
     placeholder: "34 cm",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "color",
@@ -131,6 +156,11 @@ export default [
     disabled: false,
     title: "Färg",
     placeholder: "Färg",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "material",
@@ -160,6 +190,11 @@ export default [
         eng: ["other"],
       },
     ],
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "condition",
@@ -169,6 +204,11 @@ export default [
     title: "Skick",
     swe: ["Nyskick", "Bra", "Sliten"],
     eng: ["Anew", "Bgood", "Cworn"],
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "areaOfUse",
@@ -189,6 +229,11 @@ export default [
         eng: ["outside"],
       },
     ],
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
   },
   {
     name: "purchasePrice",
@@ -198,6 +243,47 @@ export default [
     required: false,
     title: "Inköpspris",
     placeholder: "Inköpspris",
+    condition: {
+      field: "advertType",
+      value: "recycle",
+      operator: "==",
+    },
+  },
+  {
+    name: "missingItemsInformation",
+    fieldType: "textarea",
+    disabled: false,
+    title: "Om det saknas något vid återlämning, gör så här",
+    placeholder: "",
+    condition: {
+      field: "advertType",
+      value: "borrow",
+      operator: "==",
+    },
+  },
+  {
+    name: "pickUpInformation",
+    fieldType: "textarea",
+    disabled: false,
+    title: "Bra att veta inför uthämtning",
+    placeholder: "",
+    condition: {
+      field: "advertType",
+      value: "borrow",
+      operator: "==",
+    },
+  },
+  {
+    name: "returnInformation",
+    fieldType: "textarea",
+    disabled: false,
+    title: "Hur du gör när du lämnar tillbaka prylen",
+    placeholder: "",
+    condition: {
+      field: "advertType",
+      value: "borrow",
+      operator: "==",
+    },
   },
   {
     name: "company",
