@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import imageCompression from "browser-image-compression";
@@ -127,32 +126,6 @@ const useForm = (initialValues: any, mutation: string) => {
       return setRedirect(mutationResult.data.createAdvert.id);
     }
   };
-
-  /*  const sendEmail = (data: any) => {
-    const templateParams = {
-      id: data.id,
-      contactPerson: data.contactPerson,
-      department: data.department,
-      location: data.location,
-      phoneNumber: data.phoneNumber,
-      email: data.email,
-    };
-    emailjs
-      .send(
-        "default_service",
-        "template_slykgia",
-        templateParams,
-        "user_nGtt95bDVTNyRyXq3porD"
-      )
-      .then(
-        function (response) {
-          console.log("SUCCESS sending email!", response.status, response.text);
-        },
-        function (error) {
-          console.log("FAILED sending email", error);
-        }
-      );
-  }; */
 
   return {
     values,
