@@ -65,7 +65,7 @@ const MyAdverts: FC = () => {
   return (
     <>
       <AdvertContainer
-        filteredSweValues={null}
+        activeFilterOptions={[]}
         items={renderItems}
         searchValue={false}
         itemsFrom="myAdds"

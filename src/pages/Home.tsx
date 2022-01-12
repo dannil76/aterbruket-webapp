@@ -8,10 +8,11 @@ import { AuthState } from "@aws-amplify/ui-components";
 import { sortBy } from "sort-by-typescript";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import fields from "../utils/formFields";
-import convertToSwe from "../utils/convert";
 import UserContext from "../contexts/UserContext";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
+import { getAllCategories } from "../utils/handleCategories";
+import { conditions } from "../static/advertMeta";
+import { IOption } from "../interfaces/IForm";
 
 const AdvertContainer = React.lazy(
   () => import("../components/AdvertContainer")
@@ -128,27 +129,6 @@ const SearchFilterDiv = styled.div`
   }
 `;
 
-/* const TabCtn = styled.div`
-  width: 100%;
-  background-color: ${(props) => props.theme.colors.offWhite};
-
-  button {
-    border: none;
-    color: #707070;
-    background-color: transparent;
-    font-weight: 900;
-    padding: 10px;
-    margin-left: 30px;
-    :active,
-    :focus {
-      color: ${(props) => props.theme.colors.primaryDark};
-      border: none;
-      border-bottom: 2px solid #a0c855;
-      outline: none;
-    }
-  }
-`; */
-
 const MessageCtn = styled.div`
   width: 50%;
   text-align: center;
@@ -237,6 +217,7 @@ const Home: FC<Props> = ({
       );
     }
   };
+
   const filterConditions: any = (fetchedData: any, conditions: any) => {
     let copyItems: any[] = [];
     let results: any[] = [];
@@ -317,33 +298,11 @@ const Home: FC<Props> = ({
     }
   }, [authState, filterValueUpdated, activeSorting]);
 
-  const categoryData = fields.find((field) => field.name === "category");
-  const conditionData = fields.find((field) => field.name === "condition");
-
-  const indexes: number[] = [];
-  let filteredSweValues: string[] = [];
-
-  if (
-    categoryData !== undefined
-    && conditionData !== undefined
-    && categoryData.eng
-    && conditionData.eng) {
-    const valuesInEng = [...categoryData.eng, ...conditionData.eng];
-    const valuesInSwe = [...categoryData.swe, ...conditionData.swe];
-
-    const findSameValuesIndex = (engValues: any, allFilterValues: any) => {
-      return engValues.filter((i: string) => {
-        if (allFilterValues.indexOf(i) >= 0) {
-          indexes.push(engValues.indexOf(i));
-          return true;
-        }
-        return false;
-      });
-    };
-
-    findSameValuesIndex(valuesInEng, allValues);
-    filteredSweValues = convertToSwe(valuesInSwe, indexes);
-  }
+  const categoryData = getAllCategories();
+  const filterOptions = [...categoryData, ...conditions];
+  const activeFilterOptions = filterOptions.filter((item: IOption) => {
+    return allValues.includes(item.key);
+  });
 
   if (qrCamera.result.length > 2) {
     return <Redirect to={`/item/${qrCamera.result}`} />;
@@ -408,7 +367,7 @@ const Home: FC<Props> = ({
               />
             </SearchFilterDiv>
             <AdvertContainer
-              filteredSweValues={filteredSweValues}
+              activeFilterOptions={activeFilterOptions}
               items={renderItems}
               searchValue={searchValue}
               itemsFrom="home"

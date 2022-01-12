@@ -81,7 +81,7 @@ const ItemsToGet: FC = () => {
     <>
       <Suspense fallback={<div>Loading...</div>}>
         <AdvertContainer
-          filteredSweValues={[]}
+          activeFilterOptions={[]}
           searchValue={false}
           items={haffatItems}
           itemsFrom="haffat"
@@ -90,7 +90,7 @@ const ItemsToGet: FC = () => {
         />
 
         <AdvertContainer
-          filteredSweValues={[]}
+          activeFilterOptions={[]}
           searchValue={false}
           items={pickedUpItems}
           itemsFrom="pickedUp"

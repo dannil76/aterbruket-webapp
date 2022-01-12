@@ -1,5 +1,6 @@
 import React, { FC, Suspense } from "react";
 import styled from "styled-components";
+import { IOption } from "../interfaces/IForm";
 
 const Card = React.lazy(() => import("./Card"));
 
@@ -14,7 +15,7 @@ interface IAdvert {
   items: any;
   searchValue: any;
   itemsFrom: string;
-  filteredSweValues: any;
+  activeFilterOptions: IOption[];
   activeSorting: ISorting;
   fetchReservedAdverts?: any;
 }
@@ -69,7 +70,7 @@ const AdvertContainer: FC<IAdvert> = ({
   items,
   searchValue,
   itemsFrom,
-  filteredSweValues,
+  activeFilterOptions,
   activeSorting,
   fetchReservedAdverts,
 }: IAdvert) => {
@@ -78,7 +79,7 @@ const AdvertContainer: FC<IAdvert> = ({
     filteredItems = items.filter((item: any) => {
       return (
         item.title.toLowerCase().indexOf(searchValue.toLocaleLowerCase()) !==
-          -1 ||
+        -1 ||
         item.description
           .toLowerCase()
           .indexOf(searchValue.toLocaleLowerCase()) !== -1 ||
@@ -96,17 +97,17 @@ const AdvertContainer: FC<IAdvert> = ({
     <AdvertContainerDiv>
       <Suspense fallback={<div>Loading...</div>}>
         <div className="allaDiv">
-          {itemsFrom === "home" && filteredSweValues.length > 0 ? (
+          {itemsFrom === "home" && activeFilterOptions.length > 0 ? (
             <OptionWrapper>
               <h3>Aktiva filter :</h3>
-              {filteredSweValues.map((value: string) => {
+              {activeFilterOptions.map((option: IOption) => {
                 return (
                   <span
                     className="options"
-                    key={value}
+                    key={option.key}
                     style={{ margin: "5px", height: "15px" }}
                   >
-                    {value}
+                    {option.title}
                   </span>
                 );
               })}
