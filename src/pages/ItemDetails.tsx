@@ -34,7 +34,10 @@ import { createAdvert, updateAdvert } from "../graphql/mutations";
 import Map from "../components/Map";
 import UserContext from "../contexts/UserContext";
 import showDays from "../hooks/showDays";
-import fields from "../utils/formFields";
+import fields from "../static/formFields";
+import { getCategoryByKey } from "../utils/handleCategories";
+import { conditions, materials, areaOfUse } from "../static/advertMeta";
+import { IOption } from "../interfaces/IForm";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
@@ -412,6 +415,13 @@ interface ParamTypes {
   id: string;
 }
 
+interface MetaValues {
+  metal: boolean;
+  other: boolean;
+  plastic: boolean;
+  wood: boolean;
+}
+
 const ItemDetails: FC<ParamTypes> = () => {
   const { id } = useParams<ParamTypes>();
   const [item, setItem] = useState({}) as any;
@@ -424,6 +434,24 @@ const ItemDetails: FC<ParamTypes> = () => {
   const buttonOutOfScreen = useRef(null);
   const [refVisible, setRefVisible] = useState(false);
   const [showHeaderBtn, setShowHeaderBtn] = useState(false);
+
+  const getMetaValues = (itemValues: MetaValues, allValues: IOption[]) => {
+    const values = Object.entries(itemValues)
+      .filter(([key, value]) => value)
+      .map(([key, value]) => {
+        const valueObj = allValues.find((v) => v.key === key);
+        return valueObj?.title ? valueObj.title : "";
+      }
+      );
+    return values;
+  };
+
+  const itemCategory = getCategoryByKey(item?.category);
+  const itemCondition = conditions.find((condition) => condition.key === item?.condition);
+  const itemMaterialsArray = getMetaValues(item?.material?.[0] ?? {}, materials) ?? [];
+  const itemMaterialsString = itemMaterialsArray.join(", ");
+  const itemAreaOfUseArray = getMetaValues(item?.areaOfUse?.[0] ?? {}, areaOfUse) ?? [];
+  const itemAreaOfUseString = itemAreaOfUseArray.join(", ");
 
   const fetchImage = (item: any) => {
     Storage.get(item.images[0].src).then((url: any) => {
@@ -451,7 +479,6 @@ const ItemDetails: FC<ParamTypes> = () => {
   useEffect(() => {
     fetchItem();
     setItemUpdated(false);
-    return () => { };
   }, [itemUpdated]);
 
   let handler: any;
@@ -503,52 +530,22 @@ const ItemDetails: FC<ParamTypes> = () => {
 
     await API.graphql(graphqlOperation(createAdvert, { input: item }));
   };
+
   const onClickReservBtn = () => {
     updateItem("reserved");
     setShowHeaderBtn(false);
   };
+
   const onClickRemoveResBtn = () => {
     updateItem("available");
     setShowHeaderBtn(false);
   };
+
   const onClickPickUpBtn = () => {
     updateItem("pickedUp");
     setShowHeaderBtn(false);
   };
-  const translate = (word: string, cat: any) => {
-    let sweWord = "";
 
-    fields.find((el) => {
-      if (el.name === cat && el.option) {
-        el.option.map((op: any) => {
-          if (op.eng[0] === word) {
-            sweWord = op.swe[0];
-          }
-        });
-      } else if (el.name === cat && el.swe) {
-        el.eng.map((op: any, idx: number) => {
-          if (op === word) {
-            sweWord = el.swe[idx];
-          }
-        });
-      }
-    });
-    return sweWord;
-  };
-  const mapingObject = (obj: any, cat: string) => {
-    let str = "";
-    Object.entries(obj[0]).forEach(([key, value]) => {
-      if (value) {
-        const sweWord = translate(key, cat);
-        if (str.length === 0) {
-          str = `${str} ${sweWord}`;
-        } else {
-          str = `${str}, ${sweWord}`;
-        }
-      }
-    });
-    return <td key={str}>{str}</td>;
-  };
   const history = useHistory();
 
   const goBackFunc = () => {
@@ -616,9 +613,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         )}
         <div className="titleDiv">
           <h4>
-            {item.category
-              ? translate(item.category, "category")
-              : item.category}
+            {itemCategory?.title}
           </h4>
           <h1>{item.title}</h1>
           <p>{item.aterbruketId}</p>
@@ -742,31 +737,21 @@ const ItemDetails: FC<ParamTypes> = () => {
               <td>
                 <h4>Material</h4>
               </td>
-              {item.material ? (
-                mapingObject(item.material, "material")
-              ) : (
-                <td> </td>
-              )}
+              {itemMaterialsString ? (<td>{itemMaterialsString}</td>) : (<td></td>)}
             </tr>
             <tr>
               <td>
                 <h4>Skick</h4>
               </td>
               <td>
-                {item.condition
-                  ? translate(item.condition, "condition")
-                  : item.condition}
+                {itemCondition?.title}
               </td>
             </tr>
             <tr>
               <td>
                 <h4>Användningsområde</h4>
               </td>
-              {item.areaOfUse ? (
-                mapingObject(item.areaOfUse, "areaOfUse")
-              ) : (
-                <td> </td>
-              )}
+              {itemAreaOfUseString ? (<td>{itemAreaOfUseString}</td>) : (<td></td>)}
             </tr>
             <tr>
               <td>
