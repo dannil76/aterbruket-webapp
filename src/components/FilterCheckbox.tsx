@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { IOption } from "../interfaces/IForm";
 
 const InputGroup = styled.div`
    {
@@ -46,7 +47,7 @@ const InputGroup = styled.div`
       font-weight: 900;
       color: ${(props) => props.theme.colors.darker};
     }
-    
+
     }
   }
 `;
@@ -77,7 +78,9 @@ const GroupCtn = styled.div`
 `;
 
 interface Props {
-  group: any;
+  id: string;
+  title: string;
+  options: IOption[];
   saveValues: any;
   setSaveValues: any;
 }
@@ -85,9 +88,12 @@ interface Props {
 const FilterCheckbox: FC<Props> = ({
   setSaveValues,
   saveValues,
-  group,
+  options,
+  title,
+  id,
 }: Props) => {
-  const handleInputChange = (e: React.ChangeEvent<any>, groupName: any) => {
+
+  const handleInputChange = (groupName: any, e: React.ChangeEvent<any>) => {
     setSaveValues({
       ...saveValues,
       [groupName]: {
@@ -97,45 +103,39 @@ const FilterCheckbox: FC<Props> = ({
     });
   };
 
-  let checkboxes: any;
-
-  if (group.option) {
-    // Area of use should be here
-  } else {
-    checkboxes = group.eng.map((element: any, idx: number) => {
-      return (
-        <InputGroup key={element}>
-          <label
-            htmlFor={element}
-            className={
-              saveValues[group.name] && saveValues[group.name][element]
-                ? "active"
-                : "normal"
+  const checkboxes = options.map((element: IOption) => {
+    return (
+      <InputGroup key={element.id}>
+        <label
+          htmlFor={element.key}
+          className={
+            saveValues[id] && saveValues[id][element.key]
+              ? "active"
+              : "normal"
+          }
+        >
+          <input
+            type="checkbox"
+            id={`${element.id}`}
+            name={element.key}
+            onChange={(e) => handleInputChange(id, e)}
+            checked={
+              !!(saveValues[id] && saveValues[id][element.key])
             }
-          >
-            <input
-              type="checkbox"
-              id={element}
-              name={element}
-              onChange={(e) => handleInputChange(e, [group.name])}
-              checked={
-                !!(saveValues[group.name] && saveValues[group.name][element])
-              }
-            />
+          />
 
-            {group.swe[idx]}
-          </label>
-        </InputGroup>
-      );
-    });
-  }
+          {element.title}
+        </label>
+      </InputGroup>
+    );
+  });
 
   return (
     <GroupCtn>
-      <h2>{group.title.toUpperCase()}</h2>
+      <h2>{title.toUpperCase()}</h2>
       <Divider
         style={{
-          width: group.title === "Skick" ? "37px" : "92px",
+          width: title === "Skick" ? "37px" : "92px",
         }}
       />
       {checkboxes}
