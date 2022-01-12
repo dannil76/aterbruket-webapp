@@ -6,7 +6,7 @@ import { API } from "aws-amplify";
 import styled from "styled-components";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import fields from "../utils/formFields";
+import { getAllCategories } from "../utils/handleCategories";
 import UserContext from "../contexts/UserContext";
 import CardStatics from "./CardStatics";
 import filterStatus from "../hooks/filterStatus";
@@ -94,17 +94,17 @@ const GroupDiv = styled.div`
 
 const Statics: FC = () => {
   const ATERBRUKETADRESS = "Larmvägen 33";
-  const [allItems, setAllItems] = useState() as any;
+  const [allItems, setAllItems] = useState([]) as any;
   const [allItemsOverTime, setAllItemsOverTime] = useState() as any;
   const [statusGroupOverTime, setStatusGroupOverTime] = useState([]) as any;
   const [statusGroup, setStatusGroup] = useState([]) as any;
-  const [Categorys, setCategorys] = useState() as any;
   const { user } = useContext(UserContext);
   const [selectDepartment, setSelectDepartment] = useState([
     { title: "Alla förvaltningar", filterOn: "all" },
     { title: "Återbruket", filterOn: ATERBRUKETADRESS },
   ]);
   const [selected, setSelected] = useState("all");
+  const categories = getAllCategories();
 
   const fetchItems = async () => {
     const result = (await API.graphql(
@@ -112,7 +112,7 @@ const Statics: FC = () => {
     )) as GraphQLResult<ListAdvertsQuery>;
     const advertItems = result.data?.listAdverts?.items;
     setAllItems(advertItems);
-    const res = filterStatus(advertItems, Categorys);
+    const res = filterStatus(advertItems, categories);
     setStatusGroup(res);
   };
 
@@ -121,7 +121,7 @@ const Statics: FC = () => {
       graphqlOperation(listAdverts)
     )) as GraphQLResult<ListAdvertsQuery>;
     const advertItems = result.data?.listAdverts?.items;
-    const res = filterStatus(advertItems, Categorys);
+    const res = filterStatus(advertItems, categories);
     setAllItemsOverTime(advertItems);
 
     setStatusGroupOverTime(res);
@@ -130,18 +130,6 @@ const Statics: FC = () => {
   useEffect(() => {
     fetchItemsOverTime();
     fetchItems();
-    const found = fields.find((element) => {
-      return element.name === "category";
-    });
-
-    // eslint-disable-next-line prefer-const
-    let saveAllCategorys = {} as any;
-
-    if (found && found.eng) {
-      found.eng.map((cat: string) => {
-        saveAllCategorys[cat] = 0;
-      });
-    }
 
     if (user.sub) {
       setSelectDepartment([
@@ -149,9 +137,6 @@ const Statics: FC = () => {
         { title: "Min statistik", filterOn: user.sub },
       ]);
     }
-    setCategorys(saveAllCategorys);
-
-    return () => { };
   }, []);
 
   const filterItems = (filterOn: string) => {
@@ -168,7 +153,7 @@ const Statics: FC = () => {
       });
     }
 
-    const res = filterStatus(filteredItems, Categorys);
+    const res = filterStatus(filteredItems, categories);
     setStatusGroup(res);
   };
 
@@ -186,7 +171,7 @@ const Statics: FC = () => {
       });
     }
 
-    const res = filterStatus(filteredItems, Categorys);
+    const res = filterStatus(filteredItems, categories);
     setStatusGroupOverTime(res);
   };
 
