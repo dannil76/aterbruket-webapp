@@ -1,3 +1,9 @@
+import { getCategoriesByParent, getCategoriesExceptByParent } from "../utils/handleCategories";
+import { conditions, areaOfUse, materials } from "./advertMeta";
+
+const recycleCategories = getCategoriesByParent([1]);
+const borrowCategories = getCategoriesExceptByParent([1]);
+
 export default [
   {
     name: "advertType",
@@ -6,16 +12,16 @@ export default [
     disabled: false,
     title: "Den är till för",
     required: true,
-    option: [
+    options: [
       {
-        name: "recycle",
-        swe: ["Återbruk"],
-        eng: ["Recycle"],
+        id: 1,
+        key: "recycle",
+        title: "Återbruk",
       },
       {
-        name: "borrow",
-        swe: ["Utlåning"],
-        eng: ["Borrow"],
+        id: 2,
+        key: "borrow",
+        title: "Utlåning",
       },
     ],
   },
@@ -45,8 +51,8 @@ export default [
     placeholder: "ex. 4435A",
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -55,40 +61,25 @@ export default [
     disabled: false,
     required: true,
     title: "Kategori / Typ av möbel",
-    swe: [
-      "Barnmöbler",
-      "Bord",
-      "Diverse",
-      "Förvaringsmöbler",
-      "Höj- och sänkbart skrivbord",
-      "Kontorsstolar",
-      "Reservdelar och Tillbehör",
-      "Sittmöbler",
-      "Skrivbord",
-      "Soffor och Bänkar",
-      "Sökes",
-      "Tavlor",
-      "UteÅterbrukat",
-      "Vitvaror",
-      "Återbygg",
-    ],
-    eng: [
-      "kidsFurniture",
-      "table",
-      "other",
-      "storageFurniture",
-      "raiseAndLowerableDesk",
-      "officeChair",
-      "sparepart",
-      "seatingFurniture",
-      "desk",
-      "sofaAndBench",
-      "wanted",
-      "painting",
-      "outdoorItem",
-      "appliances",
-      "constructionMaterial",
-    ],
+    options: recycleCategories,
+    condition: {
+      field: "advertType",
+      operator: "==",
+      value: "recycle",
+    },
+  },
+  {
+    name: "category",
+    fieldType: "select",
+    disabled: false,
+    required: true,
+    title: "Kategori / Typ av sak",
+    options: borrowCategories,
+    condition: {
+      field: "advertType",
+      operator: "==",
+      value: "borrow",
+    },
   },
   {
     name: "description",
@@ -106,8 +97,8 @@ export default [
     placeholder: "Hur många?",
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -132,8 +123,8 @@ export default [
     placeholder: "34 cm",
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -158,8 +149,8 @@ export default [
     placeholder: "Färg",
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -168,32 +159,11 @@ export default [
     fieldType: "input",
     disabled: false,
     title: "Material",
-    option: [
-      {
-        name: "wood",
-        swe: ["Trä"],
-        eng: ["wood"],
-      },
-      {
-        name: "plastic",
-        swe: ["Plast"],
-        eng: ["plastic"],
-      },
-      {
-        name: "metal",
-        swe: ["Metall"],
-        eng: ["metal"],
-      },
-      {
-        name: "other",
-        swe: ["Annat"],
-        eng: ["other"],
-      },
-    ],
+    options: materials,
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -202,12 +172,11 @@ export default [
     disabled: false,
     required: true,
     title: "Skick",
-    swe: ["Nyskick", "Bra", "Sliten"],
-    eng: ["Anew", "Bgood", "Cworn"],
+    options: conditions,
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -217,22 +186,11 @@ export default [
     fieldType: "input",
     disabled: false,
     required: true,
-    option: [
-      {
-        name: "indoors",
-        swe: ["Inne"],
-        eng: ["indoors"],
-      },
-      {
-        name: "outside",
-        swe: ["Ute"],
-        eng: ["outside"],
-      },
-    ],
+    options: areaOfUse,
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -245,8 +203,8 @@ export default [
     placeholder: "Inköpspris",
     condition: {
       field: "advertType",
-      value: "recycle",
       operator: "==",
+      value: "recycle",
     },
   },
   {
@@ -257,8 +215,8 @@ export default [
     placeholder: "",
     condition: {
       field: "advertType",
-      value: "borrow",
       operator: "==",
+      value: "borrow",
     },
   },
   {
@@ -269,8 +227,8 @@ export default [
     placeholder: "",
     condition: {
       field: "advertType",
-      value: "borrow",
       operator: "==",
+      value: "borrow",
     },
   },
   {
@@ -281,8 +239,8 @@ export default [
     placeholder: "",
     condition: {
       field: "advertType",
-      value: "borrow",
       operator: "==",
+      value: "borrow",
     },
   },
   {
@@ -312,7 +270,6 @@ export default [
     title: "Adress",
     placeholder: "ex. Larmvägen 33 254 56 Helsingborg",
   },
-
   {
     name: "contactPerson",
     dataType: "text",
