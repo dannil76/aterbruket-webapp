@@ -34,7 +34,6 @@ import { createAdvert, updateAdvert } from "../graphql/mutations";
 import Map from "../components/Map";
 import UserContext from "../contexts/UserContext";
 import showDays from "../hooks/showDays";
-import fields from "../static/formFields";
 import { getCategoryByKey } from "../utils/handleCategories";
 import { conditions, materials, areaOfUse } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
