@@ -8,7 +8,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
-import { IFields } from "../interfaces/IForm";
+import { IFields, IOption } from "../interfaces/IForm";
 import Button from "./Button";
 import "react-toastify/dist/ReactToastify.css";
 import compare from "../utils/compare";
@@ -279,20 +279,20 @@ export default function Form(props: {
     }
 
     if (field.fieldType === "input" && field.dataType === "checkbox") {
-      const data = field.option ? field.option : [];
-      const checkboxInput = data.map((x: any) => {
+      const data = field.options ? field.options : [];
+      const checkboxInput = data.map((option: IOption) => {
         return (
-          <div key={x.name}>
-            <label htmlFor={x.name}>
-              <p className="labelP">{x.swe ? x.swe[0] : x.name}</p>
+          <div key={option.id}>
+            <label htmlFor={option.key}>
+              <p className="labelP">{option.title}</p>
             </label>
             <input
               type={field.dataType}
-              name={x.name}
-              id={x.name}
+              name={option.key}
+              id={option.key}
               onChange={(e) => props.handleCheckboxChange(e, field.name)}
-              checked={props.values[field.name][x.name]}
-              disabled={x.disabled}
+              checked={props.values[field.name][option.key]}
+              disabled={option.disabled}
             />
           </div>
         );
@@ -343,7 +343,7 @@ export default function Form(props: {
     }
 
     if (field.fieldType === "select") {
-      const data = field.eng ? field.eng : [];
+      const data = field.options ? field.options : [];
       return (
         <section className="allDiv" key={field.name}>
           {" "}
@@ -363,10 +363,10 @@ export default function Form(props: {
             <option value="" disabled>
               Välj ett alternativ
             </option>
-            {data.map((x: string, idx: number) => {
+            {data.map((option: IOption) => {
               return (
-                <option value={x} key={x}>
-                  {field.swe ? field.swe[idx] : x}
+                <option value={option.key} key={option.id}>
+                  {option.title}
                 </option>
               );
             })}
@@ -376,18 +376,18 @@ export default function Form(props: {
     }
 
     if (field.fieldType === "radio") {
-      const data = field.option ? field.option : [];
-      const options = data.map(option =>
-        <div key={option.name}>
-          <label htmlFor={option.name}>
-            <p className="labelP">{option.swe}</p>
+      const data = field.options ? field.options : [];
+      const options = data.map((option: IOption) =>
+        <div key={option.id}>
+          <label htmlFor={option.key}>
+            <p className="labelP">{option.title}</p>
           </label>
           <input
             type="radio"
-            id={option.name}
+            id={option.key}
             name={field.name}
-            value={option.name}
-            checked={props.values[field.name] == option.name}
+            value={option.key}
+            checked={props.values[field.name] == option.key}
             onChange={props.handleInputChange}
           />
         </div>
