@@ -1,4 +1,7 @@
-import { getCategoriesByParent, getCategoriesExceptByParent } from "../utils/handleCategories";
+import {
+  getCategoriesByParent,
+  getCategoriesExceptByParent,
+} from "../utils/handleCategories";
 import { conditions, areaOfUse, materials } from "./advertMeta";
 
 const recycleCategories = getCategoriesByParent([1]);
@@ -34,28 +37,6 @@ export default [
     title: "Lägg till en bild",
   },
   {
-    name: "title",
-    dataType: "text",
-    fieldType: "input",
-    disabled: false,
-    required: true,
-    title: "Rubrik",
-    placeholder: "Döp annonsen...",
-  },
-  {
-    name: "aterbruketId",
-    dataType: "text",
-    fieldType: "input",
-    disabled: false,
-    title: "Återbruket ID",
-    placeholder: "ex. 4435A",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
-  },
-  {
     name: "category",
     fieldType: "select",
     disabled: false,
@@ -82,10 +63,35 @@ export default [
     },
   },
   {
+    name: "title",
+    dataType: "text",
+    fieldType: "input",
+    disabled: false,
+    required: true,
+    title: "Rubrik",
+    description: "Max 20 tecken",
+    placeholder: "Döp annonsen...",
+  },
+  {
+    name: "aterbruketId",
+    dataType: "text",
+    fieldType: "input",
+    disabled: false,
+    title: "Återbruket ID",
+    placeholder: "ex. 4435A",
+    condition: {
+      field: "advertType",
+      operator: "==",
+      value: "recycle",
+    },
+  },
+  {
     name: "description",
     fieldType: "textarea",
     disabled: false,
     title: "Beskrivning",
+    description:
+      "En kort text om prylen som gör den intressant att haffa. Detaljerad information om mått, färg mm lämnar du i nästa steg 😊",
     placeholder: "Beskriv grejen...",
   },
   {
@@ -160,6 +166,7 @@ export default [
     disabled: false,
     title: "Material",
     options: materials,
+    description: "Välj en eller flera",
     condition: {
       field: "advertType",
       operator: "==",
@@ -187,6 +194,7 @@ export default [
     disabled: false,
     required: true,
     options: areaOfUse,
+    description: "Välj en eller flera",
     condition: {
       field: "advertType",
       operator: "==",
@@ -201,6 +209,8 @@ export default [
     required: false,
     title: "Inköpspris",
     placeholder: "Inköpspris",
+    description:
+      "Vet du inte exakt vad den köptes in för?\n\nAnge då en uppskattning av priset.",
     condition: {
       field: "advertType",
       operator: "==",
@@ -208,11 +218,15 @@ export default [
     },
   },
   {
-    name: "missingItemsInformation",
-    fieldType: "textarea",
+    name: "pickUpInformation",
+    dataType: "text",
+    fieldType: "input",
     disabled: false,
-    title: "Om det saknas något vid återlämning, gör så här",
-    placeholder: "",
+    title: "Bra att veta inför uthämtning",
+    placeholder: "Du behöver...",
+    required: true,
+    description:
+      "t ex. hur prylen är paketerad, om det ska laddas batterier etc.",
     condition: {
       field: "advertType",
       operator: "==",
@@ -220,11 +234,15 @@ export default [
     },
   },
   {
-    name: "pickUpInformation",
-    fieldType: "textarea",
+    name: "missingItemsInformation",
+    dataType: "text",
+    fieldType: "input",
     disabled: false,
-    title: "Bra att veta inför uthämtning",
-    placeholder: "",
+    title: "Om det saknas något vid återlämningen",
+    placeholder: "Om du glömt...",
+    required: true,
+    description:
+      "Beskriv hur lånaren ska göra om något saknas vid återlämningen ... 😊",
     condition: {
       field: "advertType",
       operator: "==",
@@ -233,8 +251,10 @@ export default [
   },
   {
     name: "returnInformation",
-    fieldType: "textarea",
+    dataType: "text",
+    fieldType: "input",
     disabled: false,
+    required: true,
     title: "Hur du gör när du lämnar tillbaka prylen",
     placeholder: "",
     condition: {

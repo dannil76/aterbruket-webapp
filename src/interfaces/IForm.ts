@@ -7,7 +7,8 @@ export interface IFields {
   title: string;
   placeholder?: string;
   options?: IOption[];
-  condition?: ConditionLogic | undefined;
+  condition?: ConditionLogic | undefined;
+  description?: string;
 }
 
 export interface ConditionLogic {
@@ -17,9 +18,9 @@ export interface ConditionLogic {
 }
 
 export interface IOption {
-  id: number,
-  parent?: number | null,
-  key: string,
-  title: string,
-  disabled?: boolean,
+  id: number;
+  parent?: number | null;
+  key: string;
+  title: string;
+  disabled?: boolean;
 }

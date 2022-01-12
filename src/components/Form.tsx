@@ -143,7 +143,6 @@ const FormContainerDiv = styled.div`
     input[type="radio"] {
       height: auto;
     }
-
   }
 
   .dimensionsDiv {
@@ -207,7 +206,6 @@ export default function Form(props: {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   const fields = props.fields.map((field: IFields) => {
-
     if (field.condition !== undefined) {
       const { field: fieldName, value, operator } = field.condition;
       if (compare(value, operator, props.values[fieldName]) === false) {
@@ -260,18 +258,9 @@ export default function Form(props: {
           </label>
           <input {...attributes} />
 
-          {field.name === "title" && (
+          {field.description && (
             <div className="validationInfo">
-              <span className="infoSpan">max 20 tecken</span>
-            </div>
-          )}
-
-          {field.name === "purchasePrice" && (
-            <div className="validationInfo">
-              <span className="infoSpan">
-                Vet du inte exakt vad den köptes in för? <br />
-                Ange då en uppskattning av priset.
-              </span>{" "}
+              <span className="infoSpan">{field.description}</span>
             </div>
           )}
         </section>
@@ -313,9 +302,11 @@ export default function Form(props: {
           >
             {checkboxInput}
           </div>
-          <div className="validationInfo">
-            <span className="infoSpan">välj en eller flera</span>
-          </div>
+          {field.description && (
+            <div className="validationInfo">
+              <span className="infoSpan">{field.description}</span>
+            </div>
+          )}
         </section>
       );
     }
@@ -335,9 +326,11 @@ export default function Form(props: {
             required={field.required}
             maxLength={200}
           />
-          <div className="validationInfo">
-            <span className="infoSpan">max 200 tecken</span>
-          </div>
+          {field.description && (
+            <div className="validationInfo">
+              <span className="infoSpan">{field.description}</span>
+            </div>
+          )}
         </section>
       );
     }
@@ -377,7 +370,7 @@ export default function Form(props: {
 
     if (field.fieldType === "radio") {
       const data = field.options ? field.options : [];
-      const options = data.map((option: IOption) =>
+      const options = data.map((option: IOption) => (
         <div key={option.id}>
           <label htmlFor={option.key}>
             <p className="labelP">{option.title}</p>
@@ -391,7 +384,7 @@ export default function Form(props: {
             onChange={props.handleInputChange}
           />
         </div>
-      )
+      ));
       return (
         <section className="allDiv" key={field.name}>
           <label htmlFor={field.name}>
@@ -399,9 +392,7 @@ export default function Form(props: {
             {field.required && <span className="required">*</span>}
           </label>
 
-          <div className="checkboxDiv areaOfUseDiv">
-            {options}
-          </div>
+          <div className="checkboxDiv areaOfUseDiv">{options}</div>
         </section>
       );
     }
