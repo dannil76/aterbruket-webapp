@@ -6,20 +6,20 @@ export interface IFields {
   required?: boolean;
   title: string;
   placeholder?: string;
-  option?: IOption[];
-  swe?: string[] | undefined;
-  eng?: string[] | undefined;
+  options?: IOption[];
   condition?: ConditionLogic | undefined;
 }
 
-interface ConditionLogic {
+export interface ConditionLogic {
   field: string;
   operator: string;
   value: string | boolean | number;
 }
 
-interface IOption {
-  name: string;
-  swe?: string[] | undefined;
-  eng?: string[] | undefined;
+export interface IOption {
+  id: number,
+  parent?: number | null,
+  key: string,
+  title: string,
+  disabled?: boolean,
 }
