@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MdCancel } from "react-icons/md";
 import FilterCheckbox from "./FilterCheckbox";
 import SortRadioButtons from "./SortRadioButtons";
-import fields from "../utils/formFields";
+import fields from "../static/formFields";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
 
 const FilterCtn = styled.div`

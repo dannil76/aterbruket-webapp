@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import useForm from "../hooks/useForm";
 import { createAdvert } from "../graphql/mutations";
-import fields from "../utils/formFields";
+import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
 
 const Form = React.lazy(() => import("../components/Form"));

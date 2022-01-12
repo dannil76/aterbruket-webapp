@@ -3,7 +3,7 @@ import Loader from "react-loader-spinner";
 import Form from "./Form";
 import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
-import fields from "../utils/formFields";
+import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
 
 interface IareaOfUse {
