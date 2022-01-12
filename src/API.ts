@@ -11,7 +11,7 @@ export type CreateAdvertInput = {
   width?: string | null,
   length?: string | null,
   status?: ItemStatus | null,
-  category?: ItemCategory | null,
+  category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
   color?: string | null,
@@ -42,25 +42,6 @@ export enum ItemStatus {
   available = "available",
   reserved = "reserved",
   pickedUp = "pickedUp",
-}
-
-
-export enum ItemCategory {
-  desk = "desk",
-  raiseAndLowerableDesk = "raiseAndLowerableDesk",
-  kidsFurniture = "kidsFurniture",
-  table = "table",
-  other = "other",
-  storageFurniture = "storageFurniture",
-  officeChair = "officeChair",
-  sparepart = "sparepart",
-  seatingFurniture = "seatingFurniture",
-  sofaAndBench = "sofaAndBench",
-  wanted = "wanted",
-  painting = "painting",
-  outdoorItem = "outdoorItem",
-  appliances = "appliances",
-  constructionMaterial = "constructionMaterial",
 }
 
 
@@ -102,7 +83,7 @@ export type ModelAdvertConditionInput = {
   width?: ModelStringInput | null,
   length?: ModelStringInput | null,
   status?: ModelItemStatusInput | null,
-  category?: ModelItemCategoryInput | null,
+  category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
@@ -173,11 +154,6 @@ export type ModelItemStatusInput = {
   ne?: ItemStatus | null,
 };
 
-export type ModelItemCategoryInput = {
-  eq?: ItemCategory | null,
-  ne?: ItemCategory | null,
-};
-
 export type ModelItemConditionInput = {
   eq?: ItemCondition | null,
   ne?: ItemCondition | null,
@@ -210,7 +186,7 @@ export type Advert = {
   width?: string | null,
   length?: string | null,
   status?: ItemStatus | null,
-  category?: ItemCategory | null,
+  category?: string | null,
   material?:  Array<ItemAMaterial | null > | null,
   condition?: ItemCondition | null,
   color?: string | null,
@@ -268,7 +244,7 @@ export type UpdateAdvertInput = {
   width?: string | null,
   length?: string | null,
   status?: ItemStatus | null,
-  category?: ItemCategory | null,
+  category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
   color?: string | null,
@@ -354,7 +330,7 @@ export type ModelAdvertFilterInput = {
   width?: ModelStringInput | null,
   length?: ModelStringInput | null,
   status?: ModelItemStatusInput | null,
-  category?: ModelItemCategoryInput | null,
+  category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
@@ -441,7 +417,7 @@ export type CreateAdvertMutation = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -501,7 +477,7 @@ export type UpdateAdvertMutation = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -561,7 +537,7 @@ export type DeleteAdvertMutation = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -672,7 +648,7 @@ export type GetAdvertQuery = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -738,7 +714,7 @@ export type ListAdvertsQuery = {
       width?: string | null,
       length?: string | null,
       status?: ItemStatus | null,
-      category?: ItemCategory | null,
+      category?: string | null,
       material?:  Array< {
         __typename: "ItemAMaterial",
         wood?: boolean | null,
@@ -835,7 +811,7 @@ export type OnCreateAdvertSubscription = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -890,7 +866,7 @@ export type OnUpdateAdvertSubscription = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
@@ -945,7 +921,7 @@ export type OnDeleteAdvertSubscription = {
     width?: string | null,
     length?: string | null,
     status?: ItemStatus | null,
-    category?: ItemCategory | null,
+    category?: string | null,
     material?:  Array< {
       __typename: "ItemAMaterial",
       wood?: boolean | null,
