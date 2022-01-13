@@ -251,6 +251,7 @@ export default function Form(props: {
           {field.title === "Förvaltning" && <h4>Var finns prylen?</h4>}
           {field.title === "Kontaktperson" && <h4>Kontakt</h4>}
           {field.title === "Höjd" && <h4>Mått</h4>}
+          {field.name === "pickUpInstructions" && <h4>Haffningen</h4>}
 
           <label htmlFor={field.name}>
             <p className="labelP">{field.title}</p>

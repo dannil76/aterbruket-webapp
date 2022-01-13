@@ -316,4 +316,19 @@ export default [
     title: "Epost",
     placeholder: "namn.efternamn@helsingborg.se",
   },
+  {
+    name: "pickUpInstructions",
+    dataType: "text",
+    fieldType: "input",
+    disabled: false,
+    title: "Så här haffar du prylen",
+    placeholder: "Du behöver...",
+    required: true,
+    description: "Beskriv hur haffaren hämtar ut prylen.",
+    condition: {
+      field: "advertType",
+      operator: "==",
+      value: "borrow",
+    },
+  },
 ];

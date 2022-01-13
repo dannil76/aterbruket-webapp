@@ -32,6 +32,7 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   missingItemsInformation: String
   pickUpInformation: String
   returnInformation: String
+  pickUpInstructions: String
 }
 
 enum ItemAdvertType {
