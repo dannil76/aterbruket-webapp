@@ -12,6 +12,7 @@ import { IFields, IOption } from "../interfaces/IForm";
 import Button from "./Button";
 import "react-toastify/dist/ReactToastify.css";
 import compare from "../utils/compare";
+import DateRangePicker from "./DateRangePicker";
 
 const FormContainerDiv = styled.div`
   width: 100%;
@@ -394,6 +395,18 @@ export default function Form(props: {
           </label>
 
           <div className="checkboxDiv areaOfUseDiv">{options}</div>
+        </section>
+      );
+    }
+
+    if (field.fieldType === "dateRangePicker") {
+      return (
+        <section className="allDiv" key={field.name}>
+          <label htmlFor={field.name}>
+            <p className="labelP">{field.title}</p>{" "}
+            {field.required && <span className="required">*</span>}
+          </label>
+          <DateRangePicker />
         </section>
       );
     }

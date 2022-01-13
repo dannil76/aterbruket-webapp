@@ -63,6 +63,19 @@ export default [
     },
   },
   {
+    name: "allowedBorrowDateRange",
+    dataType: "text",
+    fieldType: "dateRangePicker",
+    disabled: false,
+    required: false,
+    title: "Tillgänglig period",
+    condition: {
+      field: "advertType",
+      value: "borrow",
+      operator: "==",
+    },
+  },
+  {
     name: "title",
     dataType: "text",
     fieldType: "input",
