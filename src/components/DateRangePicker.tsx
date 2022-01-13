@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DateRangePicker as ReactDatesRangePicker } from "react-dates";
 import moment from "moment";
+import "moment/locale/sv";
 import "react-dates/lib/css/_datepicker.css";
 import "react-dates/initialize";
 
@@ -17,12 +18,15 @@ const DateRangePicker: React.FC = () => {
       startDateId="startDateId"
       endDate={endDate}
       endDateId="endDateId"
+      startDatePlaceholderText="Startdatum"
+      endDatePlaceholderText="Slutdatum"
       focusedInput={focusedInput}
       onFocusChange={setFocusedInput}
       onDatesChange={(selectedDates) => {
         setStartDate(selectedDates.startDate);
         setEndDate(selectedDates.endDate);
       }}
+      hideKeyboardShortcutsPanel
     />
   );
 };
