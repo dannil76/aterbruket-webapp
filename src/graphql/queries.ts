@@ -49,6 +49,7 @@ export const getAdvert = /* GraphQL */ `
       missingItemsInformation
       pickUpInformation
       returnInformation
+      pickUpInstructions
       createdAt
       updatedAt
     }
@@ -116,6 +117,7 @@ export const listAdverts = /* GraphQL */ `
         missingItemsInformation
         pickUpInformation
         returnInformation
+        pickUpInstructions
         createdAt
         updatedAt
       }
