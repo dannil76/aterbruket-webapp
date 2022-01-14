@@ -48,6 +48,7 @@ interface Props {
     missingItemsInformation?: string;
     pickUpInformation?: string;
     returnInformation?: string;
+    accessories?: string[];
   };
   setRegive: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -65,6 +66,8 @@ const RegiveForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleAddRepeaterItem,
+    handleRemoveRepeaterItem,
     redirect,
     result,
     file,
@@ -107,6 +110,7 @@ const RegiveForm: FC<Props> = ({
       missingItemsInformation: item.missingItemsInformation ?? "",
       pickUpInformation: item.pickUpInformation ?? "",
       returnInformation: item.returnInformation ?? "",
+      accessories: item.accessories ?? [],
     },
     updateAdvert
   );
@@ -132,6 +136,8 @@ const RegiveForm: FC<Props> = ({
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleCheckboxChange={handleCheckboxChange}
+            handleAddRepeaterItem={handleAddRepeaterItem}
+            handleRemoveRepeaterItem={handleRemoveRepeaterItem}
           />
         </>
       )}

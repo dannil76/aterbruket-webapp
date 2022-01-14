@@ -55,6 +55,7 @@ interface Props {
     missingItemsInformation?: string;
     pickUpInformation?: string;
     returnInformation?: string;
+    accessories?: string[];
   };
   setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -72,6 +73,8 @@ const EditItemForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleAddRepeaterItem,
+    handleRemoveRepeaterItem,
     redirect,
     file,
     fileUploading,
@@ -114,6 +117,7 @@ const EditItemForm: FC<Props> = ({
       missingItemsInformation: item.missingItemsInformation ?? "",
       pickUpInformation: item.pickUpInformation ?? "",
       returnInformation: item.returnInformation ?? "",
+      accessories: item.accessories ?? [],
     },
     updateAdvert
   );
@@ -148,6 +152,8 @@ const EditItemForm: FC<Props> = ({
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleCheckboxChange={handleCheckboxChange}
+            handleAddRepeaterItem={handleAddRepeaterItem}
+            handleRemoveRepeaterItem={handleRemoveRepeaterItem}
           />
         </>
       )}

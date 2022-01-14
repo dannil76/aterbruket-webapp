@@ -35,6 +35,22 @@ const useForm = (initialValues: any, mutation: string) => {
     });
   };
 
+  const handleAddRepeaterItem = (value: string, key: string) => {
+    const newValue = values[key].concat(value);
+    setValues({
+      ...values,
+      [key]: newValue,
+    });
+  };
+
+  const handleRemoveRepeaterItem = (value: string, key: string) => {
+    const newValue = values[key].filter((item: string) => item !== value);
+    setValues({
+      ...values,
+      [key]: newValue,
+    });
+  };
+
   const upload = async (fileObject: any) => {
     const uuid = uuidv4();
     return Storage.put(uuid, file)
@@ -133,6 +149,8 @@ const useForm = (initialValues: any, mutation: string) => {
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleAddRepeaterItem,
+    handleRemoveRepeaterItem,
     result,
     file,
     fileUploading,

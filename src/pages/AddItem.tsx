@@ -22,6 +22,8 @@ const AddItem: FC = () => {
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleAddRepeaterItem,
+    handleRemoveRepeaterItem,
     redirect,
     file,
     fileUploading,
@@ -61,6 +63,7 @@ const AddItem: FC = () => {
       missingItemsInformation: "",
       pickUpInformation: "",
       returnInformation: "",
+      accessories: [],
     },
     createAdvert
   );
@@ -88,6 +91,8 @@ const AddItem: FC = () => {
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           handleCheckboxChange={handleCheckboxChange}
+          handleAddRepeaterItem={handleAddRepeaterItem}
+          handleRemoveRepeaterItem={handleRemoveRepeaterItem}
         />
       )}
 
