@@ -6,8 +6,6 @@ import { useRepeaterFieldContext } from "./RepeaterFieldContext";
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 2px;
-
   border-radius: 4.5px;
   background-color: ${(props) => props.theme.colors.lightGray};
 `;
