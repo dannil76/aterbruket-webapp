@@ -431,9 +431,7 @@ export default function Form(props: {
             {props.values[field.name].map((item: any, index: number) => (
               <RepeaterField.Item key={`${item}${index}`} value={item} />
             ))}
-            <RepeaterField.SubmitButton>
-              Nytt tillbehör
-            </RepeaterField.SubmitButton>
+            <RepeaterField.Input placeholder="Nytt tillbehör" />
           </RepeaterField>
 
           {field.description && (

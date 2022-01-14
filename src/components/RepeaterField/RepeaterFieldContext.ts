@@ -13,7 +13,7 @@ const RepeaterFieldContext = createContext<
 
 export const RepeaterFieldProvider = RepeaterFieldContext.Provider;
 
-export const useRepeaterFieldContext = () => {
+export const useRepeaterFieldContext = (): RepeaterFieldContextProps => {
   const context = useContext(RepeaterFieldContext);
   if (!context) {
     throw new Error(
