@@ -13,6 +13,7 @@ import Button from "./Button";
 import "react-toastify/dist/ReactToastify.css";
 import compare from "../utils/compare";
 import DateRangePicker from "./DateRangePicker";
+import RepeaterField from "./RepeaterField";
 
 const FormContainerDiv = styled.div`
   width: 100%;
@@ -204,6 +205,8 @@ export default function Form(props: {
   mutation: string;
   handleInputChange: (event: React.ChangeEvent<any>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<any>, data: any) => void;
+  handleAddRepeaterItem: (value: string, key: string) => void;
+  handleRemoveRepeaterItem: (value: string, key: string) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   const fields = props.fields.map((field: IFields) => {
@@ -407,6 +410,37 @@ export default function Form(props: {
             {field.required && <span className="required">*</span>}
           </label>
           <DateRangePicker />
+        </section>
+      );
+    }
+
+    if (field.fieldType === "repeater") {
+      return (
+        <section className="allDiv" key={field.name}>
+          <label htmlFor={field.name}>
+            <p className="labelP">{field.title}</p>
+            {field.required && <span className="required">*</span>}
+          </label>
+
+          <RepeaterField
+            addItem={(value) => props.handleAddRepeaterItem(value, field.name)}
+            removeItem={(value) =>
+              props.handleRemoveRepeaterItem(value, field.name)
+            }
+          >
+            {props.values[field.name].map((item: any, index: number) => (
+              <RepeaterField.Item key={`${item}${index}`} value={item} />
+            ))}
+            <RepeaterField.SubmitButton>
+              Nytt tillbehör
+            </RepeaterField.SubmitButton>
+          </RepeaterField>
+
+          {field.description && (
+            <div className="validationInfo">
+              <span className="infoSpan">{field.description}</span>
+            </div>
+          )}
         </section>
       );
     }
