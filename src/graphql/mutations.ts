@@ -53,6 +53,7 @@ export const createAdvert = /* GraphQL */ `
       pickUpInformation
       returnInformation
       pickUpInstructions
+      accessories
       createdAt
       updatedAt
     }
@@ -109,6 +110,7 @@ export const updateAdvert = /* GraphQL */ `
       pickUpInformation
       returnInformation
       pickUpInstructions
+      accessories
       createdAt
       updatedAt
     }
@@ -165,6 +167,7 @@ export const deleteAdvert = /* GraphQL */ `
       pickUpInformation
       returnInformation
       pickUpInstructions
+      accessories
       createdAt
       updatedAt
     }

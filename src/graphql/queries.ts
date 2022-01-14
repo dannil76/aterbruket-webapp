@@ -50,6 +50,7 @@ export const getAdvert = /* GraphQL */ `
       pickUpInformation
       returnInformation
       pickUpInstructions
+      accessories
       createdAt
       updatedAt
     }
@@ -118,6 +119,7 @@ export const listAdverts = /* GraphQL */ `
         pickUpInformation
         returnInformation
         pickUpInstructions
+        accessories
         createdAt
         updatedAt
       }

@@ -37,6 +37,7 @@ export type CreateAdvertInput = {
   pickUpInformation?: string | null,
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
+  accessories?: Array< string | null > | null,
 };
 
 export enum ItemStatus {
@@ -106,6 +107,7 @@ export type ModelAdvertConditionInput = {
   pickUpInformation?: ModelStringInput | null,
   returnInformation?: ModelStringInput | null,
   pickUpInstructions?: ModelStringInput | null,
+  accessories?: ModelStringInput | null,
   and?: Array< ModelAdvertConditionInput | null > | null,
   or?: Array< ModelAdvertConditionInput | null > | null,
   not?: ModelAdvertConditionInput | null,
@@ -214,6 +216,7 @@ export type Advert = {
   pickUpInformation?: string | null,
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
+  accessories?: Array< string | null > | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -273,6 +276,7 @@ export type UpdateAdvertInput = {
   pickUpInformation?: string | null,
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
+  accessories?: Array< string | null > | null,
 };
 
 export type DeleteAdvertInput = {
@@ -357,6 +361,7 @@ export type ModelAdvertFilterInput = {
   pickUpInformation?: ModelStringInput | null,
   returnInformation?: ModelStringInput | null,
   pickUpInstructions?: ModelStringInput | null,
+  accessories?: ModelStringInput | null,
   and?: Array< ModelAdvertFilterInput | null > | null,
   or?: Array< ModelAdvertFilterInput | null > | null,
   not?: ModelAdvertFilterInput | null,
@@ -462,6 +467,7 @@ export type CreateAdvertMutation = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -523,6 +529,7 @@ export type UpdateAdvertMutation = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -584,6 +591,7 @@ export type DeleteAdvertMutation = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -696,6 +704,7 @@ export type GetAdvertQuery = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -763,6 +772,7 @@ export type ListAdvertsQuery = {
       pickUpInformation?: string | null,
       returnInformation?: string | null,
       pickUpInstructions?: string | null,
+      accessories?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -861,6 +871,7 @@ export type OnCreateAdvertSubscription = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -917,6 +928,7 @@ export type OnUpdateAdvertSubscription = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -973,6 +985,7 @@ export type OnDeleteAdvertSubscription = {
     pickUpInformation?: string | null,
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
+    accessories?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
