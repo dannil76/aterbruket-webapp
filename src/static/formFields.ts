@@ -9,16 +9,6 @@ const borrowCategories = getCategoriesExceptByParent([1]);
 
 export default [
   {
-    name: "accessories",
-    fieldType: "repeater",
-    dataType: "text",
-    required: false,
-    title: "Tillbehör till prylen",
-    disabled: false,
-    description:
-      "Lägg till prylens tillbehör / lösa delar (lista skapas som lånaren checkar av) - alla tillbehör behöver checkas av vid ut & inlämning.",
-  },
-  {
     name: "advertType",
     dataType: "text",
     fieldType: "radio",
@@ -238,6 +228,21 @@ export default [
       field: "advertType",
       operator: "==",
       value: "recycle",
+    },
+  },
+  {
+    name: "accessories",
+    fieldType: "repeater",
+    dataType: "text",
+    required: false,
+    title: "Tillbehör till prylen",
+    disabled: false,
+    description:
+      "Lägg till prylens tillbehör / lösa delar (lista skapas som lånaren checkar av) - alla tillbehör behöver checkas av vid ut & inlämning.",
+    condition: {
+      field: "advertType",
+      operator: "==",
+      value: "borrow",
     },
   },
   {
