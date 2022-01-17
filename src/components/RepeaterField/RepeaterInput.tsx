@@ -1,18 +1,19 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import { MdAdd } from "react-icons/md";
+import Input from "../Input";
 import { useRepeaterFieldContext } from "./RepeaterFieldContext";
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
   border-radius: 4.5px;
-  background-color: ${(props) => props.theme.colors.lightGray};
+  background-color: ${(props) => props.theme.colors.grayLight};
 `;
 
-const Input = styled.input`
+const RepeaterInputField = styled(Input)`
   flex-grow: 2;
-  border: none;
+  background-color: ${(props) => props.theme.colors.grayLight};
 `;
 
 const Button = styled.button`
@@ -34,20 +35,13 @@ const RepeaterInput: FunctionComponent = ({ children, ...otherProps }) => {
   const { inputValue, setInputValue, addItem } = useRepeaterFieldContext();
   return (
     <Container>
-      <Input
+      <RepeaterInputField
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         {...otherProps}
       />
-      <Button
-        type="button"
-        onClick={() => {
-          if (!inputValue) return;
-          addItem(inputValue);
-          setInputValue("");
-        }}
-      >
+      <Button type="button" onClick={addItem}>
         <MdAdd />
       </Button>
     </Container>

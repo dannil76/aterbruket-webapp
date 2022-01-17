@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
 import { IFields, IOption } from "../interfaces/IForm";
 import Button from "./Button";
+import Input from "./Input";
 import "react-toastify/dist/ReactToastify.css";
 import compare from "../utils/compare";
 import DateRangePicker from "./DateRangePicker";
@@ -73,7 +74,7 @@ const FormContainerDiv = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    background-color: ${(props) => props.theme.colors.lightGray};
+    background-color: ${(props) => props.theme.colors.grayLighter};
     border-radius: 4.5px;
     height: 56px;
     align-items: center;
@@ -114,7 +115,6 @@ const FormContainerDiv = styled.div`
       color: ${(props) => props.theme.colors.darkest};
     }
 
-    input,
     textarea,
     select {
       border-radius: 4.5px;
@@ -122,7 +122,7 @@ const FormContainerDiv = styled.div`
       font-size: 16px;
       height: 56px;
       padding: 0 0 0 24px;
-      background-color: ${(props) => props.theme.colors.lightGray};
+      background-color: ${(props) => props.theme.colors.grayLighter};
       ::placeholder {
         font-style: italic;
         color: #a3a3a3;
@@ -187,7 +187,7 @@ const FormContainerDiv = styled.div`
     height: 80px;
 
     ::-webkit-file-upload-button {
-      background: ${(props) => props.theme.colors.lightGray};
+      background: ${(props) => props.theme.colors.grayLighter};
       color: black;
       width: 100%;
       height: 56px;
@@ -199,14 +199,14 @@ const FormContainerDiv = styled.div`
     }
   }
 `;
+
 export default function Form(props: {
   values: any;
   fields: IFields[];
   mutation: string;
   handleInputChange: (event: React.ChangeEvent<any>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<any>, data: any) => void;
-  handleAddRepeaterItem: (value: string, key: string) => void;
-  handleRemoveRepeaterItem: (value: string, key: string) => void;
+  handleSetValue: (value: string | string[], key: string) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   const fields = props.fields.map((field: IFields) => {
@@ -261,7 +261,7 @@ export default function Form(props: {
             <p className="labelP">{field.title}</p>
             {field.required && <span className="required">*</span>}
           </label>
-          <input {...attributes} />
+          <Input {...attributes} />
 
           {field.description && (
             <div className="validationInfo">
@@ -423,14 +423,16 @@ export default function Form(props: {
           </label>
 
           <RepeaterField
-            addItem={(value) => props.handleAddRepeaterItem(value, field.name)}
-            removeItem={(value) =>
-              props.handleRemoveRepeaterItem(value, field.name)
-            }
+            setData={(value) => props.handleSetValue(value, field.name)}
+            data={props.values[field.name]}
           >
-            {props.values[field.name].map((item: any, index: number) => (
-              <RepeaterField.Item key={`${item}${index}`} value={item} />
-            ))}
+            {props.values[field.name].length > 0 && (
+              <RepeaterField.ItemsContainer>
+                {props.values[field.name].map((item: any, index: number) => (
+                  <RepeaterField.Item key={`${item}${index}`} value={item} />
+                ))}
+              </RepeaterField.ItemsContainer>
+            )}
             <RepeaterField.Input placeholder="Nytt tillbehör" />
           </RepeaterField>
 

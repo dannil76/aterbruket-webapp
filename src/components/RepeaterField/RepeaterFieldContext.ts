@@ -3,7 +3,7 @@ import React, { createContext, useContext } from "react";
 interface RepeaterFieldContextProps {
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
-  addItem: (value: string) => void;
+  addItem: () => void;
   removeItem: (value: string) => void;
 }
 

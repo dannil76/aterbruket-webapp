@@ -47,6 +47,7 @@ interface Props {
     purchasePrice: number;
     missingItemsInformation?: string;
     pickUpInformation?: string;
+    pickUpInstructions?: string;
     returnInformation?: string;
     accessories?: string[];
   };
@@ -66,8 +67,7 @@ const RegiveForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
-    handleAddRepeaterItem,
-    handleRemoveRepeaterItem,
+    handleSetValue,
     redirect,
     result,
     file,
@@ -109,6 +109,7 @@ const RegiveForm: FC<Props> = ({
       giver: user.sub,
       missingItemsInformation: item.missingItemsInformation ?? "",
       pickUpInformation: item.pickUpInformation ?? "",
+      pickUpInstructions: item.pickUpInstructions ?? "",
       returnInformation: item.returnInformation ?? "",
       accessories: item.accessories ?? [],
     },
@@ -136,8 +137,7 @@ const RegiveForm: FC<Props> = ({
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleCheckboxChange={handleCheckboxChange}
-            handleAddRepeaterItem={handleAddRepeaterItem}
-            handleRemoveRepeaterItem={handleRemoveRepeaterItem}
+            handleSetValue={handleSetValue}
           />
         </>
       )}

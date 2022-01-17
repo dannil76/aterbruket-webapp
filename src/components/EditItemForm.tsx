@@ -54,6 +54,7 @@ interface Props {
     company?: string;
     missingItemsInformation?: string;
     pickUpInformation?: string;
+    pickUpInstructions?: string;
     returnInformation?: string;
     accessories?: string[];
   };
@@ -73,8 +74,7 @@ const EditItemForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
-    handleAddRepeaterItem,
-    handleRemoveRepeaterItem,
+    handleSetValue,
     redirect,
     file,
     fileUploading,
@@ -116,6 +116,7 @@ const EditItemForm: FC<Props> = ({
       purchasePrice: item.purchasePrice,
       missingItemsInformation: item.missingItemsInformation ?? "",
       pickUpInformation: item.pickUpInformation ?? "",
+      pickUpInstructions: item.pickUpInstructions ?? "",
       returnInformation: item.returnInformation ?? "",
       accessories: item.accessories ?? [],
     },
@@ -152,8 +153,7 @@ const EditItemForm: FC<Props> = ({
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleCheckboxChange={handleCheckboxChange}
-            handleAddRepeaterItem={handleAddRepeaterItem}
-            handleRemoveRepeaterItem={handleRemoveRepeaterItem}
+            handleSetValue={handleSetValue}
           />
         </>
       )}

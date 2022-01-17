@@ -35,19 +35,10 @@ const useForm = (initialValues: any, mutation: string) => {
     });
   };
 
-  const handleAddRepeaterItem = (value: string, key: string) => {
-    const newValue = values[key].concat(value);
+  const handleSetValue = (value: string[] | string, key: string) => {
     setValues({
       ...values,
-      [key]: newValue,
-    });
-  };
-
-  const handleRemoveRepeaterItem = (value: string, key: string) => {
-    const newValue = values[key].filter((item: string) => item !== value);
-    setValues({
-      ...values,
-      [key]: newValue,
+      [key]: value,
     });
   };
 
@@ -149,11 +140,10 @@ const useForm = (initialValues: any, mutation: string) => {
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
-    handleAddRepeaterItem,
-    handleRemoveRepeaterItem,
     result,
     file,
     fileUploading,
+    handleSetValue,
   };
 };
 
