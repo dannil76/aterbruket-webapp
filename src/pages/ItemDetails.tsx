@@ -217,7 +217,7 @@ const ImgDiv = styled.div`
 const Line = styled.div`
    {
     width: 96%;
-    border-top: 3px dashed ${(props) => props.theme.colors.lightGray};
+    border-top: 3px dashed ${(props) => props.theme.colors.grayLighter};
   }
 `;
 
@@ -333,7 +333,7 @@ const CardGroups = styled.div`
     width: 100%;
     text-align: left;
     padding: 16px;
-    // background-color: ${(props) => props.theme.colors.lightGray};
+    // background-color: ${(props) => props.theme.colors.grayLighter};
     //color: ${(props) => props.theme.colors.offWhite};
     background-color: ${(props) => props.theme.colors.primaryLighter};
     color: ${(props) => props.theme.colors.primaryDark};

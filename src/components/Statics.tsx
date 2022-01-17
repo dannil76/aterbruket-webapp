@@ -32,7 +32,7 @@ const SelectWrapper = styled.div`
     height: 50px;
     padding: 12px 12px 12px 24px;
     color: ${(props) => props.theme.colors.darker};
-    background-color: ${(props) => props.theme.colors.lightGray};
+    background-color: ${(props) => props.theme.colors.grayLighter};
     ::placeholder {
       font-style: italic;
     }

@@ -16,8 +16,8 @@ const InputGroup = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    
-    
+
+
     .radioWrapper{
       width: 100%;
       display: flex;
@@ -26,7 +26,7 @@ const InputGroup = styled.div`
     }
 
 
-    background-color: ${(props) => props.theme.colors.lightGray};
+    background-color: ${(props) => props.theme.colors.grayLighter};
     width: 350px;
     height: 56px;
     border-radius: 4.5px;
@@ -40,10 +40,10 @@ const InputGroup = styled.div`
       align-items: center;
     }
 
-    
+
     label.active {
       justify-content: flex-start;
- 
+
     }
 
     .labelText{
@@ -57,28 +57,28 @@ const InputGroup = styled.div`
       border: none;
     }
 
-   
+
     svg {
       font-size: 14px;
       padding-left: 2px;
       color: ${(props) => props.theme.colors.primaryLight}
-   
+
     }
     span {
       font-size: 18px;
       margin-left: 4px;
     }
-    
+
     .masterRadio {
-      margin-left: 19px; 
+      margin-left: 19px;
       font-weight: 500;
     }
     .active{
-      margin-left: 19px; 
+      margin-left: 19px;
       font-weight: 900;
       color: ${(props) => props.theme.colors.darker};
     }
-    
+
     .radioInput{
       appearance: none;
       border: 2px solid ${(props) => props.theme.colors.illustration};

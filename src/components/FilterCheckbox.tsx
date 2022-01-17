@@ -11,7 +11,7 @@ const InputGroup = styled.div`
     align-items: center;
     justify-content: flex-start;
 
-    background-color: ${(props) => props.theme.colors.lightGray};
+    background-color: ${(props) => props.theme.colors.grayLighter};
     width: 350px;
     height: 56px;
     border-radius: 4.5px;
@@ -29,7 +29,7 @@ const InputGroup = styled.div`
 
     input[type="checkbox"]:checked,
     &:focus {
-      border: 2px solid ${(props) => props.theme.colors.lightGray};
+      border: 2px solid ${(props) => props.theme.colors.grayLighter};
       background-color: ${(props) => props.theme.colors.primaryLight};
       outline: none;
     }
@@ -92,7 +92,6 @@ const FilterCheckbox: FC<Props> = ({
   title,
   id,
 }: Props) => {
-
   const handleInputChange = (groupName: any, e: React.ChangeEvent<any>) => {
     setSaveValues({
       ...saveValues,
@@ -109,9 +108,7 @@ const FilterCheckbox: FC<Props> = ({
         <label
           htmlFor={element.key}
           className={
-            saveValues[id] && saveValues[id][element.key]
-              ? "active"
-              : "normal"
+            saveValues[id] && saveValues[id][element.key] ? "active" : "normal"
           }
         >
           <input
@@ -119,9 +116,7 @@ const FilterCheckbox: FC<Props> = ({
             id={`${element.id}`}
             name={element.key}
             onChange={(e) => handleInputChange(id, e)}
-            checked={
-              !!(saveValues[id] && saveValues[id][element.key])
-            }
+            checked={!!(saveValues[id] && saveValues[id][element.key])}
           />
 
           {element.title}

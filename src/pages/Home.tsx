@@ -107,7 +107,7 @@ const SearchFilterDiv = styled.div`
       align-items: flex-start;
       border-radius: 17.5px;
       border: none;
-      background-color: ${(props) => props.theme.colors.lightGray};
+      background-color: ${(props) => props.theme.colors.grayLighter};
     }
   }
 
