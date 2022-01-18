@@ -55,6 +55,10 @@ export const createAdvert = /* GraphQL */ `
       pickUpInstructions
       accessories
       borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+      }
       createdAt
       updatedAt
     }
@@ -113,6 +117,10 @@ export const updateAdvert = /* GraphQL */ `
       pickUpInstructions
       accessories
       borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+      }
       createdAt
       updatedAt
     }
@@ -171,6 +179,10 @@ export const deleteAdvert = /* GraphQL */ `
       pickUpInstructions
       accessories
       borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+      }
       createdAt
       updatedAt
     }

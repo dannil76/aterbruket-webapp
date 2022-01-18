@@ -39,6 +39,7 @@ export type CreateAdvertInput = {
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
   borrowDifficultyLevel?: string | null,
+  advertBorrowCalendar?: AdvertBorrowCalendarInput | null,
 };
 
 export enum ItemStatus {
@@ -77,6 +78,11 @@ export enum ItemAdvertType {
   borrow = "borrow",
 }
 
+
+export type AdvertBorrowCalendarInput = {
+  allowedDateStart?: string | null,
+  allowedDateEnd?: string | null,
+};
 
 export type ModelAdvertConditionInput = {
   title?: ModelStringInput | null,
@@ -220,6 +226,7 @@ export type Advert = {
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
   borrowDifficultyLevel?: string | null,
+  advertBorrowCalendar?: AdvertBorrowCalendar,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -242,6 +249,12 @@ export type ItemImages = {
   __typename: "ItemImages",
   src?: string | null,
   alt?: string | null,
+};
+
+export type AdvertBorrowCalendar = {
+  __typename: "AdvertBorrowCalendar",
+  allowedDateStart?: string | null,
+  allowedDateEnd?: string | null,
 };
 
 export type UpdateAdvertInput = {
@@ -281,6 +294,7 @@ export type UpdateAdvertInput = {
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
   borrowDifficultyLevel?: string | null,
+  advertBorrowCalendar?: AdvertBorrowCalendarInput | null,
 };
 
 export type DeleteAdvertInput = {
@@ -474,6 +488,11 @@ export type CreateAdvertMutation = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -537,6 +556,11 @@ export type UpdateAdvertMutation = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -600,6 +624,11 @@ export type DeleteAdvertMutation = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -714,6 +743,11 @@ export type GetAdvertQuery = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -783,6 +817,11 @@ export type ListAdvertsQuery = {
       pickUpInstructions?: string | null,
       accessories?: Array< string | null > | null,
       borrowDifficultyLevel?: string | null,
+      advertBorrowCalendar?:  {
+        __typename: "AdvertBorrowCalendar",
+        allowedDateStart?: string | null,
+        allowedDateEnd?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -883,6 +922,11 @@ export type OnCreateAdvertSubscription = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -941,6 +985,11 @@ export type OnUpdateAdvertSubscription = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -999,6 +1048,11 @@ export type OnDeleteAdvertSubscription = {
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
     borrowDifficultyLevel?: string | null,
+    advertBorrowCalendar?:  {
+      __typename: "AdvertBorrowCalendar",
+      allowedDateStart?: string | null,
+      allowedDateEnd?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,

@@ -52,6 +52,10 @@ export const getAdvert = /* GraphQL */ `
       pickUpInstructions
       accessories
       borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+      }
       createdAt
       updatedAt
     }
@@ -122,6 +126,10 @@ export const listAdverts = /* GraphQL */ `
         pickUpInstructions
         accessories
         borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+        }
         createdAt
         updatedAt
       }
