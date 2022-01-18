@@ -200,6 +200,12 @@ const FormContainerDiv = styled.div`
   }
 `;
 
+const ActionsContainer = styled.div`
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+`;
+
 export default function Form(props: {
   values: any;
   fields: IFields[];
@@ -376,6 +382,11 @@ export default function Form(props: {
               );
             })}
           </select>
+          {field.description && (
+            <div className="validationInfo">
+              <span className="infoSpan">{field.description}</span>
+            </div>
+          )}
         </section>
       );
     }
@@ -451,6 +462,22 @@ export default function Form(props: {
         </section>
       );
     }
+
+    if (field.fieldType === "layout") {
+      return (
+        <section className="allDiv" key={field.name}>
+          {field.title && (
+            <label htmlFor={field.name}>
+              <p className="labelP">{field.title}</p>{" "}
+              {field.required && <span className="required">*</span>}
+            </label>
+          )}
+          <div>
+            <p>{field.attributes?.content}</p>
+          </div>
+        </section>
+      );
+    }
   });
 
   const history = useHistory();
@@ -463,30 +490,32 @@ export default function Form(props: {
     <FormContainerDiv>
       <form onSubmit={props.handleSubmit}>
         {fields}
-        <Button
-          type="submit"
-          style={{
-            width: "350px",
-            height: "56px",
-            fontSize: "16px",
-            fontWeight: "bold",
-          }}
-        >
-          Färdig!
-        </Button>
-        <Button
-          type="button"
-          onClick={() => goBackFunc()}
-          transparent
-          style={{
-            fontSize: "16px",
-            color: "#A3A3A3",
-            border: "none",
-            fontWeight: "bold",
-          }}
-        >
-          Avbryt
-        </Button>
+        <ActionsContainer>
+          <Button
+            type="submit"
+            style={{
+              width: "350px",
+              height: "56px",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            Färdig!
+          </Button>
+          <Button
+            type="button"
+            onClick={() => goBackFunc()}
+            transparent
+            style={{
+              fontSize: "16px",
+              color: "#A3A3A3",
+              border: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Avbryt
+          </Button>
+        </ActionsContainer>
       </form>
       <ToastContainer
         position="top-center"
