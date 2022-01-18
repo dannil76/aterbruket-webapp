@@ -51,6 +51,7 @@ export const getAdvert = /* GraphQL */ `
       returnInformation
       pickUpInstructions
       accessories
+      borrowDifficultyLevel
       createdAt
       updatedAt
     }
@@ -120,6 +121,7 @@ export const listAdverts = /* GraphQL */ `
         returnInformation
         pickUpInstructions
         accessories
+        borrowDifficultyLevel
         createdAt
         updatedAt
       }

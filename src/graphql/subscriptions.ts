@@ -51,6 +51,7 @@ export const onCreateAdvert = /* GraphQL */ `
       returnInformation
       pickUpInstructions
       accessories
+      borrowDifficultyLevel
       createdAt
       updatedAt
     }
@@ -105,6 +106,7 @@ export const onUpdateAdvert = /* GraphQL */ `
       returnInformation
       pickUpInstructions
       accessories
+      borrowDifficultyLevel
       createdAt
       updatedAt
     }
@@ -159,6 +161,7 @@ export const onDeleteAdvert = /* GraphQL */ `
       returnInformation
       pickUpInstructions
       accessories
+      borrowDifficultyLevel
       createdAt
       updatedAt
     }

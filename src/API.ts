@@ -38,6 +38,7 @@ export type CreateAdvertInput = {
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
+  borrowDifficultyLevel?: string | null,
 };
 
 export enum ItemStatus {
@@ -108,6 +109,7 @@ export type ModelAdvertConditionInput = {
   returnInformation?: ModelStringInput | null,
   pickUpInstructions?: ModelStringInput | null,
   accessories?: ModelStringInput | null,
+  borrowDifficultyLevel?: ModelStringInput | null,
   and?: Array< ModelAdvertConditionInput | null > | null,
   or?: Array< ModelAdvertConditionInput | null > | null,
   not?: ModelAdvertConditionInput | null,
@@ -217,6 +219,7 @@ export type Advert = {
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
+  borrowDifficultyLevel?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -277,6 +280,7 @@ export type UpdateAdvertInput = {
   returnInformation?: string | null,
   pickUpInstructions?: string | null,
   accessories?: Array< string | null > | null,
+  borrowDifficultyLevel?: string | null,
 };
 
 export type DeleteAdvertInput = {
@@ -362,6 +366,7 @@ export type ModelAdvertFilterInput = {
   returnInformation?: ModelStringInput | null,
   pickUpInstructions?: ModelStringInput | null,
   accessories?: ModelStringInput | null,
+  borrowDifficultyLevel?: ModelStringInput | null,
   and?: Array< ModelAdvertFilterInput | null > | null,
   or?: Array< ModelAdvertFilterInput | null > | null,
   not?: ModelAdvertFilterInput | null,
@@ -468,6 +473,7 @@ export type CreateAdvertMutation = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -530,6 +536,7 @@ export type UpdateAdvertMutation = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -592,6 +599,7 @@ export type DeleteAdvertMutation = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -705,6 +713,7 @@ export type GetAdvertQuery = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -773,6 +782,7 @@ export type ListAdvertsQuery = {
       returnInformation?: string | null,
       pickUpInstructions?: string | null,
       accessories?: Array< string | null > | null,
+      borrowDifficultyLevel?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -872,6 +882,7 @@ export type OnCreateAdvertSubscription = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -929,6 +940,7 @@ export type OnUpdateAdvertSubscription = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -986,6 +998,7 @@ export type OnDeleteAdvertSubscription = {
     returnInformation?: string | null,
     pickUpInstructions?: string | null,
     accessories?: Array< string | null > | null,
+    borrowDifficultyLevel?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
