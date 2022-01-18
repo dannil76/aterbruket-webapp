@@ -64,6 +64,7 @@ const AddItem: FC = () => {
       pickUpInstructions: "",
       returnInformation: "",
       accessories: [],
+      borrowDifficultyLevel: "",
     },
     createAdvert
   );

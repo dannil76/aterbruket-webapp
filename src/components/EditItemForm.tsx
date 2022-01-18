@@ -57,6 +57,7 @@ interface Props {
     pickUpInstructions?: string;
     returnInformation?: string;
     accessories?: string[];
+    borrowDifficultyLevel?: string;
   };
   setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -119,6 +120,7 @@ const EditItemForm: FC<Props> = ({
       pickUpInstructions: item.pickUpInstructions ?? "",
       returnInformation: item.returnInformation ?? "",
       accessories: item.accessories ?? [],
+      borrowDifficultyLevel: item.borrowDifficultyLevel,
     },
     updateAdvert
   );
