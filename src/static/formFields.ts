@@ -266,6 +266,7 @@ export default [
     description:
       "Lägg till prylens tillbehör / lösa delar (lista skapas som lånaren checkar av) - alla tillbehör behöver checkas av vid ut & inlämning.",
     conditions: [
+      {
         field: "advertType",
         operator: "==",
         value: "borrow",
