@@ -35,6 +35,12 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   pickUpInstructions: String
   accessories: [String]
   borrowDifficultyLevel: String
+  advertBorrowCalendar: AdvertBorrowCalendar
+}
+
+type AdvertBorrowCalendar {
+  allowedDateStart: AWSDate
+  allowedDateEnd: AWSDate
 }
 
 enum ItemAdvertType {
