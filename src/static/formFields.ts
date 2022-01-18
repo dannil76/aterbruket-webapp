@@ -265,11 +265,12 @@ export default [
     disabled: false,
     description:
       "Lägg till prylens tillbehör / lösa delar (lista skapas som lånaren checkar av) - alla tillbehör behöver checkas av vid ut & inlämning.",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
-    },
+    conditions: [
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
   },
   {
     name: "pickUpInformation",
