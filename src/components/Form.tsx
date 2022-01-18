@@ -210,9 +210,16 @@ export default function Form(props: {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   const fields = props.fields.map((field: IFields) => {
-    if (field.condition !== undefined) {
-      const { field: fieldName, value, operator } = field.condition;
-      if (compare(value, operator, props.values[fieldName]) === false) {
+    if (field.conditions !== undefined) {
+      let isVisible = true;
+
+      field.conditions.forEach((condition: any) => {
+        const { field: fieldName, value, operator } = condition;
+        isVisible =
+          compare(value, operator, props.values[fieldName]) && isVisible;
+      });
+
+      if (!isVisible) {
         return;
       }
     }
