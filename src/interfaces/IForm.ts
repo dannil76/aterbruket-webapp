@@ -2,13 +2,18 @@ export interface IFields {
   name: string;
   dataType?: string;
   fieldType: string | number;
-  disabled: boolean;
+  disabled?: boolean;
   required?: boolean;
   title: string;
   placeholder?: string;
   options?: IOption[];
-  condition?: ConditionLogic | undefined;
+  conditions?: ConditionLogic[] | undefined;
   description?: string;
+  attributes?: Attributes;
+}
+
+export interface Attributes {
+  content?: string;
 }
 
 export interface ConditionLogic {
