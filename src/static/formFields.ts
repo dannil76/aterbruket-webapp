@@ -43,11 +43,13 @@ export default [
     required: true,
     title: "Kategori / Typ av möbel",
     options: recycleCategories,
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "category",
@@ -56,11 +58,13 @@ export default [
     required: true,
     title: "Kategori / Typ av sak",
     options: borrowCategories,
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
   },
   {
     name: "allowedBorrowDateRange",
@@ -69,11 +73,13 @@ export default [
     disabled: false,
     required: false,
     title: "Tillgänglig period",
-    condition: {
-      field: "advertType",
-      value: "borrow",
-      operator: "==",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        value: "borrow",
+        operator: "==",
+      },
+    ],
   },
   {
     name: "title",
@@ -92,11 +98,13 @@ export default [
     disabled: false,
     title: "Återbruket ID",
     placeholder: "ex. 4435A",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "description",
@@ -114,11 +122,13 @@ export default [
     disabled: false,
     title: "Antal",
     placeholder: "Hur många?",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "height",
@@ -127,11 +137,13 @@ export default [
     disabled: false,
     title: "Höjd",
     placeholder: "34 cm",
-    condition: {
-      field: "advertType",
-      value: "recycle",
-      operator: "==",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        value: "recycle",
+        operator: "==",
+      },
+    ],
   },
   {
     name: "width",
@@ -140,11 +152,13 @@ export default [
     disabled: false,
     title: "Bredd",
     placeholder: "34 cm",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "length",
@@ -153,11 +167,13 @@ export default [
     disabled: false,
     title: "Djup",
     placeholder: "34 cm",
-    condition: {
-      field: "advertType",
-      value: "recycle",
-      operator: "==",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        value: "recycle",
+        operator: "==",
+      },
+    ],
   },
   {
     name: "color",
@@ -166,11 +182,13 @@ export default [
     disabled: false,
     title: "Färg",
     placeholder: "Färg",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "material",
@@ -180,24 +198,28 @@ export default [
     title: "Material",
     options: materials,
     description: "Välj en eller flera",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
-    name: "condition",
+    name: "conditions",
     fieldType: "select",
     disabled: false,
     required: true,
     title: "Skick",
     options: conditions,
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "areaOfUse",
@@ -208,11 +230,13 @@ export default [
     required: true,
     options: areaOfUse,
     description: "Välj en eller flera",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "purchasePrice",
@@ -224,11 +248,13 @@ export default [
     placeholder: "Inköpspris",
     description:
       "Vet du inte exakt vad den köptes in för?\n\nAnge då en uppskattning av priset.",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "recycle",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
   },
   {
     name: "accessories",
@@ -255,11 +281,13 @@ export default [
     required: true,
     description:
       "t ex. hur prylen är paketerad, om det ska laddas batterier etc.",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
   },
   {
     name: "missingItemsInformation",
@@ -271,11 +299,13 @@ export default [
     required: true,
     description:
       "Beskriv hur lånaren ska göra om något saknas vid återlämningen ... 😊",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
   },
   {
     name: "returnInformation",
@@ -285,11 +315,13 @@ export default [
     required: true,
     title: "Hur du gör när du lämnar tillbaka prylen",
     placeholder: "",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
-    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
   },
   {
     name: "company",
@@ -353,10 +385,111 @@ export default [
     placeholder: "Du behöver...",
     required: true,
     description: "Beskriv hur haffaren hämtar ut prylen.",
-    condition: {
-      field: "advertType",
-      operator: "==",
-      value: "borrow",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "borrowDifficultyLevel",
+    fieldType: "select",
+    disabled: false,
+    required: true,
+    title: "Så här enkelt är det att haffa prylen",
+    options: [
+      {
+        id: 1,
+        key: "easy",
+        title: "🟢 Superenkel",
+      },
+      {
+        id: 2,
+        key: "medium",
+        title: "🟡 Enkel",
+      },
+      {
+        id: 3,
+        key: "hard",
+        title: "🔴 Ganska svårt",
+      },
+    ],
+    description:
+      "Välj om det bara är att gå in och hämta, man behöver hjälp eller om man behöver komma i kontakt med en specifik person.",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "borrowDifficultyLevelEasyDescription",
+    fieldType: "layout",
+    title: "Superenkel",
+    disabled: false,
+    attributes: {
+      content:
+        "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad.",
     },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+      {
+        field: "borrowDifficultyLevel",
+        operator: "==",
+        value: "easy",
+      },
+    ],
+  },
+  {
+    name: "borrowDifficultyLevelMediumDescription",
+    fieldType: "layout",
+    title: "Enkel",
+    disabled: false,
+    attributes: {
+      content:
+        "Prylen finns i ett rum som bara de som jobbar där har tillgång till, någon behöver öppna dörren för dig etc.",
+    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+      {
+        field: "borrowDifficultyLevel",
+        operator: "==",
+        value: "medium",
+      },
+    ],
+  },
+  {
+    name: "borrowDifficultyLevelHardDescription",
+    fieldType: "layout",
+    title: "Ganska svårt",
+    disabled: false,
+    attributes: {
+      content:
+        "Prylen finns i ett låst skåp bakom en låst dörr. Du behöver få tag i en viss person för att få hjälp att komma in.",
+    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+      {
+        field: "borrowDifficultyLevel",
+        operator: "==",
+        value: "hard",
+      },
+    ],
   },
 ];
