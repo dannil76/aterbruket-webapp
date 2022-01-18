@@ -14,6 +14,7 @@ import Input from "./Input";
 import "react-toastify/dist/ReactToastify.css";
 import compare from "../utils/compare";
 import DateRangePicker from "./DateRangePicker";
+import { IDateRange } from "../interfaces/IDateRange";
 import RepeaterField from "./RepeaterField";
 
 const FormContainerDiv = styled.div`
@@ -212,6 +213,7 @@ export default function Form(props: {
   mutation: string;
   handleInputChange: (event: React.ChangeEvent<any>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<any>, data: any) => void;
+  handleDateRangeChange: (changeEvent: IDateRange) => void;
   handleSetValue: (value: string | string[], key: string) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
@@ -427,7 +429,7 @@ export default function Form(props: {
             <p className="labelP">{field.title}</p>{" "}
             {field.required && <span className="required">*</span>}
           </label>
-          <DateRangePicker />
+          <DateRangePicker onValueChange={props.handleDateRangeChange} />
         </section>
       );
     }

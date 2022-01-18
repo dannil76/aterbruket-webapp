@@ -22,6 +22,7 @@ const AddItem: FC = () => {
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
     handleSetValue,
     redirect,
     file,
@@ -92,6 +93,7 @@ const AddItem: FC = () => {
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           handleCheckboxChange={handleCheckboxChange}
+          handleDateRangeChange={handleDateRangeChange}
           handleSetValue={handleSetValue}
         />
       )}

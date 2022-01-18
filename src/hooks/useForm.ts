@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import imageCompression from "browser-image-compression";
 import HandleClimatImpact from "./HandleClimatImpact";
 import { createAdvert } from "../graphql/mutations";
+import { IDateRange } from "../interfaces/IDateRange";
 
 const recreateInitial = async (mutation: any, values: any) => {
   delete values.createdAt;
@@ -82,6 +83,16 @@ const useForm = (initialValues: any, mutation: string) => {
     });
   };
 
+  const handleDateRangeChange = async (changeEvent: IDateRange) => {
+    setValues({
+      ...values,
+      advertBorrowCalendar: {
+        allowedDateStart: changeEvent?.startDate?.format("YYYY-MM-DD") || null,
+        allowedDateEnd: changeEvent?.endDate?.format("YYYY-MM-DD") || null,
+      },
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFileUploading(true);
@@ -140,6 +151,7 @@ const useForm = (initialValues: any, mutation: string) => {
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
     result,
     file,
     fileUploading,

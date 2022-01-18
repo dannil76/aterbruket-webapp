@@ -68,6 +68,7 @@ const RegiveForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
     handleSetValue,
     redirect,
     result,
@@ -139,6 +140,7 @@ const RegiveForm: FC<Props> = ({
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleCheckboxChange={handleCheckboxChange}
+            handleDateRangeChange={handleDateRangeChange}
             handleSetValue={handleSetValue}
           />
         </>

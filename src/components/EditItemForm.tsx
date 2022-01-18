@@ -75,6 +75,7 @@ const EditItemForm: FC<Props> = ({
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
     handleSetValue,
     redirect,
     file,
@@ -154,6 +155,7 @@ const EditItemForm: FC<Props> = ({
             mutation={updateAdvert}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
+            handleDateRangeChange={handleDateRangeChange}
             handleCheckboxChange={handleCheckboxChange}
             handleSetValue={handleSetValue}
           />
