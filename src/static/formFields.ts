@@ -364,55 +364,6 @@ export default [
     ],
   },
   {
-    name: "pickUpInformation",
-    fieldType: "text",
-    disabled: false,
-    title: "Bra att veta inför uthämtning",
-    placeholder: "Du behöver...",
-    required: true,
-    description:
-      "t ex. hur prylen är paketerad, om det ska laddas batterier etc.",
-    conditions: [
-      {
-        field: "advertType",
-        operator: "==",
-        value: "borrow",
-      },
-    ],
-  },
-  {
-    name: "missingItemsInformation",
-    fieldType: "text",
-    disabled: false,
-    title: "Om det saknas något vid återlämningen",
-    placeholder: "Om du glömt...",
-    required: true,
-    description:
-      "Beskriv hur lånaren ska göra om något saknas vid återlämningen ... 😊",
-    conditions: [
-      {
-        field: "advertType",
-        operator: "==",
-        value: "borrow",
-      },
-    ],
-  },
-  {
-    name: "returnInformation",
-    fieldType: "text",
-    disabled: false,
-    required: true,
-    title: "Hur du gör när du lämnar tillbaka prylen",
-    placeholder: "",
-    conditions: [
-      {
-        field: "advertType",
-        operator: "==",
-        value: "borrow",
-      },
-    ],
-  },
-  {
     name: "addressHeading",
     fieldType: "layout",
     title: "",
@@ -485,22 +436,6 @@ export default [
     attributes: {
       content: [{ element: "h4", value: "Haffningen" }],
     },
-    conditions: [
-      {
-        field: "advertType",
-        operator: "==",
-        value: "borrow",
-      },
-    ],
-  },
-  {
-    name: "pickUpInstructions",
-    fieldType: "text",
-    disabled: false,
-    title: "Så här haffar du prylen",
-    placeholder: "Du behöver...",
-    required: true,
-    description: "Beskriv hur haffaren hämtar ut prylen.",
     conditions: [
       {
         field: "advertType",
@@ -645,6 +580,72 @@ export default [
         field: "borrowDifficultyLevel",
         operator: "==",
         value: "hard",
+      },
+    ],
+  },
+  {
+    name: "pickUpInstructions",
+    fieldType: "text",
+    disabled: false,
+    title: "Så här haffar du prylen",
+    placeholder: "Du behöver...",
+    required: true,
+    description: "Beskriv hur haffaren hämtar ut prylen.",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "pickUpInformation",
+    fieldType: "text",
+    disabled: false,
+    title: "Bra att veta inför uthämtning",
+    placeholder: "Du behöver...",
+    required: true,
+    description:
+      "t ex. hur prylen är paketerad, om det ska laddas batterier etc.",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "returnInformation",
+    fieldType: "text",
+    disabled: false,
+    required: true,
+    title: "Bra att veta vid återlämning",
+    placeholder: "Lämna...",
+    description: "Behöver lånaren veta något speciellt för återlämningen?",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "missingItemsInformation",
+    fieldType: "text",
+    disabled: false,
+    title: "Om något går sönder eller försvinner",
+    placeholder: "Om du tappar bort...",
+    required: true,
+    description:
+      "Har ni nån smart lösning när saker pajar eller försvinner berätta det här.",
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
       },
     ],
   },

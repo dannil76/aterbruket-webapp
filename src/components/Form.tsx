@@ -255,6 +255,7 @@ const LayoutSection = styled(FieldSection)`
 
   ${FieldDescription} {
     margin-top: 0px;
+    margin-bottom: 16px;
   }
 `;
 
