@@ -36,6 +36,8 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   accessories: [String]
   borrowDifficultyLevel: String
   advertBorrowCalendar: AdvertBorrowCalendar
+  accessRestriction: String
+  accessRestrictionSelection: [String]
 }
 
 type AdvertBorrowCalendar {

@@ -58,6 +58,8 @@ interface Props {
     returnInformation?: string;
     accessories?: string[];
     borrowDifficultyLevel?: string;
+    accessRestriction?: string;
+    accessRestrictionSelection?: string[];
   };
   setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -122,6 +124,8 @@ const EditItemForm: FC<Props> = ({
       returnInformation: item.returnInformation ?? "",
       accessories: item.accessories ?? [],
       borrowDifficultyLevel: item.borrowDifficultyLevel,
+      accessRestriction: item.accessRestriction,
+      accessRestrictionSelection: item.accessRestrictionSelection,
     },
     updateAdvert
   );

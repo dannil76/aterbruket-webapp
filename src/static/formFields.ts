@@ -2,7 +2,12 @@ import {
   getCategoriesByParent,
   getCategoriesExceptByParent,
 } from "../utils/handleCategories";
-import { conditions, areaOfUse, materials } from "./advertMeta";
+import {
+  conditions,
+  areaOfUse,
+  materials,
+  administrations,
+} from "./advertMeta";
 
 const recycleCategories = getCategoriesByParent([1]);
 const borrowCategories = getCategoriesExceptByParent([1]);
@@ -10,11 +15,13 @@ const borrowCategories = getCategoriesExceptByParent([1]);
 export default [
   {
     name: "advertType",
-    dataType: "text",
     fieldType: "radio",
     disabled: false,
     title: "Den är till för",
     required: true,
+    attributes: {
+      direction: "column",
+    },
     options: [
       {
         id: 1,
@@ -30,8 +37,7 @@ export default [
   },
   {
     name: "images",
-    dataType: "file",
-    fieldType: "input",
+    fieldType: "file",
     disabled: false,
     required: true,
     title: "Lägg till en bild",
@@ -68,7 +74,6 @@ export default [
   },
   {
     name: "allowedBorrowDateRange",
-    dataType: "text",
     fieldType: "dateRangePicker",
     disabled: false,
     required: false,
@@ -83,18 +88,19 @@ export default [
   },
   {
     name: "title",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     required: true,
     title: "Rubrik",
     description: "Max 20 tecken",
     placeholder: "Döp annonsen...",
+    attributes: {
+      maxLength: "20",
+    },
   },
   {
     name: "aterbruketId",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Återbruket ID",
     placeholder: "ex. 4435A",
@@ -117,8 +123,7 @@ export default [
   },
   {
     name: "quantity",
-    dataType: "number",
-    fieldType: "input",
+    fieldType: "number",
     disabled: false,
     title: "Antal",
     placeholder: "Hur många?",
@@ -131,12 +136,29 @@ export default [
     ],
   },
   {
+    name: "measurementLabel",
+    fieldType: "layout",
+    title: "Mått",
+    disabled: false,
+    attributes: {},
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "recycle",
+      },
+    ],
+  },
+  {
     name: "height",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Höjd",
     placeholder: "34 cm",
+    attributes: {
+      inlineLabel: true,
+      pattern: "[0-9]*",
+    },
     conditions: [
       {
         field: "advertType",
@@ -147,11 +169,14 @@ export default [
   },
   {
     name: "width",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Bredd",
     placeholder: "34 cm",
+    attributes: {
+      inlineLabel: true,
+      pattern: "[0-9]*",
+    },
     conditions: [
       {
         field: "advertType",
@@ -162,11 +187,14 @@ export default [
   },
   {
     name: "length",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Djup",
     placeholder: "34 cm",
+    attributes: {
+      inlineLabel: true,
+      pattern: "[0-9]*",
+    },
     conditions: [
       {
         field: "advertType",
@@ -176,9 +204,16 @@ export default [
     ],
   },
   {
+    name: "describeLabel",
+    fieldType: "layout",
+    title: "",
+    attributes: {
+      content: [{ element: "h4", value: "Beskriv prylen" }],
+    },
+  },
+  {
     name: "color",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Färg",
     placeholder: "Färg",
@@ -192,12 +227,14 @@ export default [
   },
   {
     name: "material",
-    dataType: "checkbox",
-    fieldType: "input",
+    fieldType: "checkbox",
     disabled: false,
     title: "Material",
     options: materials,
     description: "Välj en eller flera",
+    attributes: {
+      direction: "row",
+    },
     conditions: [
       {
         field: "advertType",
@@ -223,13 +260,15 @@ export default [
   },
   {
     name: "areaOfUse",
-    dataType: "checkbox",
+    fieldType: "checkbox",
     title: "Användningsområde",
-    fieldType: "input",
     disabled: false,
     required: true,
     options: areaOfUse,
     description: "Välj en eller flera",
+    attributes: {
+      direction: "column",
+    },
     conditions: [
       {
         field: "advertType",
@@ -240,14 +279,16 @@ export default [
   },
   {
     name: "purchasePrice",
-    dataType: "number",
-    fieldType: "input",
+    fieldType: "number",
     disabled: false,
     required: false,
     title: "Inköpspris",
     placeholder: "Inköpspris",
     description:
       "Vet du inte exakt vad den köptes in för?\n\nAnge då en uppskattning av priset.",
+    attributes: {
+      pattern: "[0-9]*",
+    },
     conditions: [
       {
         field: "advertType",
@@ -259,7 +300,6 @@ export default [
   {
     name: "accessories",
     fieldType: "repeater",
-    dataType: "text",
     required: false,
     title: "Tillbehör till prylen",
     disabled: false,
@@ -274,9 +314,58 @@ export default [
     ],
   },
   {
+    name: "accessRestriction",
+    fieldType: "select",
+    disabled: false,
+    required: true,
+    title: "Vilka får låna?",
+    options: [
+      {
+        id: 1,
+        key: "none",
+        title: "Alla",
+      },
+      {
+        id: 2,
+        key: "selection",
+        title: "Flera",
+      },
+    ],
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
+    name: "accessRestrictionSelection",
+    fieldType: "checkbox",
+    disabled: false,
+    required: false,
+    title: "",
+    options: administrations,
+    attributes: {
+      reverse: true,
+      direction: "column",
+    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+      {
+        field: "accessRestriction",
+        operator: "==",
+        value: "selection",
+      },
+    ],
+  },
+  {
     name: "pickUpInformation",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Bra att veta inför uthämtning",
     placeholder: "Du behöver...",
@@ -293,8 +382,7 @@ export default [
   },
   {
     name: "missingItemsInformation",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Om det saknas något vid återlämningen",
     placeholder: "Om du glömt...",
@@ -311,8 +399,7 @@ export default [
   },
   {
     name: "returnInformation",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     required: true,
     title: "Hur du gör när du lämnar tillbaka prylen",
@@ -326,18 +413,24 @@ export default [
     ],
   },
   {
+    name: "addressHeading",
+    fieldType: "layout",
+    title: "",
+    attributes: {
+      content: [{ element: "h4", value: "Var finns prylen?" }],
+    },
+  },
+  {
     name: "company",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "select",
     disabled: false,
     required: true,
     title: "Förvaltning",
-    placeholder: "ex. Stadsledningsförvaltningen",
+    options: administrations,
   },
   {
     name: "department",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     required: true,
     title: "Avdelning",
@@ -345,17 +438,23 @@ export default [
   },
   {
     name: "location",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     required: true,
     title: "Adress",
     placeholder: "ex. Larmvägen 33 254 56 Helsingborg",
   },
   {
+    name: "contactHeading",
+    fieldType: "layout",
+    title: "",
+    attributes: {
+      content: [{ element: "h4", value: "Kontakt" }],
+    },
+  },
+  {
     name: "contactPerson",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     required: true,
     title: "Kontaktperson",
@@ -363,25 +462,40 @@ export default [
   },
   {
     name: "phoneNumber",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Telefon",
     placeholder: "ex. 0701234567",
+    attributes: {
+      pattern: "[0-9]*",
+    },
   },
   {
     name: "email",
-    dataType: "email",
-    fieldType: "input",
+    fieldType: "email",
     disabled: false,
     required: true,
     title: "Epost",
     placeholder: "namn.efternamn@helsingborg.se",
   },
   {
+    name: "pickupHeading",
+    fieldType: "layout",
+    title: "",
+    attributes: {
+      content: [{ element: "h4", value: "Haffningen" }],
+    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+    ],
+  },
+  {
     name: "pickUpInstructions",
-    dataType: "text",
-    fieldType: "input",
+    fieldType: "text",
     disabled: false,
     title: "Så här haffar du prylen",
     placeholder: "Du behöver...",
@@ -418,8 +532,6 @@ export default [
         title: "🔴 Ganska svårt",
       },
     ],
-    description:
-      "Välj om det bara är att gå in och hämta, man behöver hjälp eller om man behöver komma i kontakt med en specifik person.",
     conditions: [
       {
         field: "advertType",
@@ -429,13 +541,45 @@ export default [
     ],
   },
   {
-    name: "borrowDifficultyLevelEasyDescription",
+    name: "borrowDifficultyLevelDefaultDescription",
     fieldType: "layout",
-    title: "Superenkel",
+    title: "",
     disabled: false,
     attributes: {
-      content:
-        "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad.",
+      content: [
+        {
+          element: "i",
+          value:
+            "Välj om det bara är att gå in och hämta, man behöver hjälp eller om man behöver komma i kontakt med en specifik person.",
+        },
+      ],
+    },
+    conditions: [
+      {
+        field: "advertType",
+        operator: "==",
+        value: "borrow",
+      },
+      {
+        field: "borrowDifficultyLevel",
+        operator: "==",
+        value: "",
+      },
+    ],
+  },
+  {
+    name: "borrowDifficultyLevelEasyDescription",
+    fieldType: "layout",
+    title: "",
+    disabled: false,
+    attributes: {
+      content: [
+        {
+          element: "i",
+          value:
+            "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad",
+        },
+      ],
     },
     conditions: [
       {
@@ -453,11 +597,16 @@ export default [
   {
     name: "borrowDifficultyLevelMediumDescription",
     fieldType: "layout",
-    title: "Enkel",
+    title: "",
     disabled: false,
     attributes: {
-      content:
-        "Prylen finns i ett rum som bara de som jobbar där har tillgång till, någon behöver öppna dörren för dig etc.",
+      content: [
+        {
+          element: "i",
+          value:
+            "Prylen finns i ett rum som bara de som jobbar där har tillgång till, någon behöver öppna dörren för dig etc.",
+        },
+      ],
     },
     conditions: [
       {
@@ -475,11 +624,16 @@ export default [
   {
     name: "borrowDifficultyLevelHardDescription",
     fieldType: "layout",
-    title: "Ganska svårt",
+    title: "",
     disabled: false,
     attributes: {
-      content:
-        "Prylen finns i ett låst skåp bakom en låst dörr. Du behöver få tag i en viss person för att få hjälp att komma in.",
+      content: [
+        {
+          element: "i",
+          value:
+            "Prylen finns i ett låst skåp bakom en låst dörr. Du behöver få tag i en viss person för att få hjälp att komma in.",
+        },
+      ],
     },
     conditions: [
       {

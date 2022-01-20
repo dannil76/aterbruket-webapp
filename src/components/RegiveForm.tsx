@@ -51,6 +51,8 @@ interface Props {
     returnInformation?: string;
     accessories?: string[];
     borrowDifficultyLevel?: string;
+    accessRestriction?: string;
+    accessRestrictionSelection?: string[];
   };
   setRegive: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
@@ -115,6 +117,8 @@ const RegiveForm: FC<Props> = ({
       returnInformation: item.returnInformation ?? "",
       accessories: item.accessories ?? [],
       borrowDifficultyLevel: item.borrowDifficultyLevel,
+      accessRestriction: item.accessRestriction,
+      accessRestrictionSelection: item.accessRestrictionSelection,
     },
     updateAdvert
   );

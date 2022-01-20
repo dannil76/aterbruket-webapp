@@ -66,6 +66,8 @@ const AddItem: FC = () => {
       returnInformation: "",
       accessories: [],
       borrowDifficultyLevel: "",
+      accessRestriction: "none",
+      accessRestrictionSelection: [],
     },
     createAdvert
   );

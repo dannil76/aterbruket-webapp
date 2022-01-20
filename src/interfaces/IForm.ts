@@ -1,6 +1,5 @@
 export interface IFields {
   name: string;
-  dataType?: string;
   fieldType: string | number;
   disabled?: boolean;
   required?: boolean;
@@ -13,7 +12,7 @@ export interface IFields {
 }
 
 export interface Attributes {
-  content?: string;
+  [key: string]: any;
 }
 
 export interface ConditionLogic {

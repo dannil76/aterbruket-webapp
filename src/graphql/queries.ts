@@ -56,6 +56,8 @@ export const getAdvert = /* GraphQL */ `
         allowedDateStart
         allowedDateEnd
       }
+      accessRestriction
+      accessRestrictionSelection
       createdAt
       updatedAt
     }
@@ -130,6 +132,8 @@ export const listAdverts = /* GraphQL */ `
           allowedDateStart
           allowedDateEnd
         }
+        accessRestriction
+        accessRestrictionSelection
         createdAt
         updatedAt
       }

@@ -1,4 +1,4 @@
-const conditions =  [
+const conditions = [
   {
     id: 1,
     key: "Anew",
@@ -52,4 +52,52 @@ const materials = [
   },
 ];
 
-export { conditions, areaOfUse, materials };
+const administrations = [
+  {
+    id: 1,
+    key: "Arbetsmarknadsförvaltningen",
+    title: "Arbetsmarknadsförvaltningen",
+  },
+  {
+    id: 2,
+    key: "Fastighetsförvaltningen",
+    title: "Fastighetsförvaltningen",
+  },
+  {
+    id: 3,
+    key: "Kulturförvaltningen",
+    title: "Kulturförvaltningen",
+  },
+  {
+    id: 4,
+    key: "Miljöförvaltningen",
+    title: "Miljöförvaltningen",
+  },
+  {
+    id: 5,
+    key: "Skol- och fritidsförvaltningen",
+    title: "Skol- och fritidsförvaltningen",
+  },
+  {
+    id: 6,
+    key: "Socialförvaltningen",
+    title: "Socialförvaltningen",
+  },
+  {
+    id: 7,
+    key: "Stadsbyggnadsförvaltningen",
+    title: "Stadsbyggnadsförvaltningen",
+  },
+  {
+    id: 8,
+    key: "Stadsledningsförvaltningen",
+    title: "Stadsledningsförvaltningen",
+  },
+  {
+    id: 9,
+    key: "Vård- och omsorgsförvaltningen",
+    title: "Vård- och omsorgsförvaltningen",
+  },
+];
+
+export { conditions, areaOfUse, materials, administrations };

@@ -59,6 +59,8 @@ export const createAdvert = /* GraphQL */ `
         allowedDateStart
         allowedDateEnd
       }
+      accessRestriction
+      accessRestrictionSelection
       createdAt
       updatedAt
     }
@@ -121,6 +123,8 @@ export const updateAdvert = /* GraphQL */ `
         allowedDateStart
         allowedDateEnd
       }
+      accessRestriction
+      accessRestrictionSelection
       createdAt
       updatedAt
     }
@@ -183,6 +187,8 @@ export const deleteAdvert = /* GraphQL */ `
         allowedDateStart
         allowedDateEnd
       }
+      accessRestriction
+      accessRestrictionSelection
       createdAt
       updatedAt
     }
