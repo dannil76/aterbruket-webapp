@@ -244,7 +244,7 @@ export default [
     ],
   },
   {
-    name: "conditions",
+    name: "condition",
     fieldType: "select",
     disabled: false,
     required: true,
