@@ -21,7 +21,7 @@ const FormContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 
   form {
     display: flex;

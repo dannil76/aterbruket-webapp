@@ -25,6 +25,7 @@ import {
   MdPlace,
   MdPerson,
   MdPhone,
+  MdPeople,
 } from "react-icons/md";
 import { FiAtSign } from "react-icons/fi";
 import QRCode from "../components/QRCodeContainer";
@@ -45,7 +46,6 @@ const RegiveForm = React.lazy(() => import("../components/RegiveForm"));
 const TopSection = styled.div`
   background-color: ${(props) => props.theme.colors.offWhite};
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
   box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
@@ -66,7 +66,7 @@ const TopSection = styled.div`
   header {
     position: relative;
     width: 100%;
-    height: 75px;
+    height: 60px;
     position: fixed;
     background-color: ${(props) => props.theme.colors.offWhite};
     z-index: 1000;
@@ -74,17 +74,16 @@ const TopSection = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
 
     svg {
       position: absolute;
       left: 28px;
-      bottom: 16px;
       font-size: 24px;
       color: ${(props) => props.theme.colors.darkest};
     }
     p,
     .headerTitle {
-      margin: 35px 0 0 0;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -98,7 +97,6 @@ const TopSection = styled.div`
       height: auto;
       margin: 0;
       position: absolute;
-      bottom: 7px;
       right: 16px;
       padding: 8px 12px;
       font-size: 16px;
@@ -115,6 +113,10 @@ const TopSection = styled.div`
   }
 
   .btn--edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: ${(props) => props.theme.colors.primaryLighter};
     border: 2px solid #6f9725;
     box-sizing: border-box;
@@ -123,20 +125,21 @@ const TopSection = styled.div`
     position: relative;
 
     svg {
+      font-size: 24px;
       color: #6f9725;
-      position: absolute;
-      left: 115px;
-      top: 16px;
+      margin-right: 16px;
     }
   }
+
   span {
+    margin-left: 24px;
     font-style: italic;
     font-weight: 500;
     font-size: 16px;
-    line-height: 150%;
     color: ${(props) => props.theme.colors.dark};
-    margin: 0 102px 24px 24px;
+    padding-bottom: 24px;
   }
+
   .titleDiv {
     width: 100%;
     h4 {
@@ -147,6 +150,12 @@ const TopSection = styled.div`
       line-height: 112%;
       letter-spacing: 0.0025em;
       color: ${(props) => props.theme.colors.primaryDark};
+
+      svg {
+        vertical-align: middle;
+        color: ${(props) => props.theme.colors.primaryLight};
+        font-size: 24px;
+      }
     }
     h1 {
       font-style: normal;
@@ -192,10 +201,11 @@ const Button = styled.button`
   font-size: 18px;
   line-height: 132%;
   letter-spacing: 0.015em;
-  width: 340px;
+  margin-left: 24px;
+  margin-right: 24px;
   height: 56px;
   border: none;
-  margin: 0 12px 24px 12px;
+  margin-bottom: 24px;
 `;
 
 const ImgDiv = styled.div`
@@ -204,7 +214,7 @@ const ImgDiv = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${(props) => props.theme.colors.offWhite};
-  margin-top: 75px;
+  margin-top: 60px;
 
   img {
     max-height: 256px;
@@ -216,7 +226,7 @@ const ImgDiv = styled.div`
 
 const Line = styled.div`
    {
-    width: 96%;
+    width: 100%;
     border-top: 3px dashed ${(props) => props.theme.colors.grayLighter};
   }
 `;
@@ -235,7 +245,7 @@ const MainSection = styled.section`
     color: ${(props) => props.theme.colors.primary};
   }
   .dark {
-    margin: 48px 0 28px 24px;
+    margin: 24px 0 16px 24px;
     color: ${(props) => props.theme.colors.darkest};
     align-self: flex-start;
   }
@@ -258,17 +268,17 @@ const MainSection = styled.section`
     table-layout: fixed;
 
     td {
-      padding: 16px 0 0 23px;
+      padding-left: 24px;
+      padding-bottom: 16px;
       border: none;
     }
 
     td:nth-child(2) {
+      padding-right: 24px;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
-      line-height: 144%;
       text-align: right;
-      padding: 16px 24px 0 0;
       word-wrap: break-word;
 
       span {
@@ -278,63 +288,55 @@ const MainSection = styled.section`
   }
 `;
 
-const CardGroups = styled.div`
+const Card = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    width: 90%;
-    height: 326px;
-
-    background-color: ${(props) => props.theme.colors.white};
-    border-radius: 9.5px;
-    filter: drop-shadow(0px 0px 2px rgba(98, 98, 98, 0.18)),
-      drop-shadow(0px 1px 2px rgba(98, 98, 98, 0.18));
-  }
-  .contactCard {
-    height: auto;
-  }
+  margin: 0 16px;
+  width: calc(100% - 32px);
+  box-sizing: border-box;
+  background-color: ${(props) => props.theme.colors.white};
+  border-radius: 9.5px;
+  box-shadow: 0px 0px 2px rgba(98, 98, 98, 0.18),
+    0px 1px 2px rgba(98, 98, 98, 0.18);
 
   .cardHeader {
     z-index: 0;
     width: 100%;
-    height: 30%;
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
+    height: 200px;
     border-radius: 9.5px 9.5px 0px 0px;
   }
+
   .cardBody {
-    box-sizing: border-box;
-    margin: 0 24px;
-    padding: 0 24px;
-    width: 100%;
-    height: 70%;
-    border-radius: 0px 0px 9.5px 9.5px;
+    padding: 24px;
   }
+
   h5 {
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0 0 12px 0;
     font-weight: 900;
     font-size: 12px;
     line-height: 150%;
     color: ${(props) => props.theme.colors.primary};
-    margin: 24px 0px 12px 0px;
+
+    span {
+      display: inline-block;
+      margin-right: 13px;
+      vertical-align: middle;
+    }
   }
+
   p {
-    margin: 0;
+    font-size: 18px;
+    margin: 0 0 12px 0;
   }
+
   .btn--adress {
-    margin: 16px 0;
+    margin: 0;
+    margin-top: 8px;
     width: 100%;
     text-align: left;
     padding: 16px;
-    // background-color: ${(props) => props.theme.colors.grayLighter};
-    //color: ${(props) => props.theme.colors.offWhite};
     background-color: ${(props) => props.theme.colors.primaryLighter};
     color: ${(props) => props.theme.colors.primaryDark};
     position: relative;
@@ -351,11 +353,10 @@ const CardGroups = styled.div`
 
   .contactPersonDiv {
     box-sizing: border-box;
-    padding: 0 24px;
     width: 100%;
     display: flex;
-    margin: 16px 0;
     align-items: center;
+    margin-bottom: 16px;
 
     h4 {
       margin: 0 16px;
@@ -386,12 +387,16 @@ const CardGroups = styled.div`
     padding: 0 8px 0 8px;
     display: flex;
     align-items: center;
-    min-width: 290px;
+    width: 100%;
     height: 48px;
     background-color: #f5f5f5;
     border-radius: 4.5px;
     margin: 0 0 10px 0;
     line-break: anywhere;
+
+    &:last-child {
+      margin: 0;
+    }
 
     a {
       color: ${(props) => props.theme.colors.darker};
@@ -408,6 +413,34 @@ const CardGroups = styled.div`
       color: ${(props) => props.theme.colors.dark};
     }
   }
+`;
+
+const Section = styled.section`
+  padding-bottom: 28px;
+`;
+
+const BottomSection = styled.section`
+  width: 100%;
+  padding-bottom: 64px;
+`;
+
+const DifficultyIcon = styled.span<{ level: string }>`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: gray;
+
+  ${(props) => {
+    switch (props.level) {
+      case "medium":
+        return `background-color: #EFBB1F;`;
+      case "hard":
+        return `background-color: #E14751;`;
+      case "easy":
+      default:
+        return `background-color:#84C035;`;
+    }
+  }}
 `;
 
 interface ParamTypes {
@@ -440,16 +473,19 @@ const ItemDetails: FC<ParamTypes> = () => {
       .map(([key, value]) => {
         const valueObj = allValues.find((v) => v.key === key);
         return valueObj?.title ? valueObj.title : "";
-      }
-      );
+      });
     return values;
   };
 
   const itemCategory = getCategoryByKey(item?.category);
-  const itemCondition = conditions.find((condition) => condition.key === item?.condition);
-  const itemMaterialsArray = getMetaValues(item?.material?.[0] ?? {}, materials) ?? [];
+  const itemCondition = conditions.find(
+    (condition) => condition.key === item?.condition
+  );
+  const itemMaterialsArray =
+    getMetaValues(item?.material?.[0] ?? {}, materials) ?? [];
   const itemMaterialsString = itemMaterialsArray.join(", ");
-  const itemAreaOfUseArray = getMetaValues(item?.areaOfUse?.[0] ?? {}, areaOfUse) ?? [];
+  const itemAreaOfUseArray =
+    getMetaValues(item?.areaOfUse?.[0] ?? {}, areaOfUse) ?? [];
   const itemAreaOfUseString = itemAreaOfUseArray.join(", ");
 
   const fetchImage = (item: any) => {
@@ -554,6 +590,9 @@ const ItemDetails: FC<ParamTypes> = () => {
   const mailtoHref = `mailto:${item.email}?subject=En kollega vill Haffa "${item.title}"&body=Hej ${item.contactPerson}!%0d%0aDin kollega ${user.name} vill Haffa "${item.title}" och har en fundering:`;
   const telHref = `tel:${item.phoneNumber}`;
 
+  const isRecycleType = item.advertType === "recycle";
+  const isBorrowType = item.advertType === "borrow";
+
   const allDetails = (
     <>
       <TopSection>
@@ -569,7 +608,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                 }}
                 type="button"
               >
-                HAFFA!
+                {isRecycleType ? "HAFFA!" : "Reservera"}
               </Button>
             )}
           </header>
@@ -611,9 +650,13 @@ const ItemDetails: FC<ParamTypes> = () => {
           </ImgDiv>
         )}
         <div className="titleDiv">
-          <h4>
-            {itemCategory?.title}
-          </h4>
+          {isBorrowType && (
+            <h4>
+              <MdPeople /> Delning
+            </h4>
+          )}
+          {isRecycleType && <h4>{itemCategory?.title}</h4>}
+
           <h1>{item.title}</h1>
           <p>{item.aterbruketId}</p>
         </div>
@@ -631,7 +674,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               }}
               type="button"
             >
-              Haffa!
+              {isRecycleType ? "HAFFA!" : "Jag vill låna!"}
             </Button>
           )}
 
@@ -695,102 +738,147 @@ const ItemDetails: FC<ParamTypes> = () => {
       </TopSection>
 
       <MainSection>
-        <div>
+        <Section />
+        <Section>
           <h4 className="dark">Beskrivning</h4>
           <p className="description">{item.description}</p>
-        </div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <h4>Höjd</h4>
-              </td>
-              <td>
-                {item.height} <span>cm</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Bredd</h4>
-              </td>
-              <td>
-                {item.width} <span>cm</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Djup</h4>
-              </td>
-              <td>
-                {item.length} <span>cm</span>
-              </td>
-            </tr>
+        </Section>
 
-            <tr>
-              <td>
-                <h4>Färg</h4>
-              </td>
-              <td>{item.color}</td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Material</h4>
-              </td>
-              {itemMaterialsString ? (<td>{itemMaterialsString}</td>) : (<td></td>)}
-            </tr>
-            <tr>
-              <td>
-                <h4>Skick</h4>
-              </td>
-              <td>
-                {itemCondition?.title}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Användningsområde</h4>
-              </td>
-              {itemAreaOfUseString ? (<td>{itemAreaOfUseString}</td>) : (<td></td>)}
-            </tr>
-            <tr>
-              <td>
-                <h4>Klimatpåverkan</h4>
-              </td>
-              <td>
-                {item.climateImpact}{" "}
-                <span>
-                  kg CO<sub>2</sub>e
-                </span>
-              </td>
-            </tr>
-
-            {item.purchasePrice !== "" && (
+        <Section>
+          <table>
+            <tbody>
               <tr>
                 <td>
-                  <h4>Inköpspris</h4>
+                  <h4>Typ av haffning</h4>
                 </td>
-                <td>
-                  {item.purchasePrice} <span>kr</span>
-                </td>
+                <td>{isRecycleType ? "Återbruk" : "Delning"}</td>
               </tr>
-            )}
 
-            {item.status === "available" && (
-              <tr>
-                <td>
-                  <h4>Har varit tillgänglig i</h4>
-                </td>
-                <td>
-                  {showDays(item.createdAt)} <span>dagar</span>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <CardGroups>
+              {isRecycleType && (
+                <>
+                  <tr>
+                    <td>
+                      <h4>Höjd</h4>
+                    </td>
+                    <td>
+                      {item.height} <span>cm</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Bredd</h4>
+                    </td>
+                    <td>
+                      {item.width} <span>cm</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Djup</h4>
+                    </td>
+                    <td>
+                      {item.length} <span>cm</span>
+                    </td>
+                  </tr>
+                  {item.color && (
+                    <tr>
+                      <td>
+                        <h4>Färg</h4>
+                      </td>
+                      <td>{item.color}</td>
+                    </tr>
+                  )}
+                  {itemMaterialsString && (
+                    <tr>
+                      <td>
+                        <h4>Material</h4>
+                      </td>
+                      <td>{itemMaterialsString}</td>
+                    </tr>
+                  )}
+                  {itemCondition?.title && (
+                    <tr>
+                      <td>
+                        <h4>Skick</h4>
+                      </td>
+                      <td>{itemCondition?.title}</td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td>
+                      <h4>Användningsområde</h4>
+                    </td>
+                    {itemAreaOfUseString ? (
+                      <td>{itemAreaOfUseString}</td>
+                    ) : (
+                      <td />
+                    )}
+                  </tr>
+
+                  {item.purchasePrice !== "" && (
+                    <tr>
+                      <td>
+                        <h4>Inköpspris</h4>
+                      </td>
+                      <td>
+                        {item.purchasePrice} <span>kr</span>
+                      </td>
+                    </tr>
+                  )}
+
+                  {item.status === "available" && (
+                    <tr>
+                      <td>
+                        <h4>Har varit tillgänglig i</h4>
+                      </td>
+                      <td>
+                        {showDays(item.createdAt)} <span>dagar</span>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+
+              {item.climateImpact && (
+                <tr>
+                  <td>
+                    <h4>Klimatpåverkan</h4>
+                  </td>
+                  <td>
+                    {item.climateImpact}{" "}
+                    <span>
+                      kg CO<sub>2</sub>e
+                    </span>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          {isBorrowType && item?.accessories && item.accessories.length > 0 && (
+            <>
+              <div>
+                <h4 className="dark">Ingår i paketet</h4>
+              </div>
+              <table>
+                <tbody>
+                  {item.accessories.map((accessory: any) => (
+                    <tr key={accessory}>
+                      <td>
+                        <h4>{accessory}</h4>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </Section>
+
+        <Section>
           <h4 className="dark">Här finns prylen</h4>
 
-          <div className="card mapCard">
+          <Card>
             <div className="cardHeader">
               {item && item.location && (
                 <Map mapTypeControl={false} location={item.location} />
@@ -806,7 +894,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               )}
             </div>
             <div className="cardBody">
-              <h5>ADRESS</h5>
+              <h5>Adress</h5>
               <p>{item.department}</p>
               <p>{item.location}</p>
               <Button className=" btn--adress" type="button">
@@ -814,37 +902,67 @@ const ItemDetails: FC<ParamTypes> = () => {
                 <MdPlace />
               </Button>
             </div>
-          </div>
+          </Card>
+        </Section>
+
+        {isBorrowType && (
+          <Section>
+            <h4 className="dark">Hur du haffar ut prylen</h4>
+            <Card>
+              <div className="cardBody">
+                <h5>
+                  <DifficultyIcon level={item.borrowDifficultyLevel} />
+                  Hur svår att haffa ut?
+                </h5>
+                <p>
+                  {item.borrowDifficultyLevel === "easy" &&
+                    "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad."}
+                  {item.borrowDifficultyLevel === "medium" &&
+                    "Prylen finns i ett rum som bara de som jobbar där har tillgång till, någon behöver öppna dörren för dig etc."}
+                  {item.borrowDifficultyLevel === "hard" &&
+                    "Prylen finns i ett låst skåp bakom en låst dörr. Du behöver få tag i en viss person för att få hjälp att komma in."}
+                </p>
+
+                <h5>Så Här går det till</h5>
+                <p>{item.pickUpInstructions ?? ""}</p>
+              </div>
+            </Card>
+          </Section>
+        )}
+
+        <Section>
           <h4 className="dark">Kontaktperson</h4>
+          <Card>
+            <div className="cardBody">
+              <div className="contactPersonDiv">
+                <div className="circle">
+                  <MdPerson />
+                </div>
+                <div>
+                  <h4 className="dark">{item.contactPerson}</h4>
+                  <h5 className="company">{item.company}</h5>
+                </div>
+              </div>
+              {item.phoneNumber && (
+                <div className="contactInfo">
+                  <MdPhone />
+                  <a href={telHref}>{item.phoneNumber}</a>
+                </div>
+              )}
 
-          <div className="card contactCard">
-            <div className="contactPersonDiv">
-              <div className="circle">
-                <MdPerson />
-              </div>
-              <div>
-                <h4 className="dark">{item.contactPerson}</h4>
-                <h5 className="company">{item.company}</h5>
-              </div>
-            </div>
-            {item.phoneNumber && (
               <div className="contactInfo">
-                <MdPhone />
-                <a href={telHref}>{item.phoneNumber}</a>
+                <FiAtSign />
+                <a href={mailtoHref}>{item.email}</a>
               </div>
-            )}
-
-            <div className="contactInfo">
-              <FiAtSign />
-              <a href={mailtoHref}>{item.email}</a>
             </div>
-          </div>
-        </CardGroups>
+          </Card>
+        </Section>
       </MainSection>
 
-      <Line />
-
-      <QRCode id={id} />
+      <BottomSection>
+        <Line />
+        <QRCode id={id} />
+      </BottomSection>
     </>
   );
 

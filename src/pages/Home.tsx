@@ -77,7 +77,7 @@ const ScanBtn = styled.button`
 `;
 
 const SearchFilterDiv = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 600px;
   display: flex;
   justify-content: space-around;
@@ -141,6 +141,11 @@ const MessageCtn = styled.div`
   .message {
     margin-bottom: 50px;
   }
+`;
+
+const Spacer = styled.div`
+  width: 100%;
+  height: 72px;
 `;
 
 interface IQrCamera {
@@ -387,6 +392,7 @@ const Home: FC<Props> = ({
                 </h4>
               </MessageCtn>
             )}
+            <Spacer />
             <AddBtn
               type="button"
               onClick={() => {
