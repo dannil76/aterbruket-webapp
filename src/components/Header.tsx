@@ -19,7 +19,7 @@ const HeaderDiv = styled.header<MyProps>`
   padding: ${(props) =>
     `${props.theme.headerTheme.padding[0]}px ${props.theme.headerTheme.padding[1]}px ${props.theme.headerTheme.padding[2]}px ${props.theme.headerTheme.padding[3]}px`};
 
-  background-color: transparent;
+  background-color: ${(props) => props.theme.appTheme.primaryColor};
 
   ${(props) =>
     props.isScrollTop === false &&
