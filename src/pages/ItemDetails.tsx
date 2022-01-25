@@ -50,19 +50,6 @@ const TopSection = styled.div`
   flex-direction: column;
   box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
 
-  .reservedHeader {
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-
-    .headerTitle--reserved {
-      margin: 26px 0 0 0;
-    }
-    .reservedP {
-      color: ${(props) => props.theme.colors.primaryDark};
-      font-size: 14px;
-      margin: 0;
-    }
-  }
-
   header {
     position: relative;
     width: 100%;
@@ -89,7 +76,7 @@ const TopSection = styled.div`
       font-size: 18px;
       line-height: 132%;
       color: ${(props) => props.theme.colors.darkest};
-      max-width: 40%;
+      text-align: center;
     }
     .btn--haffa--header,
     .btn--pickUp--header {
@@ -105,6 +92,20 @@ const TopSection = styled.div`
 
     .btn--pickUp--header {
       background-color: ${(props) => props.theme.colors.primaryLight};
+    }
+  }
+
+  .reservedHeader {
+    background-color: ${(props) => props.theme.colors.primaryLighter};
+
+    .headerTitle--reserved {
+      margin: 0;
+    }
+
+    .reservedP {
+      color: ${(props) => props.theme.colors.primaryDark};
+      font-size: 14px;
+      margin: 0;
     }
   }
 
@@ -617,17 +618,16 @@ const ItemDetails: FC<ParamTypes> = () => {
         {(item.status === "reserved" || item.status === "pickedUp") && (
           <header className="reservedHeader">
             <MdArrowBack onClick={goBackFunc} />
-            <p
-              className="headerTitle headerTitle--reserved"
-              style={{ marginLeft: showHeaderBtn ? "-30px" : "0" }}
-            >
-              {item.title}
-            </p>
-            {item.status === "reserved" ? (
-              <p className="reservedP">Reserverad</p>
-            ) : (
-              <p className="reservedP">Uthämtad</p>
-            )}
+
+            <div>
+              <p className="headerTitle headerTitle--reserved">{item.title}</p>
+              {item.status === "reserved" ? (
+                <p className="reservedP">Reserverad</p>
+              ) : (
+                <p className="reservedP">Uthämtad</p>
+              )}
+            </div>
+
             {showHeaderBtn && (
               <Button
                 className="btn--pickUp--header"
