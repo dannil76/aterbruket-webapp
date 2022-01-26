@@ -708,6 +708,7 @@ const ItemDetails: FC<ParamTypes> = () => {
             marginBottom={24}
             marginLeft={24}
             marginRight={24}
+            shadow
             ref={(el: any) => {
               buttonOutOfScreen.current = el;
               setRefVisible(!!el);
