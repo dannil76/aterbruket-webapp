@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { MdClose, MdAdd } from "react-icons/md";
 import { ImQrcode } from "react-icons/im";
+import { enableBodyScroll } from "body-scroll-lock";
 
 const Modal = styled.div`
 position: absolute;
@@ -86,16 +87,16 @@ const ModalBody = styled.div`
 `;
 
 type Props = {
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleModal: () => void;
 };
 
-const ModalAddItemContent: FC<Props> = ({ setModalOpen }: Props) => (
+const ModalAddItemContent: FC<Props> = ({ toggleModal }: Props) => (
   <Modal>
     <ModalHeader>
       <button
         className="closeBtn"
         type="button"
-        onClick={() => setModalOpen(false)}
+        onClick={() => toggleModal()}
       >
         <MdClose />
       </button>
@@ -107,19 +108,21 @@ const ModalAddItemContent: FC<Props> = ({ setModalOpen }: Props) => (
           className="selectBtn scanBtn"
           type="button"
           onClick={() => {
-            setModalOpen(false);
+            toggleModal();
+            enableBodyScroll(document.body);
           }}
         >
           <ImQrcode className="btnIcon" />
           Skanna QR
         </button>
       </Link>
-      <Link className="link" to="/add">
+      <Link className="link" to="/add" >
         <button
           className="selectBtn addBtn"
           type="button"
           onClick={() => {
-            setModalOpen(false);
+            toggleModal();
+            enableBodyScroll(document.body);
           }}
         >
           <MdAdd className="btnIcon" />

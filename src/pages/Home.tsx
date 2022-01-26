@@ -320,7 +320,7 @@ const Home: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
         ) : (
           <>
             <Modal isVisible={isModalVisible}>
-              <ModalAddItemContent setModalOpen={toggleModal} />
+              <ModalAddItemContent toggleModal={() => toggleModal()} />
             </Modal>
             <ScanBtn
               id="scanBtn"
