@@ -561,7 +561,7 @@ const ItemDetails: FC<ParamTypes> = () => {
       window.open(`geo:0,0?q=${location}`);
     }
     window.open(
-      `https://www.google.com/maps/dir/?api=1&travelmode=driving&layer=traffic&destination=${location}`
+      `https://www.google.com/maps/dir/?api=1&travelmode=transit&layer=traffic&destination=${location}`
     );
   };
 
