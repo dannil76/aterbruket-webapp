@@ -27,7 +27,7 @@ const Pagination = React.lazy(() => import("../components/Pagination"));
 
 const AddBtn = styled.button`
   position: fixed;
-  bottom: 10vh;
+  bottom: 100px;
   background-color: ${(props) => props.theme.colors.primaryDark};
   color: white;
   display: flex;
