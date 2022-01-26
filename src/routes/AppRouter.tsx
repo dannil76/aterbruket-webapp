@@ -95,7 +95,6 @@ const Separator = styled.div`
 `;
 
 const AppRouter: FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [qrCamera, setQrCamera] = useState({ delay: 500, result: "" });
 
   return (
@@ -122,12 +121,7 @@ const AppRouter: FC = () => {
             exact
             path="/app"
             component={() => (
-              <Home
-                modalOpen={modalOpen}
-                setModalOpen={setModalOpen}
-                qrCamera={qrCamera}
-                setQrCamera={setQrCamera}
-              />
+              <Home qrCamera={qrCamera} setQrCamera={setQrCamera} />
             )}
           />
           <Route path="/add" component={() => <AddItem />} />

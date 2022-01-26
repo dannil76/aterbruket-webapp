@@ -13,12 +13,12 @@ import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
 import { getAllCategories } from "../utils/handleCategories";
 import { conditions } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
+import { Modal, useModal } from "../components/Modal";
 
 const AdvertContainer = React.lazy(
   () => import("../components/AdvertContainer")
 );
 const FilterMenu = React.lazy(() => import("../components/FilterMenu"));
-const Modal = React.lazy(() => import("../components/Modal"));
 const ModalAddItemContent = React.lazy(
   () => import("../components/ModalAddItemContent")
 );
@@ -158,8 +158,6 @@ interface Item {
 }
 
 type Props = {
-  modalOpen: boolean;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   qrCamera: IQrCamera;
   setQrCamera: React.Dispatch<
     React.SetStateAction<{
@@ -169,15 +167,11 @@ type Props = {
   >;
 };
 
-const Home: FC<Props> = ({
-  modalOpen,
-  setModalOpen,
-  qrCamera,
-  setQrCamera,
-}: Props) => {
+const Home: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
   const [showQRCamera, setShowQRCamera] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalVisible, toggleModal] = useModal();
 
   const updateSearch = (event: React.ChangeEvent<any>) => {
     const { target } = event;
@@ -325,8 +319,8 @@ const Home: FC<Props> = ({
           </>
         ) : (
           <>
-            <Modal modalOpen={modalOpen}>
-              <ModalAddItemContent setModalOpen={setModalOpen} />
+            <Modal isVisible={isModalVisible}>
+              <ModalAddItemContent setModalOpen={toggleModal} />
             </Modal>
             <ScanBtn
               id="scanBtn"
@@ -393,12 +387,7 @@ const Home: FC<Props> = ({
               </MessageCtn>
             )}
             <Spacer />
-            <AddBtn
-              type="button"
-              onClick={() => {
-                setModalOpen(true);
-              }}
-            >
+            <AddBtn type="button" onClick={() => toggleModal()}>
               <MdNewReleases />
               <p>Gör en egen annons!</p>
             </AddBtn>

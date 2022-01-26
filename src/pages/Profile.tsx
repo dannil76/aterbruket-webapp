@@ -6,6 +6,10 @@ import UserContext from "../contexts/UserContext";
 
 import Button from "../components/Button";
 
+const Main = styled.main`
+  padding-bottom: 80px;
+`;
+
 const InformationFrame = styled.header`
   padding: 24px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04)),
@@ -40,7 +44,7 @@ const Profile: FC = () => {
   };
 
   return (
-    <main>
+    <Main>
       <h2>{user.name}</h2>
       {user.isAdmin && <strong>Administratör</strong>}
       <InformationContainer>
@@ -83,7 +87,7 @@ const Profile: FC = () => {
       </InformationContainer>
 
       <Button onClick={handleSignOut}>Logga ut</Button>
-    </main>
+    </Main>
   );
 };
 

@@ -1,16 +1,24 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { FC } from "react";
+import React from "react";
 import styled from "styled-components";
 
-type ButtonProps = {
+export interface IButton extends React.HTMLAttributes<HTMLButtonElement> {
   transparent?: boolean;
   secondary?: boolean;
   shadow?: boolean;
-  size?: "sm" | "md" | "lg";
-} & React.ComponentPropsWithoutRef<"button">;
+  size?: "sm" | "md" | "lg" | "xl";
+  color?: string;
+  marginBottom?: number;
+  marginTop?: number;
+  marginRight?: number;
+  marginLeft?: number;
+  block?: boolean;
+  [key: string]: any;
+}
 
-const ButtonComponent = styled.button<ButtonProps>`
-  background: #50811b;
+const ButtonComponent = styled.button<IButton>`
+  background: ${(props) =>
+    props.color ? props.theme.colors[props.color] : props.theme.colors.primary};
   border-radius: 4.5px;
   border: none;
   color: white;
@@ -18,6 +26,17 @@ const ButtonComponent = styled.button<ButtonProps>`
   padding: 12px 24px;
   cursor: pointer;
   font-weight: 500;
+  margin-bottom: ${(props) =>
+    props.marginBottom ? `${props.marginBottom}px` : "0"};
+  margin-right: ${(props) =>
+    props.marginRight ? `${props.marginRight}px` : "0"};
+  margin-left: ${(props) => (props.marginLeft ? `${props.marginLeft}px` : "0")};
+  magin-top: ${(props) => (props.marginTop ? `${props.marginTop}px` : "0")};
+  ${({ block }) =>
+    block &&
+    `
+      width: 100%;
+  `}
   ${({ size }) =>
     size === "sm" &&
     `
@@ -30,11 +49,17 @@ const ButtonComponent = styled.button<ButtonProps>`
     font-size: 16px;
     padding: 16px 32px;
   `}
-  ${({ secondary }) =>
+  ${({ size }) =>
+    size === "xl" &&
+    `
+    font-size: 18px;
+    padding: 16px 32px;
+  `}
+  ${({ secondary, theme }) =>
     secondary &&
     `
       color: #205400;
-      background: #E1E9DB;
+      background: ${theme.colors.primaryLighter};
       font-weight: 700;
   `}
  ${({ transparent }) =>
@@ -51,25 +76,19 @@ const ButtonComponent = styled.button<ButtonProps>`
   `}
 `;
 
-const Button: FC<ButtonProps> = ({
-  size,
-  secondary,
-  transparent,
-  shadow,
-  children,
-  ...props
-}) => {
+const Button = React.forwardRef<HTMLButtonElement, IButton>((props, ref) => {
   return (
     <ButtonComponent
-      size={size}
-      secondary={secondary}
-      transparent={transparent}
-      shadow={shadow}
+      ref={ref}
+      size={props.size}
+      secondary={props.secondary}
+      transparent={props.transparent}
+      shadow={props.shadow}
       {...props}
     >
-      {children}
+      {props.children}
     </ButtonComponent>
   );
-};
+});
 
 export default Button;

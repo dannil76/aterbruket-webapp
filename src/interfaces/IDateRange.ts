@@ -8,4 +8,5 @@ export interface IDateRange {
 export interface IDateRangePickerProps {
   onValueChange: (selectedDates: IDateRange) => void;
   enabledDateRange?: IDateRange;
+  [key: string]: any;
 }

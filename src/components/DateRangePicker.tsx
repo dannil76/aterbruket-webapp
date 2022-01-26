@@ -9,6 +9,7 @@ import { IDateRangePickerProps, IDateRange } from "../interfaces/IDateRange";
 const DateRangePicker: React.FC<IDateRangePickerProps> = ({
   onValueChange,
   enabledDateRange,
+  ...props
 }: IDateRangePickerProps) => {
   const [startDate, setStartDate] = useState<moment.Moment | null>(null);
   const [endDate, setEndDate] = useState<moment.Moment | null>(null);
@@ -47,6 +48,7 @@ const DateRangePicker: React.FC<IDateRangePickerProps> = ({
       onDatesChange={handleDateChange}
       hideKeyboardShortcutsPanel
       isDayBlocked={blockDay}
+      {...props}
     />
   );
 };

@@ -28,6 +28,8 @@ import {
   MdPeople,
 } from "react-icons/md";
 import { FiAtSign } from "react-icons/fi";
+import { isMobile } from "react-device-detect";
+import DateRangePicker from "../components/DateRangePicker";
 import QRCode from "../components/QRCodeContainer";
 import { GetAdvertQuery } from "../API";
 import { getAdvert } from "../graphql/queries";
@@ -38,6 +40,9 @@ import showDays from "../hooks/showDays";
 import { getCategoryByKey } from "../utils/handleCategories";
 import { conditions, materials, areaOfUse } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
+import { Modal, useModal } from "../components/Modal";
+import Button from "../components/Button";
+import { IDateRange } from "../interfaces/IDateRange";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
@@ -78,21 +83,6 @@ const TopSection = styled.div`
       color: ${(props) => props.theme.colors.darkest};
       text-align: center;
     }
-    .btn--haffa--header,
-    .btn--pickUp--header {
-      width: auto;
-      height: auto;
-      margin: 0;
-      position: absolute;
-      right: 16px;
-      padding: 8px 12px;
-      font-size: 16px;
-      box-shadow: none;
-    }
-
-    .btn--pickUp--header {
-      background-color: ${(props) => props.theme.colors.primaryLight};
-    }
   }
 
   .reservedHeader {
@@ -106,29 +96,6 @@ const TopSection = styled.div`
       color: ${(props) => props.theme.colors.primaryDark};
       font-size: 14px;
       margin: 0;
-    }
-  }
-
-  .btn--pickUp {
-    background-color: ${(props) => props.theme.colors.primaryLight};
-  }
-
-  .btn--edit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-    border: 2px solid #6f9725;
-    box-sizing: border-box;
-    border-radius: 4.5px;
-    color: ${(props) => props.theme.colors.darkest};
-    position: relative;
-
-    svg {
-      font-size: 24px;
-      color: #6f9725;
-      margin-right: 16px;
     }
   }
 
@@ -173,40 +140,6 @@ const TopSection = styled.div`
       font-size: 16px;
     }
   }
-
-  .removeReservation {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.dark};
-    margin: 0 0 32px 0;
-    border: none;
-    outline: none;
-    background-color: transparent;
-  }
-
-  .regiveBtn {
-    width: 111px;
-  }
-`;
-
-const Button = styled.button`
-  box-shadow: 0px 0px 2px rgba(98, 98, 98, 0.18),
-    0px 3px 2px rgba(98, 98, 98, 0.12), 0px 6px 8px rgba(98, 98, 98, 0.12),
-    0px 10px 16px rgba(98, 98, 98, 0.12), 0px 26px 32px rgba(98, 98, 98, 0.12);
-  border-radius: 4.5px;
-  background-color: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.white};
-  font-weight: 900;
-  font-size: 18px;
-  line-height: 132%;
-  letter-spacing: 0.015em;
-  margin-left: 24px;
-  margin-right: 24px;
-  height: 56px;
-  border: none;
-  margin-bottom: 24px;
 `;
 
 const ImgDiv = styled.div`
@@ -332,26 +265,6 @@ const Card = styled.div`
     margin: 0 0 12px 0;
   }
 
-  .btn--adress {
-    margin: 0;
-    margin-top: 8px;
-    width: 100%;
-    text-align: left;
-    padding: 16px;
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-    color: ${(props) => props.theme.colors.primaryDark};
-    position: relative;
-    opacity: 0.2; // remove this when function is working
-    outline: none;
-
-    svg {
-      color: ${(props) => props.theme.colors.secondaryDark};
-      position: absolute;
-      top: 17px;
-      right: 14px;
-    }
-  }
-
   .contactPersonDiv {
     box-sizing: border-box;
     width: 100%;
@@ -444,6 +357,52 @@ const DifficultyIcon = styled.span<{ level: string }>`
   }}
 `;
 
+const HeaderButton = styled(Button)`
+  font-weight: 900;
+  position: absolute;
+  right: 16px;
+`;
+
+const EditButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #6f9725;
+  color: ${(props) => props.theme.colors.darkest};
+  position: relative;
+
+  svg {
+    font-size: 24px;
+    color: #6f9725;
+    margin-right: 16px;
+  }
+`;
+
+const MapButton = styled(Button)`
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+  background-color: ${(props) => props.theme.colors.primaryLighter};
+  color: ${(props) => props.theme.colors.primaryDark};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  svg {
+    font-size: 24px;
+    color: ${(props) => props.theme.colors.secondaryDark};
+  }
+`;
+
+const ModalBody = styled.div`
+  margin-top: 72px;
+  text-align: center;
+
+  .DateRangePicker {
+    margin-bottom: 56px;
+  }
+`;
+
 interface ParamTypes {
   id: string;
 }
@@ -467,6 +426,7 @@ const ItemDetails: FC<ParamTypes> = () => {
   const buttonOutOfScreen = useRef(null);
   const [refVisible, setRefVisible] = useState(false);
   const [showHeaderBtn, setShowHeaderBtn] = useState(false);
+  const [isModalVisible, toggleModal] = useModal();
 
   const getMetaValues = (itemValues: MetaValues, allValues: IOption[]) => {
     const values = Object.entries(itemValues)
@@ -588,29 +548,102 @@ const ItemDetails: FC<ParamTypes> = () => {
     history.goBack();
   };
 
+  const launchNavigation = (location: string) => {
+    if (isMobile) {
+      window.open(`geo:0,0?q=${location}`);
+    }
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&travelmode=driving&layer=traffic&destination=${location}`
+    );
+  };
+
   const mailtoHref = `mailto:${item.email}?subject=En kollega vill Haffa "${item.title}"&body=Hej ${item.contactPerson}!%0d%0aDin kollega ${user.name} vill Haffa "${item.title}" och har en fundering:`;
   const telHref = `tel:${item.phoneNumber}`;
 
   const isRecycleType = item.advertType === "recycle";
   const isBorrowType = item.advertType === "borrow";
 
+  const [reservationDateRange, setReservationDateRange] = useState<{
+    startDate: string | null;
+    endDate: string | null;
+  }>({
+    startDate: null,
+    endDate: null,
+  });
+
+  const handleReservationDateRange = (changeEvent: IDateRange) => {
+    const startDate = changeEvent?.startDate?.format("YYYY-MM-DD") || null;
+    const endDate = changeEvent?.endDate?.format("YYYY-MM-DD") || null;
+    setReservationDateRange({ startDate, endDate });
+  };
+
   const allDetails = (
     <>
+      <Modal isVisible={isModalVisible}>
+        <Modal.Content>
+          <Modal.CloseButton onClick={toggleModal} />
+          <ModalBody>
+            <h4>När vill du låna prylen?</h4>
+
+            <DateRangePicker
+              numberOfMonths={1}
+              onValueChange={handleReservationDateRange}
+            />
+
+            <Button
+              block
+              size="xl"
+              type="button"
+              onClick={() => {
+                alert(
+                  `Add reservation logic here : ${JSON.stringify(
+                    reservationDateRange
+                  )}`
+                );
+                toggleModal();
+              }}
+            >
+              Boka låning
+            </Button>
+            <Button
+              transparent
+              block
+              size="xl"
+              type="button"
+              onClick={toggleModal}
+            >
+              Avbryt
+            </Button>
+          </ModalBody>
+        </Modal.Content>
+      </Modal>
+
       <TopSection>
         {item.status === "available" && (
           <header className="header">
             <MdArrowBack onClick={goBackFunc} />
             <p className="headerTitle">{item.title}</p>
-            {showHeaderBtn && (
-              <Button
-                className="btn--haffa--header"
+            {showHeaderBtn && isRecycleType && (
+              <HeaderButton
+                size="sm"
                 onClick={() => {
                   onClickReservBtn();
                 }}
                 type="button"
               >
-                {isRecycleType ? "HAFFA!" : "Reservera"}
-              </Button>
+                HAFFA!
+              </HeaderButton>
+            )}
+            {showHeaderBtn && isBorrowType && (
+              <HeaderButton
+                size="sm"
+                onClick={() => {
+                  toggleModal();
+                }}
+                type="button"
+              >
+                RESERVERA
+              </HeaderButton>
             )}
           </header>
         )}
@@ -629,15 +662,16 @@ const ItemDetails: FC<ParamTypes> = () => {
             </div>
 
             {showHeaderBtn && (
-              <Button
-                className="btn--pickUp--header"
+              <HeaderButton
+                size="sm"
+                color="primaryLight"
                 onClick={() => {
                   onClickPickUpBtn();
                 }}
                 type="button"
               >
                 HÄMTA UT
-              </Button>
+              </HeaderButton>
             )}
           </header>
         )}
@@ -661,31 +695,55 @@ const ItemDetails: FC<ParamTypes> = () => {
           <p>{item.aterbruketId}</p>
         </div>
 
-        {item.status ===
-          "available" /* && item.giver !== user.attributes.sub */ && (
-            <Button
-              ref={(el: any) => {
-                buttonOutOfScreen.current = el;
-                setRefVisible(!!el);
-              }}
-              className="btn--haffa"
-              onClick={() => {
-                onClickReservBtn();
-              }}
-              type="button"
-            >
-              {isRecycleType ? "HAFFA!" : "Jag vill låna!"}
-            </Button>
-          )}
+        {isRecycleType && item.status === "available" && (
+          <Button
+            size="xl"
+            marginBottom={24}
+            marginLeft={24}
+            marginRight={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={() => {
+              onClickReservBtn();
+            }}
+            type="button"
+          >
+            HAFFA!
+          </Button>
+        )}
+
+        {isBorrowType && (
+          <Button
+            shadow
+            size="xl"
+            marginBottom={24}
+            marginLeft={24}
+            marginRight={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={toggleModal}
+            type="button"
+          >
+            Jag vill låna!
+          </Button>
+        )}
 
         {item.status === "reserved" && item.reservedBySub === user.sub && (
           <>
             <Button
+              size="xl"
+              marginBottom={12}
+              marginLeft={24}
+              marginRight={24}
+              color="primaryLight"
               ref={(el: any) => {
                 buttonOutOfScreen.current = el;
                 setRefVisible(!!el);
               }}
-              className=" btn--pickUp"
               onClick={() => {
                 onClickPickUpBtn();
               }}
@@ -693,29 +751,37 @@ const ItemDetails: FC<ParamTypes> = () => {
             >
               Hämta ut
             </Button>
-            <button
+            <Button
+              size="lg"
+              marginBottom={12}
+              marginLeft={24}
+              marginRight={24}
+              transparent
               type="button"
-              className="removeReservation"
               onClick={() => {
                 onClickRemoveResBtn();
               }}
             >
               Ta bort reservation
-            </button>
+            </Button>
           </>
         )}
 
         {item.status === "available" &&
           (item.giver === user.sub || user.isAdmin) && (
             <>
-              <Button
-                className=" btn--edit"
+              <EditButton
+                size="xl"
+                color="primaryLighter"
+                marginBottom={24}
+                marginLeft={24}
+                marginRight={24}
                 onClick={() => setEditItem(true)}
                 type="button"
               >
                 <MdEdit />
                 Ändra
-              </Button>
+              </EditButton>
               {item.giver === user.sub && (
                 <span>Den här annonsen har du lagt upp.</span>
               )}
@@ -725,7 +791,10 @@ const ItemDetails: FC<ParamTypes> = () => {
         {item.status === "pickedUp" && item.reservedBySub === user.sub && (
           <>
             <Button
-              className=" btn--regive"
+              size="xl"
+              marginBottom={24}
+              marginLeft={24}
+              marginRight={24}
               onClick={() => {
                 setRegive(true);
               }}
@@ -897,10 +966,15 @@ const ItemDetails: FC<ParamTypes> = () => {
               <h5>Adress</h5>
               <p>{item.department}</p>
               <p>{item.location}</p>
-              <Button className=" btn--adress" type="button">
+              <MapButton
+                size="lg"
+                secondary
+                type="button"
+                onClick={() => launchNavigation(item.location)}
+              >
                 Hitta hit
                 <MdPlace />
-              </Button>
+              </MapButton>
             </div>
           </Card>
         </Section>
