@@ -54,6 +54,7 @@ const TopSection = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
+  width: 100%;
 
   header {
     position: relative;
@@ -403,6 +404,13 @@ const ModalBody = styled.div`
   }
 `;
 
+const LoaderWrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 interface ParamTypes {
   id: string;
 }
@@ -676,13 +684,12 @@ const ItemDetails: FC<ParamTypes> = () => {
           </header>
         )}
 
-        {!image ? (
-          <Loader type="ThreeDots" color="#9db0c6" height={50} width={50} />
-        ) : (
-          <ImgDiv>
+        <ImgDiv>
+          {image &&
             <img src={image} alt="" onClick={() => setShowCarousel(true)} />
-          </ImgDiv>
-        )}
+          }
+        </ImgDiv>
+
         <div className="titleDiv">
           {isBorrowType && (
             <h4>
@@ -1058,6 +1065,10 @@ const ItemDetails: FC<ParamTypes> = () => {
           />
         ) : showCarousel ? (
           <CarouselComp setShowCarousel={setShowCarousel} image={image} />
+        ) : item && Object.keys(item).length === 0 ? (
+          <LoaderWrapper>
+            <Loader type="Rings" color="#50811b" height={80} width={80} />
+          </LoaderWrapper>
         ) : (
           allDetails
         )}
