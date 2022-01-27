@@ -43,6 +43,18 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
 type AdvertBorrowCalendar {
   allowedDateStart: AWSDate
   allowedDateEnd: AWSDate
+  calendarEvents: [CalendarEvent]
+}
+
+type CalendarEvent {
+  borrowedBySub: String
+  status: String
+  borrowedDateRange: DateRange
+}
+
+type DateRange {
+  dateStart: AWSDate
+  dateEnd: AWSDate
 }
 
 enum ItemAdvertType {
