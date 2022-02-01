@@ -185,8 +185,9 @@ const MultipleChoiceContainer = styled.div<MultipleChoiceDivProps>`
       }
     }
 
-    ${reverse &&
-    `
+    ${
+      reverse &&
+      `
     > div {
       flex-direction: row-reverse;
       justify-content: space-between;
@@ -263,7 +264,7 @@ export default function Form(props: {
   mutation: string;
   handleInputChange: (event: React.ChangeEvent<any>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<any>, data: any) => void;
-  handleDateRangeChange: (changeEvent: IDateRange) => void;
+  handleDateRangeChange: (changeEvent: IDateRange, bookingType: string) => void;
   handleSetValue: (value: string | string[], key: string) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
@@ -422,7 +423,10 @@ export default function Form(props: {
           <Label htmlFor={field.name} required={required}>
             {field.title}
           </Label>
-          <DateRangePicker onValueChange={props.handleDateRangeChange} />
+          <DateRangePicker
+            onValueChange={props.handleDateRangeChange}
+            bookingType="createNewCalendar"
+          />
         </FieldSection>
       );
     }

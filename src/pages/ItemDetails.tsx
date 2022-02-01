@@ -51,6 +51,10 @@ import {
 } from "../utils/advertHelper";
 import PickUpModal from "../components/ItemDetails/PickUpModal";
 import ReservationModal from "../components/ItemDetails/ReservationModal";
+import {
+  addDateRangeToEvents,
+  updateAdvertCalendar,
+} from "../utils/calendarUtils";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
@@ -563,15 +567,19 @@ const ItemDetails: FC<ParamTypes> = () => {
   const [reservationDateRange, setReservationDateRange] = useState<{
     startDate: string | null;
     endDate: string | null;
+    bookingType: string;
   }>({
     startDate: null,
     endDate: null,
+    bookingType: "",
   });
 
-  const handleReservationDateRange = (changeEvent: IDateRange) => {
-    const startDate = changeEvent?.startDate?.format("YYYY-MM-DD") || null;
-    const endDate = changeEvent?.endDate?.format("YYYY-MM-DD") || null;
-    setReservationDateRange({ startDate, endDate });
+  const handleReservationDateRange = (
+    changeEvent: IDateRange,
+    bookingType: string
+  ) => {
+    const { startDate, endDate } = changeEvent;
+    setReservationDateRange({ startDate, endDate, bookingType });
   };
 
   const userSub = user?.sub ? user.sub : "";
@@ -581,6 +589,25 @@ const ItemDetails: FC<ParamTypes> = () => {
   if (isBorrowType && (status === "reserved" || status === "pickUpAllowed")) {
     activeReservation = getActiveReservation(userSub);
   }
+
+  const saveReservation = async () => {
+    const addEventResult = addDateRangeToEvents(
+      item.advertBorrowCalendar,
+      {
+        dateRange: {
+          startDate: reservationDateRange.startDate,
+          endDate: reservationDateRange.endDate,
+        },
+        eventType: reservationDateRange.bookingType,
+      },
+      userSub
+    );
+
+    if (addEventResult.addDateRangeToEventsResult) {
+      await updateAdvertCalendar(item, addEventResult.advertBorrowCalendar);
+      await fetchItem();
+    }
+  };
 
   const allDetails = (
     <>
@@ -592,6 +619,7 @@ const ItemDetails: FC<ParamTypes> = () => {
           dateRange={reservationDateRange}
           setDateRange={handleReservationDateRange}
           onFinish={() => {
+            saveReservation();
             toast("Prylen är nu bokad!");
           }}
         />
@@ -655,45 +683,45 @@ const ItemDetails: FC<ParamTypes> = () => {
         {(status === "reserved" ||
           status === "pickedUp" ||
           status === "pickUpAllowed") && (
-            <header className="reservedHeader">
-              <MdArrowBack onClick={goBackFunc} />
+          <header className="reservedHeader">
+            <MdArrowBack onClick={goBackFunc} />
 
-              <div>
-                <p className="headerTitle headerTitle--reserved">{item.title}</p>
-                {status === "reserved" || status === "pickUpAllowed" ? (
-                  <p className="reservedP">Reserverad</p>
-                ) : (
-                  <p className="reservedP">Uthämtad</p>
-                )}
-              </div>
-
-              {isRecycleType && showHeaderBtn && (
-                <HeaderButton
-                  size="sm"
-                  color="primaryLight"
-                  onClick={() => {
-                    togglePickUpModal();
-                  }}
-                  type="button"
-                >
-                  HÄMTA UT
-                </HeaderButton>
+            <div>
+              <p className="headerTitle headerTitle--reserved">{item.title}</p>
+              {status === "reserved" || status === "pickUpAllowed" ? (
+                <p className="reservedP">Reserverad</p>
+              ) : (
+                <p className="reservedP">Uthämtad</p>
               )}
+            </div>
 
-              {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
-                <HeaderButton
-                  size="sm"
-                  color="primaryLight"
-                  onClick={() => {
-                    togglePickUpModal();
-                  }}
-                  type="button"
-                >
-                  HÄMTA UT
-                </HeaderButton>
-              )}
-            </header>
-          )}
+            {isRecycleType && showHeaderBtn && (
+              <HeaderButton
+                size="sm"
+                color="primaryLight"
+                onClick={() => {
+                  togglePickUpModal();
+                }}
+                type="button"
+              >
+                HÄMTA UT
+              </HeaderButton>
+            )}
+
+            {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
+              <HeaderButton
+                size="sm"
+                color="primaryLight"
+                onClick={() => {
+                  togglePickUpModal();
+                }}
+                type="button"
+              >
+                HÄMTA UT
+              </HeaderButton>
+            )}
+          </header>
+        )}
 
         <ImgDiv>
           {image && (

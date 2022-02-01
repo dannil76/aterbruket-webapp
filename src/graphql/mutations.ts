@@ -58,6 +58,12 @@ export const createAdvert = /* GraphQL */ `
       advertBorrowCalendar {
         allowedDateStart
         allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+        }
       }
       accessRestriction
       accessRestrictionSelection
@@ -122,6 +128,12 @@ export const updateAdvert = /* GraphQL */ `
       advertBorrowCalendar {
         allowedDateStart
         allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+        }
       }
       accessRestriction
       accessRestrictionSelection
@@ -186,6 +198,12 @@ export const deleteAdvert = /* GraphQL */ `
       advertBorrowCalendar {
         allowedDateStart
         allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+        }
       }
       accessRestriction
       accessRestrictionSelection

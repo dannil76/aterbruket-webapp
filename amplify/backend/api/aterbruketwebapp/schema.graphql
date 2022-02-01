@@ -49,10 +49,6 @@ type AdvertBorrowCalendar {
 type CalendarEvent {
   borrowedBySub: String
   status: String
-  borrowedDateRange: DateRange
-}
-
-type DateRange {
   dateStart: AWSDate
   dateEnd: AWSDate
 }

@@ -23,7 +23,7 @@ interface Props {
     startDate: string | null;
     endDate: string | null;
   };
-  setDateRange: (changeEvent: IDateRange) => void;
+  setDateRange: (changeEvent: IDateRange, bookingType: string) => void;
   onFinish: () => void;
 }
 
@@ -42,7 +42,11 @@ const ReservationModal: React.FC<Props> = ({
         <ModalContent>
           <h4>När vill du låna prylen?</h4>
 
-          <DateRangePicker numberOfMonths={1} onValueChange={setDateRange} />
+          <DateRangePicker
+            numberOfMonths={1}
+            onValueChange={setDateRange}
+            bookingType="reserved"
+          />
 
           <Button
             block

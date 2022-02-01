@@ -84,6 +84,14 @@ export enum ItemAdvertType {
 export type AdvertBorrowCalendarInput = {
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
+  calendarEvents?: Array< CalendarEventInput | null > | null,
+};
+
+export type CalendarEventInput = {
+  borrowedBySub?: string | null,
+  status?: string | null,
+  dateStart?: string | null,
+  dateEnd?: string | null,
 };
 
 export type ModelAdvertConditionInput = {
@@ -261,6 +269,15 @@ export type AdvertBorrowCalendar = {
   __typename: "AdvertBorrowCalendar",
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
+  calendarEvents?:  Array<CalendarEvent | null > | null,
+};
+
+export type CalendarEvent = {
+  __typename: "CalendarEvent",
+  borrowedBySub?: string | null,
+  status?: string | null,
+  dateStart?: string | null,
+  dateEnd?: string | null,
 };
 
 export type UpdateAdvertInput = {
@@ -420,7 +437,7 @@ export enum ModelSortDirection {
 
 export type ModelAdvertConnection = {
   __typename: "ModelAdvertConnection",
-  items?:  Array<Advert | null >,
+  items?:  Array<Advert >,
   nextToken?: string | null,
 };
 
@@ -436,7 +453,7 @@ export type ModelPageFilterInput = {
 
 export type ModelPageConnection = {
   __typename: "ModelPageConnection",
-  items?:  Array<Page | null >,
+  items?:  Array<Page >,
   nextToken?: string | null,
 };
 
@@ -502,6 +519,13 @@ export type CreateAdvertMutation = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -572,6 +596,13 @@ export type UpdateAdvertMutation = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -642,6 +673,13 @@ export type DeleteAdvertMutation = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -763,6 +801,13 @@ export type GetAdvertQuery = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -844,7 +889,7 @@ export type ListAdvertsQuery = {
       accessRestrictionSelection?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
-    } | null >,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -884,7 +929,7 @@ export type ListPagesQuery = {
       content?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null >,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -946,6 +991,13 @@ export type OnCreateAdvertSubscription = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -1011,6 +1063,13 @@ export type OnUpdateAdvertSubscription = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,
@@ -1076,6 +1135,13 @@ export type OnDeleteAdvertSubscription = {
       __typename: "AdvertBorrowCalendar",
       allowedDateStart?: string | null,
       allowedDateEnd?: string | null,
+      calendarEvents?:  Array< {
+        __typename: "CalendarEvent",
+        borrowedBySub?: string | null,
+        status?: string | null,
+        dateStart?: string | null,
+        dateEnd?: string | null,
+      } | null > | null,
     } | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?: Array< string | null > | null,

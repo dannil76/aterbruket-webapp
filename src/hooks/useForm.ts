@@ -87,8 +87,9 @@ const useForm = (initialValues: any, mutation: string) => {
     setValues({
       ...values,
       advertBorrowCalendar: {
-        allowedDateStart: changeEvent?.startDate?.format("YYYY-MM-DD") || null,
-        allowedDateEnd: changeEvent?.endDate?.format("YYYY-MM-DD") || null,
+        allowedDateStart: changeEvent?.startDate,
+        allowedDateEnd: changeEvent?.endDate,
+        calendarEvents: [],
       },
     });
   };

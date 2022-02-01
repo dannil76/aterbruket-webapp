@@ -68,6 +68,11 @@ const AddItem: FC = () => {
       borrowDifficultyLevel: "",
       accessRestriction: "none",
       accessRestrictionSelection: [],
+      advertBorrowCalendar: {
+        allowedDateStart: null,
+        allowedDateEnd: null,
+        calendarEvents: [],
+      },
     },
     createAdvert
   );

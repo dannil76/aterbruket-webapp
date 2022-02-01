@@ -4,11 +4,16 @@ import moment from "moment";
 import "moment/locale/sv";
 import "react-dates/lib/css/_datepicker.css";
 import "react-dates/initialize";
-import { IDateRangePickerProps, IDateRange } from "../interfaces/IDateRange";
+import {
+  IDateRangePickerProps,
+  IDateRangePickerHandler,
+} from "../interfaces/IDateRange";
 
 const DateRangePicker: React.FC<IDateRangePickerProps> = ({
   onValueChange,
   enabledDateRange,
+  blockedDay,
+  bookingType,
   ...props
 }: IDateRangePickerProps) => {
   const [startDate, setStartDate] = useState<moment.Moment | null>(null);
@@ -17,22 +22,14 @@ const DateRangePicker: React.FC<IDateRangePickerProps> = ({
     "startDate" | "endDate" | null
   >(null);
 
-  const handleDateChange = (selectedDates: IDateRange) => {
+  const handleDateChange = (selectedDates: IDateRangePickerHandler) => {
     setStartDate(selectedDates.startDate);
     setEndDate(selectedDates.endDate);
 
-    onValueChange(selectedDates);
-  };
+    const start = selectedDates.startDate?.format("YYYY-MM-DD") || null;
+    const end = selectedDates.endDate?.format("YYYY-MM-DD") || null;
 
-  const blockDay = (day: moment.Moment) => {
-    if (typeof enabledDateRange === "undefined") {
-      return false;
-    }
-
-    return !(
-      day.isSameOrAfter(enabledDateRange.startDate, "day") &&
-      day.isSameOrBefore(enabledDateRange.endDate, "day")
-    );
+    onValueChange({ startDate: start, endDate: end }, bookingType);
   };
 
   return (
@@ -47,7 +44,7 @@ const DateRangePicker: React.FC<IDateRangePickerProps> = ({
       onFocusChange={setFocusedInput}
       onDatesChange={handleDateChange}
       hideKeyboardShortcutsPanel
-      isDayBlocked={blockDay}
+      isDayBlocked={blockedDay}
       {...props}
     />
   );
