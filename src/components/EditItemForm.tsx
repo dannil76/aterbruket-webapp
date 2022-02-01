@@ -5,6 +5,7 @@ import Form from "./Form";
 import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
+import { IAdvert } from "../interfaces/IAdvert";
 
 const ItemImg = styled.img`
   width: 300px;
@@ -12,55 +13,8 @@ const ItemImg = styled.img`
   margin: 0;
 `;
 
-interface IareaOfUse {
-  indoors: boolean;
-  outside: boolean;
-}
-
-interface Imaterial {
-  metal: boolean;
-  plastic: boolean;
-  other: boolean;
-  wood: boolean;
-}
-
 interface Props {
-  item: {
-    id: number;
-    title: string;
-    advertType: string;
-    aterbruketId: string;
-    status: string;
-    category?: string;
-    quantity?: number;
-    height?: string;
-    width?: string;
-    length?: string;
-    color?: string;
-    material?: Imaterial | any;
-    condition?: string;
-    areaOfUse?: IareaOfUse | any;
-    description?: string;
-    department?: string;
-    location?: string;
-    contactPerson?: string;
-    email?: string;
-    phoneNumber?: string;
-    climateImpact: number;
-    version: number;
-    revisions: number;
-    images: [{ url: string }];
-    purchasePrice: number;
-    company?: string;
-    missingItemsInformation?: string;
-    pickUpInformation?: string;
-    pickUpInstructions?: string;
-    returnInformation?: string;
-    accessories?: string[];
-    borrowDifficultyLevel?: string;
-    accessRestriction?: string;
-    accessRestrictionSelection?: string[];
-  };
+  item: IAdvert;
   setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
   image: string;
@@ -96,15 +50,15 @@ const EditItemForm: FC<Props> = ({
       length: item.length,
       color: item.color,
       material: {
-        metal: item.material[0].metal,
-        plastic: item.material[0].plastic,
-        other: item.material[0].other,
-        wood: item.material[0].wood,
+        metal: item?.material?.[0]?.metal,
+        plastic: item?.material?.[0]?.plastic,
+        other: item?.material?.[0]?.other,
+        wood: item?.material?.[0]?.wood,
       },
       condition: item.condition,
       areaOfUse: {
-        indoors: item.areaOfUse[0].indoors,
-        outside: item.areaOfUse[0].outside,
+        indoors: item?.areaOfUse?.[0]?.indoors,
+        outside: item?.areaOfUse?.[0]?.outside,
       },
       description: item.description,
       company: item.company,

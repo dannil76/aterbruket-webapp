@@ -6,7 +6,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import { IDateRange } from "../interfaces/IDateRange";
@@ -560,17 +559,6 @@ export default function Form(props: {
           </Button>
         </ActionsContainer>
       </form>
-      <ToastContainer
-        position="top-center"
-        autoClose={6000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </FormContainer>
   );
 }

@@ -10,35 +10,23 @@ const CameraContainer = styled.section`
   @media only screen and (max-width: 600px) {
     width: 100%;
     height: 100%;
-    margin: 11% 0;
   }
 
   @media only screen and (min-width: 601px) {
     width: 50%;
     height: 50%;
-    margin: 2% 0;
   }
 `;
 
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
-
 interface Props {
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
+  setResult: (result: string) => void;
 }
 
-const OpenCamera: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
+const QrCamera: FC<Props> = ({ setResult }: Props) => {
   const handleScan = (result: any): any => {
+    console.log("handleScan result", result);
     if (result) {
-      setQrCamera({ ...qrCamera, result });
+      setResult(result);
     }
   };
 
@@ -49,15 +37,14 @@ const OpenCamera: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
   return (
     <CameraContainer>
       <QrReader
-        delay={qrCamera.delay}
+        delay={500}
         onError={handleError}
         onScan={handleScan}
-        style={{ width: "100%" }}
-        showViewFinder={false}
+        style={{ width: "100%", borderRadius: "9.5px 9.5px 0 0" }}
+        showViewFinder={true}
       />
-      <p>{qrCamera.result}</p>
     </CameraContainer>
   );
 };
 
-export default OpenCamera;
+export default QrCamera;

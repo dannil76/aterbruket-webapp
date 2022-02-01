@@ -31,7 +31,16 @@ const ButtonComponent = styled.button<IButton>`
   margin-right: ${(props) =>
     props.marginRight ? `${props.marginRight}px` : "0"};
   margin-left: ${(props) => (props.marginLeft ? `${props.marginLeft}px` : "0")};
-  magin-top: ${(props) => (props.marginTop ? `${props.marginTop}px` : "0")};
+  margin-top: ${(props) => (props.marginTop ? `${props.marginTop}px` : "0")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    font-size: 24px;
+    margin-right: 16px;
+  }
+
   ${({ block }) =>
     block &&
     `

@@ -512,7 +512,7 @@ export default [
         {
           element: "i",
           value:
-            "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad",
+            "Det går att komma in själv ”från gatan” och hitta prylen för att skanna dess QR-kod utan någon annan inblandad",
         },
       ],
     },

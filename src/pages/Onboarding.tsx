@@ -280,7 +280,7 @@ const Onboarding: FC = () => {
             </Text>
             <Text>
               Med Haffa genererar du enkelt en QR-kod som du klistrar på din
-              pryl och den som lånar kan enkelt scanna koden med sin telefon för
+              pryl och den som lånar kan enkelt skanna koden med sin telefon för
               att låna eller lämna tillbaka.{" "}
             </Text>
           </div>

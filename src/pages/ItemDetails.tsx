@@ -26,10 +26,10 @@ import {
   MdPerson,
   MdPhone,
   MdPeople,
+  MdCameraAlt,
 } from "react-icons/md";
 import { FiAtSign } from "react-icons/fi";
-import { isMobile } from "react-device-detect";
-import DateRangePicker from "../components/DateRangePicker";
+import { toast } from "react-toastify";
 import QRCode from "../components/QRCodeContainer";
 import { GetAdvertQuery } from "../API";
 import { getAdvert } from "../graphql/queries";
@@ -40,9 +40,17 @@ import showDays from "../hooks/showDays";
 import { getCategoryByKey } from "../utils/handleCategories";
 import { conditions, materials, areaOfUse } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
-import { Modal, useModal } from "../components/Modal";
+import { useModal } from "../components/Modal";
 import Button from "../components/Button";
 import { IDateRange } from "../interfaces/IDateRange";
+import {
+  getStatus,
+  getActiveReservation,
+  convertToSwedishDate,
+  launchNavigation,
+} from "../utils/advertHelper";
+import PickUpModal from "../components/ItemDetails/PickUpModal";
+import ReservationModal from "../components/ItemDetails/ReservationModal";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
@@ -245,22 +253,6 @@ const Card = styled.div`
     padding: 24px;
   }
 
-  h5 {
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin: 0 0 12px 0;
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.primary};
-
-    span {
-      display: inline-block;
-      margin-right: 13px;
-      vertical-align: middle;
-    }
-  }
-
   p {
     font-size: 18px;
     margin: 0 0 12px 0;
@@ -330,6 +322,22 @@ const Card = styled.div`
   }
 `;
 
+const SubTitle = styled.h5`
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 12px 0;
+  font-weight: 900;
+  font-size: 12px;
+  line-height: 150%;
+  color: ${(props) => props.theme.colors.primary};
+
+  span {
+    display: inline-block;
+    margin-right: 13px;
+    vertical-align: middle;
+  }
+`;
+
 const Section = styled.section`
   padding-bottom: 28px;
 `;
@@ -365,17 +373,10 @@ const HeaderButton = styled(Button)`
 `;
 
 const EditButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 2px solid #6f9725;
   color: ${(props) => props.theme.colors.darkest};
-  position: relative;
-
   svg {
-    font-size: 24px;
     color: #6f9725;
-    margin-right: 16px;
   }
 `;
 
@@ -395,20 +396,16 @@ const MapButton = styled(Button)`
   }
 `;
 
-const ModalBody = styled.div`
-  margin-top: 72px;
-  text-align: center;
-
-  .DateRangePicker {
-    margin-bottom: 56px;
-  }
-`;
-
 const LoaderWrapper = styled.div`
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ReservationSection = styled.div`
+  text-align: center;
+  margin-bottom: 16px;
 `;
 
 interface ParamTypes {
@@ -434,7 +431,8 @@ const ItemDetails: FC<ParamTypes> = () => {
   const buttonOutOfScreen = useRef(null);
   const [refVisible, setRefVisible] = useState(false);
   const [showHeaderBtn, setShowHeaderBtn] = useState(false);
-  const [isModalVisible, toggleModal] = useModal();
+  const [isReservationModalVisible, toggleReservationModal] = useModal();
+  const [isPickUpModalVisible, togglePickUpModal] = useModal();
 
   const getMetaValues = (itemValues: MetaValues, allValues: IOption[]) => {
     const values = Object.entries(itemValues)
@@ -556,15 +554,6 @@ const ItemDetails: FC<ParamTypes> = () => {
     history.goBack();
   };
 
-  const launchNavigation = (location: string) => {
-    if (isMobile) {
-      window.open(`geo:0,0?q=${location}`);
-    }
-    window.open(
-      `https://www.google.com/maps/dir/?api=1&travelmode=transit&layer=traffic&destination=${location}`
-    );
-  };
-
   const mailtoHref = `mailto:${item.email}?subject=En kollega vill Haffa "${item.title}"&body=Hej ${item.contactPerson}!%0d%0aDin kollega ${user.name} vill Haffa "${item.title}" och har en fundering:`;
   const telHref = `tel:${item.phoneNumber}`;
 
@@ -585,49 +574,54 @@ const ItemDetails: FC<ParamTypes> = () => {
     setReservationDateRange({ startDate, endDate });
   };
 
+  const userSub = user?.sub ? user.sub : "";
+  const status = getStatus(item, userSub);
+
+  let activeReservation = null;
+  if (isBorrowType && (status === "reserved" || status === "pickUpAllowed")) {
+    activeReservation = getActiveReservation(userSub);
+  }
+
   const allDetails = (
     <>
-      <Modal isVisible={isModalVisible}>
-        <Modal.Content>
-          <Modal.CloseButton onClick={toggleModal} />
-          <ModalBody>
-            <h4>När vill du låna prylen?</h4>
+      {status === "available" && (
+        <ReservationModal
+          advert={item}
+          isVisible={isReservationModalVisible}
+          toggleModal={toggleReservationModal}
+          dateRange={reservationDateRange}
+          setDateRange={handleReservationDateRange}
+        />
+      )}
 
-            <DateRangePicker
-              numberOfMonths={1}
-              onValueChange={handleReservationDateRange}
-            />
+      {isBorrowType && status === "pickUpAllowed" && (
+        <PickUpModal
+          advert={item}
+          isVisible={isPickUpModalVisible}
+          toggleModal={togglePickUpModal}
+          onFinish={() => {
+            console.log("borrow finish");
+            toast("Snyggt! Prylen är nu lånad och i ditt ansvar!");
+          }}
+        />
+      )}
 
-            <Button
-              block
-              size="xl"
-              type="button"
-              onClick={() => {
-                alert(
-                  `Add reservation logic here : ${JSON.stringify(
-                    reservationDateRange
-                  )}`
-                );
-                toggleModal();
-              }}
-            >
-              Boka låning
-            </Button>
-            <Button
-              transparent
-              block
-              size="xl"
-              type="button"
-              onClick={toggleModal}
-            >
-              Avbryt
-            </Button>
-          </ModalBody>
-        </Modal.Content>
-      </Modal>
+      {isRecycleType &&
+        status === "reserved" &&
+        item.reservedBySub === user.sub && (
+          <PickUpModal
+            advert={item}
+            isVisible={isPickUpModalVisible}
+            toggleModal={togglePickUpModal}
+            onFinish={() => {
+              onClickPickUpBtn();
+              toast("Snyggt! Prylen är nu haffad!");
+            }}
+          />
+        )}
 
       <TopSection>
-        {item.status === "available" && (
+        {status === "available" && (
           <header className="header">
             <MdArrowBack onClick={goBackFunc} />
             <p className="headerTitle">{item.title}</p>
@@ -646,7 +640,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               <HeaderButton
                 size="sm"
                 onClick={() => {
-                  toggleModal();
+                  toggleReservationModal();
                 }}
                 type="button"
               >
@@ -656,38 +650,53 @@ const ItemDetails: FC<ParamTypes> = () => {
           </header>
         )}
 
-        {(item.status === "reserved" || item.status === "pickedUp") && (
-          <header className="reservedHeader">
-            <MdArrowBack onClick={goBackFunc} />
+        {(status === "reserved" ||
+          status === "pickedUp" ||
+          status === "pickUpAllowed") && (
+            <header className="reservedHeader">
+              <MdArrowBack onClick={goBackFunc} />
 
-            <div>
-              <p className="headerTitle headerTitle--reserved">{item.title}</p>
-              {item.status === "reserved" ? (
-                <p className="reservedP">Reserverad</p>
-              ) : (
-                <p className="reservedP">Uthämtad</p>
+              <div>
+                <p className="headerTitle headerTitle--reserved">{item.title}</p>
+                {status === "reserved" || status === "pickUpAllowed" ? (
+                  <p className="reservedP">Reserverad</p>
+                ) : (
+                  <p className="reservedP">Uthämtad</p>
+                )}
+              </div>
+
+              {isRecycleType && showHeaderBtn && (
+                <HeaderButton
+                  size="sm"
+                  color="primaryLight"
+                  onClick={() => {
+                    togglePickUpModal();
+                  }}
+                  type="button"
+                >
+                  HÄMTA UT
+                </HeaderButton>
               )}
-            </div>
 
-            {showHeaderBtn && (
-              <HeaderButton
-                size="sm"
-                color="primaryLight"
-                onClick={() => {
-                  onClickPickUpBtn();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </HeaderButton>
-            )}
-          </header>
-        )}
+              {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
+                <HeaderButton
+                  size="sm"
+                  color="primaryLight"
+                  onClick={() => {
+                    togglePickUpModal();
+                  }}
+                  type="button"
+                >
+                  HÄMTA UT
+                </HeaderButton>
+              )}
+            </header>
+          )}
 
         <ImgDiv>
-          {image &&
+          {image && (
             <img src={image} alt="" onClick={() => setShowCarousel(true)} />
-          }
+          )}
         </ImgDiv>
 
         <div className="titleDiv">
@@ -702,7 +711,7 @@ const ItemDetails: FC<ParamTypes> = () => {
           <p>{item.aterbruketId}</p>
         </div>
 
-        {isRecycleType && item.status === "available" && (
+        {isRecycleType && status === "available" && (
           <Button
             size="xl"
             marginBottom={24}
@@ -722,7 +731,44 @@ const ItemDetails: FC<ParamTypes> = () => {
           </Button>
         )}
 
-        {isBorrowType && (
+        {isRecycleType &&
+          status === "reserved" &&
+          item.reservedBySub === user.sub && (
+            <>
+              <Button
+                size="xl"
+                marginBottom={12}
+                marginLeft={24}
+                marginRight={24}
+                color="primaryLight"
+                ref={(el: any) => {
+                  buttonOutOfScreen.current = el;
+                  setRefVisible(!!el);
+                }}
+                onClick={() => {
+                  togglePickUpModal();
+                }}
+                type="button"
+              >
+                Hämta ut
+              </Button>
+              <Button
+                size="lg"
+                marginBottom={12}
+                marginLeft={24}
+                marginRight={24}
+                transparent
+                type="button"
+                onClick={() => {
+                  onClickRemoveResBtn();
+                }}
+              >
+                Ta bort reservation
+              </Button>
+            </>
+          )}
+
+        {isBorrowType && status === "available" && (
           <Button
             shadow
             size="xl"
@@ -733,49 +779,51 @@ const ItemDetails: FC<ParamTypes> = () => {
               buttonOutOfScreen.current = el;
               setRefVisible(!!el);
             }}
-            onClick={toggleModal}
+            onClick={toggleReservationModal}
             type="button"
           >
             Jag vill låna!
           </Button>
         )}
 
-        {item.status === "reserved" && item.reservedBySub === user.sub && (
-          <>
-            <Button
-              size="xl"
-              marginBottom={12}
-              marginLeft={24}
-              marginRight={24}
-              color="primaryLight"
-              ref={(el: any) => {
-                buttonOutOfScreen.current = el;
-                setRefVisible(!!el);
-              }}
-              onClick={() => {
-                onClickPickUpBtn();
-              }}
-              type="button"
-            >
-              Hämta ut
-            </Button>
-            <Button
-              size="lg"
-              marginBottom={12}
-              marginLeft={24}
-              marginRight={24}
-              transparent
-              type="button"
-              onClick={() => {
-                onClickRemoveResBtn();
-              }}
-            >
-              Ta bort reservation
-            </Button>
-          </>
+        {isBorrowType && status === "pickUpAllowed" && (
+          <Button
+            shadow
+            size="xl"
+            color="primaryLight"
+            marginLeft={24}
+            marginRight={24}
+            marginBottom={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={togglePickUpModal}
+            type="button"
+          >
+            <MdCameraAlt />
+            Hämta lånad pryl
+          </Button>
         )}
 
-        {item.status === "available" &&
+        {status === "pickedUp" &&
+          isRecycleType &&
+          item.reservedBySub === user.sub && (
+            <Button
+              size="xl"
+              marginBottom={24}
+              marginLeft={24}
+              marginRight={24}
+              onClick={() => {
+                setRegive(true);
+              }}
+              type="button"
+            >
+              Annonsera igen
+            </Button>
+          )}
+
+        {(status === "available" || isBorrowType) &&
           (item.giver === user.sub || user.isAdmin) && (
             <>
               <EditButton
@@ -796,21 +844,19 @@ const ItemDetails: FC<ParamTypes> = () => {
             </>
           )}
 
-        {item.status === "pickedUp" && item.reservedBySub === user.sub && (
-          <>
-            <Button
-              size="xl"
-              marginBottom={24}
-              marginLeft={24}
-              marginRight={24}
-              onClick={() => {
-                setRegive(true);
-              }}
-              type="button"
-            >
-              Annonsera igen
-            </Button>
-          </>
+        {isBorrowType && (status === "reserved" || status === "pickUpAllowed") && (
+          <ReservationSection>
+            <SubTitle>Reserverad av dig</SubTitle>
+            <p>
+              {convertToSwedishDate(
+                activeReservation?.borrowedDateRange?.dateStart ?? ""
+              )}{" "}
+              -{" "}
+              {convertToSwedishDate(
+                activeReservation?.borrowedDateRange?.dateEnd ?? ""
+              )}
+            </p>
+          </ReservationSection>
         )}
       </TopSection>
 
@@ -903,7 +949,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </tr>
                   )}
 
-                  {item.status === "available" && (
+                  {status === "available" && (
                     <tr>
                       <td>
                         <h4>Har varit tillgänglig i</h4>
@@ -971,7 +1017,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               )}
             </div>
             <div className="cardBody">
-              <h5>Adress</h5>
+              <SubTitle>Adress</SubTitle>
               <p>{item.department}</p>
               <p>{item.location}</p>
               <MapButton
@@ -992,20 +1038,20 @@ const ItemDetails: FC<ParamTypes> = () => {
             <h4 className="dark">Hur du haffar ut prylen</h4>
             <Card>
               <div className="cardBody">
-                <h5>
+                <SubTitle>
                   <DifficultyIcon level={item.borrowDifficultyLevel} />
                   Hur svår att haffa ut?
-                </h5>
+                </SubTitle>
                 <p>
                   {item.borrowDifficultyLevel === "easy" &&
-                    "Det går att komma in själv ”från gatan” och hitta prylen för att scanna dess QR-kod utan någon annan inblandad."}
+                    "Det går att komma in själv ”från gatan” och hitta prylen för att skanna dess QR-kod utan någon annan inblandad."}
                   {item.borrowDifficultyLevel === "medium" &&
                     "Prylen finns i ett rum som bara de som jobbar där har tillgång till, någon behöver öppna dörren för dig etc."}
                   {item.borrowDifficultyLevel === "hard" &&
                     "Prylen finns i ett låst skåp bakom en låst dörr. Du behöver få tag i en viss person för att få hjälp att komma in."}
                 </p>
 
-                <h5>Så Här går det till</h5>
+                <SubTitle>Så Här går det till</SubTitle>
                 <p>{item.pickUpInstructions ?? ""}</p>
               </div>
             </Card>
@@ -1022,7 +1068,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                 </div>
                 <div>
                   <h4 className="dark">{item.contactPerson}</h4>
-                  <h5 className="company">{item.company}</h5>
+                  <SubTitle className="company">{item.company}</SubTitle>
                 </div>
               </div>
               {item.phoneNumber && (

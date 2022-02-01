@@ -5,56 +5,10 @@ import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
-
-interface IareaOfUse {
-  indoors: boolean;
-  outside: boolean;
-}
-
-interface Imaterial {
-  metal: boolean;
-  plastic: boolean;
-  other: boolean;
-  wood: boolean;
-}
+import { IAdvert } from "../interfaces/IAdvert";
 
 interface Props {
-  item: {
-    id: number;
-    title: string;
-    advertType: string;
-    aterbruketId: string;
-    status: string;
-    category?: string;
-    quantity?: number;
-    height?: number;
-    width?: number;
-    length?: number;
-    color?: string;
-    material?: Imaterial | any;
-    condition?: string;
-    areaOfUse?: IareaOfUse | any;
-    description?: string;
-    department?: string;
-    location?: string;
-    contactPerson?: string;
-    giver: string;
-    email?: string;
-    phoneNumber?: number;
-    climateImpact: number;
-    version: number;
-    revisions: number;
-    company?: string;
-    purchasePrice: number;
-    missingItemsInformation?: string;
-    pickUpInformation?: string;
-    pickUpInstructions?: string;
-    returnInformation?: string;
-    accessories?: string[];
-    borrowDifficultyLevel?: string;
-    accessRestriction?: string;
-    accessRestrictionSelection?: string[];
-  };
+  item: IAdvert;
   setRegive: React.Dispatch<React.SetStateAction<boolean>>;
   closeEditformAndFetchItem: () => void;
 }
@@ -91,15 +45,15 @@ const RegiveForm: FC<Props> = ({
       length: item.length,
       color: item.color,
       material: {
-        metal: item.material[0].metal,
-        plastic: item.material[0].plastic,
-        other: item.material[0].other,
-        wood: item.material[0].wood,
+        metal: item?.material?.[0]?.metal,
+        plastic: item?.material?.[0]?.plastic,
+        other: item?.material?.[0]?.other,
+        wood: item?.material?.[0]?.wood,
       },
       condition: item.condition,
       areaOfUse: {
-        indoors: item.areaOfUse[0].indoors,
-        outside: item.areaOfUse[0].outside,
+        indoors: item?.areaOfUse?.[0]?.indoors,
+        outside: item?.areaOfUse?.[0]?.outside,
       },
       description: item.description,
       company: user.company ? user.company : "",

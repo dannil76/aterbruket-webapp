@@ -1,7 +1,17 @@
 import React, { FunctionComponent, MouseEvent } from "react";
 import { createPortal } from "react-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { MdClose } from "react-icons/md";
+
+const slideIn = keyframes`
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+`;
+
+const fadeIn = keyframes`
+  from {opacity: 0}
+  to {opacity: 1}
+`;
 
 const ModalDiv = styled.div`
   position: fixed;
@@ -10,22 +20,32 @@ const ModalDiv = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.64);
+  -webkit-animation-name: ${fadeIn};
+  -webkit-animation-duration: 0.4s;
+  animation-name: ${fadeIn};
+  animation-duration: 0.4s
 `;
 
 const Content = styled.div`
-  position: absolute;
-  bottom: 0;
+  padding: 0 32px 32px 32px;
+`;
 
-  border-radius: 9.5px 9.5px 0 0;
+const Body = styled.div<BodyProps>`
+  overflow: auto;
+  position: fixed;
+  bottom: 0;
   background-color: ${(props) => props.theme.colors.white};
-  margin: auto;
-  box-sizing: border-box;
   width: 100%;
+  -webkit-animation-name:  ${slideIn};
+  -webkit-animation-duration: 0.4s;
+  animation-name:  ${slideIn};
+  animation-duration: 0.4s;
+  border-radius: 9.5px 9.5px 0 0;
   height: calc(100% - 20px);
-  padding: 20px;
+  height: ${(props) => props.autoHeight ? `auto` : `calc(100% - 20px)`};
 `;
 
 const Button = styled.button`
@@ -37,6 +57,7 @@ const Button = styled.button`
   border: none;
   top: 24px;
   right: 24px;
+  z-index: 1001;
 
   svg {
     position: absolute;
@@ -52,7 +73,11 @@ interface CloseButtonProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
+interface BodyProps {
+  autoHeight?: boolean;
+}
 interface ModalComposition {
+  Body: FunctionComponent<BodyProps>;
   Content: FunctionComponent;
   CloseButton: FunctionComponent<CloseButtonProps>;
 }
@@ -76,6 +101,7 @@ const CloseButton: FunctionComponent<CloseButtonProps> = ({ onClick }) => (
   </Button>
 );
 
+Modal.Body = Body;
 Modal.Content = Content;
 Modal.CloseButton = CloseButton;
 

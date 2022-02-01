@@ -87,7 +87,7 @@ const QRCodeContainer: FC<IProps> = ({ id }: IProps) => {
           <strong>Återbruka, dela, cirkulera mera</strong> i Helsingborg.
         </p>
         <p style={{ fontSize: "9px", margin: "2px 0px 0px 10px" }}>
-          Scanna QR-koden och bidra till en mer hållbar värld.
+          Skanna QR-koden och bidra till en mer hållbar värld.
         </p>
         <div
           className="qrAndLogoDiv"

@@ -32,22 +32,8 @@ const MenuDiv = styled.div`
     }
   }
 `;
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
 
-type Props = {
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
-};
-
-const MenuBar: FC<Props> = ({ setQrCamera, qrCamera }: Props) => {
+const MenuBar: FC = () => {
   return (
     <MenuDiv>
       <NavLink
@@ -55,9 +41,7 @@ const MenuBar: FC<Props> = ({ setQrCamera, qrCamera }: Props) => {
         activeStyle={{
           color: "#80B14A",
         }}
-        to="/app"
-        onClick={() => setQrCamera({ ...qrCamera, result: "" })}
-      >
+        to="/app">
         <MdHome className="icon" />
         Hem
       </NavLink>

@@ -4,12 +4,16 @@ import { Link } from "react-router-dom";
 import { API, Storage } from "aws-amplify";
 import { MdArrowForward } from "react-icons/md";
 import { graphqlOperation } from "@aws-amplify/api";
+import { toast } from "react-toastify";
 import { createAdvert, updateAdvert } from "../graphql/mutations";
 import UserContext from "../contexts/UserContext";
+import PickUpModal from "./ItemDetails/PickUpModal";
+import { IAdvert } from "../interfaces/IAdvert";
+import { useModal } from "./Modal";
 
 interface Props {
   imageKey: string;
-  filteredItem: any;
+  filteredItem: IAdvert;
   fetchReservedAdverts: any;
   itemsFrom: string;
 }
@@ -130,6 +134,7 @@ const Card: FC<Props> = ({
   const [url, setURL] = useState(undefined) as any;
   const { user } = useContext(UserContext);
   const [itemUpdated, setItemUpdated] = useState(false);
+  const [isPickUpModalVisible, togglePickUpModal] = useModal();
 
   const fetchImage = (): void => {
     Storage.get(imageKey).then((url: any) => {
@@ -138,7 +143,7 @@ const Card: FC<Props> = ({
   };
   useEffect(() => {
     fetchImage();
-    return () => {};
+    return () => { };
   }, []);
 
   const updateItem = async (newStatus: string) => {
@@ -164,60 +169,75 @@ const Card: FC<Props> = ({
     await API.graphql(graphqlOperation(createAdvert, { input: filteredItem }));
   };
 
-  const onClickPickUpBtn = () => {
-    updateItem("pickedUp");
-  };
-
   useEffect(() => {
     if (itemUpdated) {
       fetchReservedAdverts();
       setItemUpdated(false);
     }
-    return () => {};
+    return () => { };
   }, [itemUpdated]);
 
+  const handlePickUp = () => {
+    toast("Snyggt! Prylen är nu haffad!");
+    updateItem("pickedUp");
+  };
+
   return (
-    <CardDiv
-      as={Link}
-      to={`/item/${filteredItem.id}`}
-      id={filteredItem.id}
-      style={{
-        opacity: filteredItem.status === "pickedUp" ? "0.5" : "1",
-        filter: filteredItem.status === "pickedUp" ? "grayscale(1)" : "none",
-      }}
-    >
-      <div className="picDiv">
-        <img src={url} alt="" />
-      </div>
-      <div className="infoDiv">
-        {filteredItem.category === "wanted" && (
-          <h4 style={{ color: "#205400", fontSize: "14px" }}>Sökes</h4>
+    <>
+      {filteredItem.advertType === "recycle" &&
+        filteredItem.status === "reserved" &&
+        filteredItem.reservedBySub === user.sub && (
+          <PickUpModal
+            advert={filteredItem}
+            isVisible={isPickUpModalVisible}
+            toggleModal={togglePickUpModal}
+            onFinish={handlePickUp}
+          />
         )}
-        {filteredItem.aterbruketId && (
-          <h4 style={{ color: "#205400", fontSize: "14px" }}>
-            {filteredItem.aterbruketId}
-          </h4>
-        )}
+      <CardDiv
+        as={Link}
+        to={`/item/${filteredItem.id}`}
+        id={filteredItem.id}
+        style={{
+          opacity: filteredItem.status === "pickedUp" ? "0.5" : "1",
+          filter: filteredItem.status === "pickedUp" ? "grayscale(1)" : "none",
+        }}
+      >
+        <div className="picDiv">
+          <img src={url} alt="" />
+        </div>
+        <div className="infoDiv">
+          {filteredItem.category === "wanted" && (
+            <h4 style={{ color: "#205400", fontSize: "14px" }}>Sökes</h4>
+          )}
+          {filteredItem.aterbruketId && (
+            <h4 style={{ color: "#205400", fontSize: "14px" }}>
+              {filteredItem.aterbruketId}
+            </h4>
+          )}
 
-        <h3>{filteredItem.title}</h3>
-        <h4>{filteredItem.quantity} stycken</h4>
-        <p className="desc">{filteredItem.description}</p>
-        {filteredItem.status === "reserved" && itemsFrom !== "myAdds" && (
-          <button
-            className="btn--pickUp"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onClickPickUpBtn();
-            }}
-          >
-            <span>Hämta ut!</span>
+          <h3>{filteredItem.title}</h3>
+          <h4>{filteredItem.quantity} stycken</h4>
+          <p className="desc">{filteredItem.description}</p>
+          {filteredItem.advertType === "recycle" &&
+            filteredItem.status === "reserved" &&
+            itemsFrom !== "myAdds" && (
+              <button
+                className="btn--pickUp"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  togglePickUpModal();
+                }}
+              >
+                <span>Hämta ut!</span>
 
-            <MdArrowForward />
-          </button>
-        )}
-      </div>
-    </CardDiv>
+                <MdArrowForward />
+              </button>
+            )}
+        </div>
+      </CardDiv>
+    </>
   );
 };
 

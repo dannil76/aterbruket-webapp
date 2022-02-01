@@ -14,6 +14,8 @@ import { getAllCategories } from "../utils/handleCategories";
 import { conditions } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
 import { Modal, useModal } from "../components/Modal";
+import { useQrCamera } from "../components/QrCamera";
+import QrModal from "../components/QrModal";
 
 const AdvertContainer = React.lazy(
   () => import("../components/AdvertContainer")
@@ -22,7 +24,6 @@ const FilterMenu = React.lazy(() => import("../components/FilterMenu"));
 const ModalAddItemContent = React.lazy(
   () => import("../components/ModalAddItemContent")
 );
-const OpenCamera = React.lazy(() => import("../components/OpenCamera"));
 const Pagination = React.lazy(() => import("../components/Pagination"));
 
 const AddBtn = styled.button`
@@ -148,30 +149,17 @@ const Spacer = styled.div`
   height: 72px;
 `;
 
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
+const QrModalContent = styled.div`
+  text-align: center;
+`;
 
 interface Item {
   condition: string;
 }
 
-type Props = {
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
-};
-
-const Home: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
-  const [showQRCamera, setShowQRCamera] = useState(false);
+const Home: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalVisible, toggleModal] = useModal();
 
   const updateSearch = (event: React.ChangeEvent<any>) => {
     const { target } = event;
@@ -303,96 +291,100 @@ const Home: FC<Props> = ({ qrCamera, setQrCamera }: Props) => {
     return allValues.includes(item.key);
   });
 
-  if (qrCamera.result.length > 2) {
-    return <Redirect to={`/item/${qrCamera.result}`} />;
+  const [isModalVisible, toggleModal] = useModal();
+  const [isQrModalVisible, toggleQrModal] = useModal();
+  const [qrCameraresult, setQrCameraResult] = useQrCamera();
+
+  if (qrCameraresult !== null) {
+    return <Redirect to={`/item/${qrCameraresult}`} />;
   }
 
   return (
     <main>
       <Suspense fallback={<div>Loading...</div>}>
-        {showQRCamera ? (
-          <>
-            <button type="button" onClick={() => setShowQRCamera(false)}>
-              X
-            </button>
-            <OpenCamera qrCamera={qrCamera} setQrCamera={setQrCamera} />
-          </>
-        ) : (
-          <>
-            <Modal isVisible={isModalVisible}>
-              <ModalAddItemContent toggleModal={() => toggleModal()} />
-            </Modal>
-            <ScanBtn
-              id="scanBtn"
-              type="button"
-              onClick={() => setShowQRCamera(true)}
-            >
-              <MdPhotoCamera />
-            </ScanBtn>
-            {/* <TabCtn>
+
+        <QrModal isVisible={isQrModalVisible} toggleModal={toggleQrModal} setResult={setQrCameraResult}>
+          <QrModalContent>
+            <h1>Skanna QR-kod</h1>
+          </QrModalContent>
+        </QrModal>
+
+        <Modal isVisible={isModalVisible}>
+          <Modal.Body autoHeight>
+            <ModalAddItemContent toggleModal={toggleModal} toggleQrModal={toggleQrModal} />
+          </Modal.Body>
+        </Modal>
+
+        <ScanBtn
+          id="scanBtn"
+          type="button"
+          onClick={() => toggleQrModal()}
+        >
+          <MdPhotoCamera />
+        </ScanBtn>
+        {/* <TabCtn>
             <button type="button">INSPIRATION</button>
             <button type="button">KATEGORIER</button>
           </TabCtn> */}
-            <SearchFilterDiv>
-              <div className="searchWrapper">
-                <MdSearch id="searchIcon" />
-                <input
-                  id="searchInput"
-                  type="text"
-                  placeholder="Sök"
-                  onChange={updateSearch}
-                />
-              </div>
-
-              <button
-                onClick={() => setIsOpen(true)}
-                type="button"
-                id="filterBtn"
-              >
-                Filter <MdTune className="filterIcon" />
-              </button>
-
-              <FilterMenu
-                setAllValues={setAllValues}
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                filterValueUpdated={filterValueUpdated}
-                setFilterValueUpdated={setFilterValueUpdated}
-                filterValue={filterValue}
-                setFilterValue={setFilterValue}
-                setConditionValues={setConditionValues}
-                activeSorting={activeSorting}
-                setActiveSorting={setActiveSorting}
-              />
-            </SearchFilterDiv>
-            <AdvertContainer
-              activeFilterOptions={activeFilterOptions}
-              items={renderItems}
-              searchValue={searchValue}
-              itemsFrom="home"
-              activeSorting={activeSorting}
+        <SearchFilterDiv>
+          <div className="searchWrapper">
+            <MdSearch id="searchIcon" />
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Sök"
+              onChange={updateSearch}
             />
-            {items.length > 0 && (
-              <Pagination
-                paginationOption={paginationOption}
-                handlePagination={handlePages}
-              />
-            )}
-            {error && (
-              <MessageCtn>
-                <MdTune className="filterIcon" />
-                <h4 className="message">
-                  Du råkade visst filtrera bort precis allt{" "}
-                </h4>
-              </MessageCtn>
-            )}
-            <Spacer />
-            <AddBtn type="button" onClick={() => toggleModal()}>
-              <MdNewReleases />
-              <p>Gör en egen annons!</p>
-            </AddBtn>
-          </>
+          </div>
+
+          <button
+            onClick={() => setIsOpen(true)}
+            type="button"
+            id="filterBtn"
+          >
+            Filter <MdTune className="filterIcon" />
+          </button>
+
+          <FilterMenu
+            setAllValues={setAllValues}
+            setIsOpen={setIsOpen}
+            isOpen={isOpen}
+            filterValueUpdated={filterValueUpdated}
+            setFilterValueUpdated={setFilterValueUpdated}
+            filterValue={filterValue}
+            setFilterValue={setFilterValue}
+            setConditionValues={setConditionValues}
+            activeSorting={activeSorting}
+            setActiveSorting={setActiveSorting}
+          />
+        </SearchFilterDiv>
+        <AdvertContainer
+          activeFilterOptions={activeFilterOptions}
+          items={renderItems}
+          searchValue={searchValue}
+          itemsFrom="home"
+          activeSorting={activeSorting}
+        />
+        {items.length > 0 && (
+          <Pagination
+            paginationOption={paginationOption}
+            handlePagination={handlePages}
+          />
         )}
+        {error && (
+          <MessageCtn>
+            <MdTune className="filterIcon" />
+            <h4 className="message">
+              Du råkade visst filtrera bort precis allt{" "}
+            </h4>
+          </MessageCtn>
+        )}
+        <Spacer />
+        <AddBtn type="button" onClick={() => toggleModal()}>
+          <MdNewReleases />
+          <p>Gör en egen annons!</p>
+        </AddBtn>
+
       </Suspense>
     </main>
   );
