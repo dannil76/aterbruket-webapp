@@ -6,7 +6,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import { IDateRange } from "../interfaces/IDateRange";
 import { IFields, IOption } from "../interfaces/IForm";
