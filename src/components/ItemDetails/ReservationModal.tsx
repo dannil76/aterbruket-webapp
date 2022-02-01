@@ -24,6 +24,7 @@ interface Props {
     endDate: string | null;
   };
   setDateRange: (changeEvent: IDateRange) => void;
+  onFinish: () => void;
 }
 
 const ReservationModal: React.FC<Props> = ({
@@ -32,6 +33,7 @@ const ReservationModal: React.FC<Props> = ({
   toggleModal,
   dateRange,
   setDateRange,
+  onFinish,
 }) => {
   return (
     <Modal isVisible={isVisible}>
@@ -47,9 +49,7 @@ const ReservationModal: React.FC<Props> = ({
             size="xl"
             type="button"
             onClick={() => {
-              alert(
-                `Add reservation logic here : ${JSON.stringify(dateRange)}`
-              );
+              onFinish();
               toggleModal();
             }}
           >

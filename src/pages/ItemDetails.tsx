@@ -591,6 +591,9 @@ const ItemDetails: FC<ParamTypes> = () => {
           toggleModal={toggleReservationModal}
           dateRange={reservationDateRange}
           setDateRange={handleReservationDateRange}
+          onFinish={() => {
+            toast("Prylen är nu bokad!");
+          }}
         />
       )}
 
@@ -600,7 +603,6 @@ const ItemDetails: FC<ParamTypes> = () => {
           isVisible={isPickUpModalVisible}
           toggleModal={togglePickUpModal}
           onFinish={() => {
-            console.log("borrow finish");
             toast("Snyggt! Prylen är nu lånad och i ditt ansvar!");
           }}
         />
