@@ -1,14 +1,16 @@
-import {
-  ItemAMaterialInput,
-  ItemAreaOfUseInput,
-  ItemCondition,
-  ItemAdvertType,
-} from "../API";
+import { ItemAMaterialInput, ItemAreaOfUseInput } from "../API";
+
+export interface IReservation {
+  borrowedBySub: string;
+  status: string;
+  dateStart: string;
+  dateEnd: string;
+}
 
 export interface IAdvert {
   id: string;
   title: string;
-  advertType: ItemAdvertType;
+  advertType: string;
   aterbruketId: string;
   status: string;
   category?: string;
@@ -18,7 +20,7 @@ export interface IAdvert {
   length?: string;
   color?: string;
   material?: Array<ItemAMaterialInput | null> | null;
-  condition?: ItemCondition;
+  condition?: string;
   areaOfUse?: Array<ItemAreaOfUseInput | null> | null;
   description?: string;
   department?: string;
@@ -26,11 +28,11 @@ export interface IAdvert {
   contactPerson?: string;
   email?: string;
   phoneNumber?: string;
-  climateImpact: number;
+  climateImpact?: number;
   version: number;
   revisions: number;
-  images: [{ url: string }];
-  purchasePrice: number;
+  images: { alt: string; src: string }[];
+  purchasePrice: string;
   company?: string;
   missingItemsInformation?: string;
   pickUpInformation?: string;
@@ -43,4 +45,9 @@ export interface IAdvert {
   reservedBySub?: string;
   createdAt: string;
   updatedAt?: string;
+  advertBorrowCalendar?: {
+    allowedDateStart: string;
+    allowedDateEnd: string;
+    calendarEvents: Array<IReservation>;
+  };
 }

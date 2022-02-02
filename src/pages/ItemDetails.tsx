@@ -583,12 +583,8 @@ const ItemDetails: FC<ParamTypes> = () => {
   };
 
   const userSub = user?.sub ? user.sub : "";
-  const status = getStatus(item, userSub);
-
-  let activeReservation = null;
-  if (isBorrowType && (status === "reserved" || status === "pickUpAllowed")) {
-    activeReservation = getActiveReservation(userSub);
-  }
+  const status = getStatus(item, userSub, new Date());
+  const activeReservation = getActiveReservation(item, userSub);
 
   const saveReservation = async () => {
     const addEventResult = addDateRangeToEvents(
@@ -878,13 +874,8 @@ const ItemDetails: FC<ParamTypes> = () => {
           <ReservationSection>
             <SubTitle>Reserverad av dig</SubTitle>
             <p>
-              {convertToSwedishDate(
-                activeReservation?.borrowedDateRange?.dateStart ?? ""
-              )}{" "}
-              -{" "}
-              {convertToSwedishDate(
-                activeReservation?.borrowedDateRange?.dateEnd ?? ""
-              )}
+              {convertToSwedishDate(activeReservation?.dateStart ?? "")} -{" "}
+              {convertToSwedishDate(activeReservation?.dateEnd ?? "")}
             </p>
           </ReservationSection>
         )}

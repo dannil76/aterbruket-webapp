@@ -1,0 +1,59 @@
+{
+  "id": "98db82ba-6752-43ca-9eed-a1ff2cace683",
+  "version": 0,
+  "reservedByName": "Hanson Jonatan - SLF",
+  "instructions": "",
+  "returnInformation": "",
+  "accessories": [],
+  "purchasePrice": "3999",
+  "status": "available",
+  "advertType": "recycle",
+  "condition": "Bgood",
+  "email": "foo.bar@helsingborg.se",
+  "pickUpInstructions": "",
+  "contactPerson": "Foo bar",
+  "length": "3",
+  "company": "Stadsledningsförvaltningen",
+  "accessRestrictionSelection": [],
+  "width": "50",
+  "missingItemsInformation": "",
+  "reservedBySub": "0b293fb6-3cad-42a4-a476-9e115406f415",
+  "accessRestriction": "none",
+  "borrowDifficultyLevel": "",
+  "color": "Blå",
+  "__typename": "Advert",
+  "phoneNumber": "0701010191",
+  "quantity": 1,
+  "department": "Digitaliseringsavd - Verksamhetslösningar - Digital utvecklin",
+  "location": "Drottninggatan 14",
+  "areaOfUse": [
+    {
+      "indoors": true,
+      "outside": false
+    }
+  ],
+  "createdAt": "2022-02-01T08:02:34.408Z",
+  "aterbruketId": "335rh",
+  "giver": "0b293fb6-3cad-42a4-a476-9e115406f415",
+  "pickUpInformation": "",
+  "height": "50",
+  "updatedAt": "2022-02-01T08:39:02.155Z",
+  "category": "painting",
+  "images": [
+    {
+      "alt": "wood-1963988_1920.jpg",
+      "src": "fa24bc0e-1f96-441d-807f-1246562e02c8"
+    }
+  ],
+  "description": "En kort text om prylen som gör den intressant att haffa. Detaljerad information om mått, färg mm lämnar du i nästa steg.",
+  "revisions": 5,
+  "material": [
+    {
+      "metal": false,
+      "plastic": false,
+      "other": true,
+      "wood": true
+    }
+  ],
+  "title": "Tavla"
+}
