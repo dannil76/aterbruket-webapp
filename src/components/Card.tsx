@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { API, Storage } from "aws-amplify";
-import { MdArrowForward } from "react-icons/md";
+import { MdArrowForward, MdPeople, MdRotateLeft } from "react-icons/md";
 import { graphqlOperation } from "@aws-amplify/api";
 import { toast } from "react-toastify";
 import { createAdvert, updateAdvert } from "../graphql/mutations";
@@ -75,13 +75,6 @@ const CardDiv = styled.div`
     line-height: 112%;
     letter-spacing: 0.0025em;
   }
-  h4 {
-    color: ${(props) => props.theme.cardTheme.amountColor};
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 132%;
-    letter-spacing: 0.015em;
-  }
   p {
     color: ${(props) => props.theme.cardTheme.descColor};
     font-weight: 500;
@@ -122,6 +115,27 @@ const CardDiv = styled.div`
       color: ${(props) => props.theme.colors.secondaryDark};
       font-size: 24px;
     }
+  }
+`;
+
+const SubTitle = styled.h4`
+  color: ${(props) => props.theme.cardTheme.amountColor};
+  font-weight: 900;
+  font-size: 12px;
+  line-height: 132%;
+  letter-spacing: 0.015em;
+`;
+
+const AdvertType = styled(SubTitle)`
+  color: ${(props) => props.theme.colors.primaryDark};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    margin-right: 6px;
+    color: ${(props) => props.theme.colors.primaryLight};
+    font-size: 18px;
   }
 `;
 
@@ -207,17 +221,30 @@ const Card: FC<Props> = ({
           <img src={url} alt="" />
         </div>
         <div className="infoDiv">
+          {filteredItem.advertType === "recycle" && (
+            <AdvertType>
+              <MdRotateLeft /> Återbruk
+            </AdvertType>
+          )}
+          {filteredItem.advertType === "borrow" && (
+            <AdvertType>
+              <MdPeople /> Delning
+            </AdvertType>
+          )}
+
           {filteredItem.category === "wanted" && (
-            <h4 style={{ color: "#205400", fontSize: "14px" }}>Sökes</h4>
+            <SubTitle style={{ color: "#205400", fontSize: "14px" }}>
+              Sökes
+            </SubTitle>
           )}
           {filteredItem.aterbruketId && (
-            <h4 style={{ color: "#205400", fontSize: "14px" }}>
+            <SubTitle style={{ color: "#205400", fontSize: "14px" }}>
               {filteredItem.aterbruketId}
-            </h4>
+            </SubTitle>
           )}
 
           <h3>{filteredItem.title}</h3>
-          <h4>{filteredItem.quantity} stycken</h4>
+          <SubTitle>{filteredItem.quantity} stycken</SubTitle>
           <p className="desc">{filteredItem.description}</p>
           {filteredItem.advertType === "recycle" &&
             filteredItem.status === "reserved" &&
@@ -230,7 +257,7 @@ const Card: FC<Props> = ({
                   togglePickUpModal();
                 }}
               >
-                <span>Hämta ut!</span>
+                <span>Hämta!</span>
 
                 <MdArrowForward />
               </button>
