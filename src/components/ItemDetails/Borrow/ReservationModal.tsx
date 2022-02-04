@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import moment from "moment";
-import { Modal } from "../Modal";
-import Button from "../Button";
-import { IAdvert } from "../../interfaces/IAdvert";
-import DateRangePicker from "../DateRangePicker";
-import { IDateRange } from "../../interfaces/IDateRange";
+import { Modal } from "../../Modal";
+import Button from "../../Button";
+import { IAdvert } from "../../../interfaces/IAdvert";
+import DateRangePicker from "../../DateRangePicker";
+import { IDateRange } from "../../../interfaces/IDateRange";
 
 const ModalContent = styled(Modal.Content)`
   margin-top: 72px;
