@@ -2,9 +2,9 @@ import moment from "moment";
 import { API } from "aws-amplify";
 import { graphqlOperation } from "@aws-amplify/api";
 import { updateAdvert } from "../graphql/mutations";
-import { IAdvert } from "../interfaces/IAdvert";
+import { IAdvert, IReservation } from "../interfaces/IAdvert";
 import {
-  IAddDateRangeToEventsReturn,
+  ICalendarUpdateResult,
   ICalendarData,
   ICalendarDataEvent,
   ICalendarEvent,
@@ -43,7 +43,7 @@ const addDateRangeToEvents = (
   adCalendar: ICalendarData,
   newCalendarEvent: ICalendarEvent,
   userSub: string
-): IAddDateRangeToEventsReturn => {
+): ICalendarUpdateResult => {
   const advertBorrowCalendar = JSON.parse(JSON.stringify(adCalendar));
   const calendarEvent = {
     borrowedBySub: userSub,
@@ -54,7 +54,10 @@ const addDateRangeToEvents = (
 
   advertBorrowCalendar.calendarEvents.push(calendarEvent);
 
-  return { addDateRangeToEventsResult: true, advertBorrowCalendar };
+  return {
+    updateSuccessful: true,
+    updatedCalendarResult: advertBorrowCalendar,
+  };
 };
 
 const updateAdvertCalendar = async (
@@ -76,4 +79,37 @@ const updateAdvertCalendar = async (
   );
 };
 
-export { isDateAvailable, addDateRangeToEvents, updateAdvertCalendar };
+const updateEventStatus = (
+  adCalendar: ICalendarData,
+  calendarEvent: IReservation | null,
+  newStatus: string
+): ICalendarUpdateResult => {
+  const adCalendarCopy = JSON.parse(JSON.stringify(adCalendar));
+  let statusUpdated: boolean;
+
+  const foundEventIndex = adCalendarCopy.calendarEvents.findIndex(
+    (el: ICalendarDataEvent) =>
+      el.borrowedBySub === calendarEvent?.borrowedBySub &&
+      el.dateStart === calendarEvent.dateStart &&
+      el.dateEnd === calendarEvent.dateEnd
+  );
+
+  if (foundEventIndex >= 0) {
+    statusUpdated = true;
+    adCalendarCopy.calendarEvents[foundEventIndex].status = newStatus;
+  } else {
+    statusUpdated = false;
+  }
+
+  return {
+    updatedCalendarResult: adCalendarCopy,
+    updateSuccessful: statusUpdated,
+  };
+};
+
+export {
+  isDateAvailable,
+  addDateRangeToEvents,
+  updateAdvertCalendar,
+  updateEventStatus,
+};

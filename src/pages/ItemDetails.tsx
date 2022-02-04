@@ -42,7 +42,7 @@ import { conditions, materials, areaOfUse } from "../static/advertMeta";
 import { IOption } from "../interfaces/IForm";
 import { useModal } from "../components/Modal";
 import Button from "../components/Button";
-import { IDateRange } from "../interfaces/IDateRange";
+import { ICalendarUpdateResult, IDateRange } from "../interfaces/IDateRange";
 import {
   getStatus,
   getActiveReservation,
@@ -55,6 +55,7 @@ import {
   addDateRangeToEvents,
   isDateAvailable,
   updateAdvertCalendar,
+  updateEventStatus,
 } from "../utils/calendarUtils";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
@@ -587,7 +588,7 @@ const ItemDetails: FC<ParamTypes> = () => {
     setReservationDateRange({ startDate, endDate, bookingType });
   };
 
-  const handleSaveReservation = async () => {
+  const handleSaveReservation = async (): Promise<boolean> => {
     const newCalendarEvent = {
       dateRange: {
         startDate: reservationDateRange.startDate,
@@ -602,10 +603,29 @@ const ItemDetails: FC<ParamTypes> = () => {
       userSub
     );
 
-    if (addEventResult.addDateRangeToEventsResult) {
-      await updateAdvertCalendar(item, addEventResult.advertBorrowCalendar);
-      await fetchItem();
+    if (addEventResult.updateSuccessful) {
+      await updateAdvertCalendar(item, addEventResult.updatedCalendarResult);
     }
+    await fetchItem();
+
+    return addEventResult.updateSuccessful;
+  };
+
+  const handleSaveReservationStatus = async (
+    newStatus: string
+  ): Promise<boolean> => {
+    const updatedEvent = updateEventStatus(
+      item.advertBorrowCalendar,
+      activeReservation,
+      newStatus
+    );
+
+    if (updatedEvent.updateSuccessful) {
+      await updateAdvertCalendar(item, updatedEvent.updatedCalendarResult);
+    }
+    await fetchItem();
+
+    return updatedEvent.updateSuccessful;
   };
 
   const allDetails = (
@@ -618,8 +638,11 @@ const ItemDetails: FC<ParamTypes> = () => {
           dateRange={reservationDateRange}
           setDateRange={handleReservationDateRange}
           onFinish={() => {
-            handleSaveReservation();
-            toast("Prylen är nu bokad!");
+            handleSaveReservation().then((saveSuccessful) => {
+              return saveSuccessful
+                ? toast("Prylen är nu bokad!")
+                : toast.error("Prylen kunde tyvärr inte bokas");
+            });
           }}
           availableCalendarDates={(date) =>
             !isDateAvailable(date, item.advertBorrowCalendar)
@@ -633,7 +656,11 @@ const ItemDetails: FC<ParamTypes> = () => {
           isVisible={isPickUpModalVisible}
           toggleModal={togglePickUpModal}
           onFinish={() => {
-            toast("Snyggt! Prylen är nu lånad och i ditt ansvar!");
+            handleSaveReservationStatus("pickedUp").then((statusSaved) => {
+              return statusSaved
+                ? toast("Snyggt! Prylen är nu lånad och i ditt ansvar!")
+                : toast.error("Prylen kunde tyvärr inte lånas.");
+            });
           }}
         />
       )}

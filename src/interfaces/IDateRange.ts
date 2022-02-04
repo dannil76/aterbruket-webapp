@@ -36,7 +36,7 @@ export interface ICalendarEvent {
   eventType: string;
 }
 
-export interface IAddDateRangeToEventsReturn {
-  addDateRangeToEventsResult: boolean;
-  advertBorrowCalendar: ICalendarDataEvent;
+export interface ICalendarUpdateResult {
+  updateSuccessful: boolean;
+  updatedCalendarResult: ICalendarDataEvent;
 }
