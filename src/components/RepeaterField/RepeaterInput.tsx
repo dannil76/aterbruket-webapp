@@ -31,7 +31,7 @@ export interface RepeaterInputInterface {
   [x: string]: unknown;
 }
 
-const RepeaterInput: FunctionComponent = ({ children, ...otherProps }) => {
+const RepeaterInput: FunctionComponent = ({ ...otherProps }) => {
   const { inputValue, setInputValue, addItem } = useRepeaterFieldContext();
   return (
     <Container>
