@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 import { Modal } from "../Modal";
 import Button from "../Button";
 import { IAdvert } from "../../interfaces/IAdvert";
@@ -25,6 +26,7 @@ interface Props {
   };
   setDateRange: (changeEvent: IDateRange, bookingType: string) => void;
   onFinish: () => void;
+  availableCalendarDates?: (date: moment.Moment) => boolean;
 }
 
 const ReservationModal: React.FC<Props> = ({
@@ -34,6 +36,7 @@ const ReservationModal: React.FC<Props> = ({
   dateRange,
   setDateRange,
   onFinish,
+  availableCalendarDates,
 }) => {
   return (
     <Modal isVisible={isVisible}>
@@ -46,6 +49,7 @@ const ReservationModal: React.FC<Props> = ({
             numberOfMonths={1}
             onValueChange={setDateRange}
             bookingType="reserved"
+            blockedDay={availableCalendarDates}
           />
 
           <Button

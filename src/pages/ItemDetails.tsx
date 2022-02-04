@@ -53,6 +53,7 @@ import PickUpModal from "../components/ItemDetails/PickUpModal";
 import ReservationModal from "../components/ItemDetails/ReservationModal";
 import {
   addDateRangeToEvents,
+  isDateAvailable,
   updateAdvertCalendar,
 } from "../utils/calendarUtils";
 
@@ -574,6 +575,10 @@ const ItemDetails: FC<ParamTypes> = () => {
     bookingType: "",
   });
 
+  const userSub = user?.sub ? user.sub : "";
+  const status = getStatus(item, userSub, new Date());
+  const activeReservation = getActiveReservation(item, userSub);
+
   const handleReservationDateRange = (
     changeEvent: IDateRange,
     bookingType: string
@@ -582,20 +587,18 @@ const ItemDetails: FC<ParamTypes> = () => {
     setReservationDateRange({ startDate, endDate, bookingType });
   };
 
-  const userSub = user?.sub ? user.sub : "";
-  const status = getStatus(item, userSub, new Date());
-  const activeReservation = getActiveReservation(item, userSub);
+  const handleSaveReservation = async () => {
+    const newCalendarEvent = {
+      dateRange: {
+        startDate: reservationDateRange.startDate,
+        endDate: reservationDateRange.endDate,
+      },
+      eventType: reservationDateRange.bookingType,
+    };
 
-  const saveReservation = async () => {
     const addEventResult = addDateRangeToEvents(
       item.advertBorrowCalendar,
-      {
-        dateRange: {
-          startDate: reservationDateRange.startDate,
-          endDate: reservationDateRange.endDate,
-        },
-        eventType: reservationDateRange.bookingType,
-      },
+      newCalendarEvent,
       userSub
     );
 
@@ -615,9 +618,12 @@ const ItemDetails: FC<ParamTypes> = () => {
           dateRange={reservationDateRange}
           setDateRange={handleReservationDateRange}
           onFinish={() => {
-            saveReservation();
+            handleSaveReservation();
             toast("Prylen är nu bokad!");
           }}
+          availableCalendarDates={(date) =>
+            !isDateAvailable(date, item.advertBorrowCalendar)
+          }
         />
       )}
 

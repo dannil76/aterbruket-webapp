@@ -19,19 +19,24 @@ export interface IDateRangePickerProps {
 }
 
 export interface ICalendarData {
-  allowedStartDate: string;
-  allowedEndDate: string;
+  allowedDateStart: string;
+  allowedDateEnd: string;
   calendarEvents: ICalendarDataEvent[];
 }
 
 export interface ICalendarDataEvent {
   borrowedBySub: string;
   status: string;
-  startDate: null | string;
-  endDate: null | string;
+  dateStart: null | string;
+  dateEnd: null | string;
 }
 
 export interface ICalendarEvent {
   dateRange: IDateRange;
   eventType: string;
+}
+
+export interface IAddDateRangeToEventsReturn {
+  addDateRangeToEventsResult: boolean;
+  advertBorrowCalendar: ICalendarDataEvent;
 }

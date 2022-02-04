@@ -1,14 +1,16 @@
 import moment from "moment";
 import { API } from "aws-amplify";
 import { graphqlOperation } from "@aws-amplify/api";
+import { updateAdvert } from "../graphql/mutations";
+import { IAdvert } from "../interfaces/IAdvert";
 import {
+  IAddDateRangeToEventsReturn,
   ICalendarData,
   ICalendarDataEvent,
   ICalendarEvent,
 } from "../interfaces/IDateRange";
-import { updateAdvert } from "../graphql/mutations";
 
-const isDateEnabled = (
+const isDateAvailable = (
   date: moment.Moment,
   calendarData: ICalendarData | undefined
 ): boolean => {
@@ -16,19 +18,19 @@ const isDateEnabled = (
     return true;
   }
 
-  if (date.isBefore(moment(calendarData.allowedStartDate))) {
+  if (date.isBefore(moment(calendarData.allowedDateStart), "day")) {
     return false;
   }
 
-  if (date.isAfter(moment(calendarData.allowedEndDate))) {
+  if (date.isAfter(moment(calendarData.allowedDateEnd), "day")) {
     return false;
   }
 
   if (calendarData.calendarEvents?.length > 0) {
     return calendarData.calendarEvents.some((event) => {
       const sameOrBetween =
-        date.isSameOrAfter(event.startDate, "day") &&
-        date.isSameOrBefore(event.endDate, "day");
+        date.isSameOrAfter(event.dateStart, "day") &&
+        date.isSameOrBefore(event.dateEnd, "day");
 
       return !sameOrBetween;
     });
@@ -41,7 +43,7 @@ const addDateRangeToEvents = (
   adCalendar: ICalendarData,
   newCalendarEvent: ICalendarEvent,
   userSub: string
-) => {
+): IAddDateRangeToEventsReturn => {
   const advertBorrowCalendar = JSON.parse(JSON.stringify(adCalendar));
   const calendarEvent = {
     borrowedBySub: userSub,
@@ -56,9 +58,9 @@ const addDateRangeToEvents = (
 };
 
 const updateAdvertCalendar = async (
-  ad: any,
+  ad: IAdvert,
   advertBorrowCalendar: ICalendarDataEvent
-) => {
+): Promise<void> => {
   const input = {
     ...ad,
     advertBorrowCalendar,
@@ -74,4 +76,4 @@ const updateAdvertCalendar = async (
   );
 };
 
-export { isDateEnabled, addDateRangeToEvents, updateAdvertCalendar };
+export { isDateAvailable, addDateRangeToEvents, updateAdvertCalendar };
