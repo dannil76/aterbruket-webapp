@@ -27,12 +27,8 @@ const isDateAvailable = (
   }
 
   if (calendarData.calendarEvents?.length > 0) {
-    return calendarData.calendarEvents.some((event) => {
-      const sameOrBetween =
-        date.isSameOrAfter(event.dateStart, "day") &&
-        date.isSameOrBefore(event.dateEnd, "day");
-
-      return !sameOrBetween;
+    return !calendarData.calendarEvents.some((event) => {
+      return date.isBetween(event.dateStart, event.dateEnd, "day", "[]");
     });
   }
 
