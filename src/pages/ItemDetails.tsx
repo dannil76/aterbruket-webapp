@@ -15,9 +15,12 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { GetAdvertQuery } from "../API";
 import Button from "../components/Button";
-import BorrowContent from "../components/ItemDetails/Borrow/DefaultContent";
-import ReservationModal from "../components/ItemDetails/Borrow/ReservationModal";
-import ReturnContent from "../components/ItemDetails/Borrow/ReturnContent";
+import {
+  DefaultContent as BorrowContent,
+  ReservationModal,
+  ReturnContent,
+  ReturnModal,
+} from "../components/ItemDetails/Borrow";
 import {
   MainSection,
   SubTitle,
@@ -126,6 +129,7 @@ const ItemDetails: FC<ParamTypes> = () => {
   const [showHeaderBtn, setShowHeaderBtn] = useState(false);
   const [isReservationModalVisible, toggleReservationModal] = useModal();
   const [isPickUpModalVisible, togglePickUpModal] = useModal();
+  const [isReturnModalVisible, toggleReturnModal] = useModal();
 
   const itemCategory = getCategoryByKey(item?.category);
 
@@ -347,6 +351,20 @@ const ItemDetails: FC<ParamTypes> = () => {
                 return statusSaved
                   ? toast("Snyggt! Prylen är nu lånad och i ditt ansvar!")
                   : toast.error("Prylen kunde tyvärr inte lånas.");
+              });
+            }}
+          />
+        ),
+        pickedUp: (
+          <ReturnModal
+            advert={item}
+            isVisible={isReturnModalVisible}
+            toggleModal={toggleReturnModal}
+            onFinish={() => {
+              handleSaveReservationStatus("returned").then((statusSaved) => {
+                return statusSaved
+                  ? toast("Snyggt! Prylen är nu återlämnad!")
+                  : toast.error("Prylen kunde tyvärr inte lämnas tillbaka.");
               });
             }}
           />
@@ -581,7 +599,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               buttonOutOfScreen.current = el;
               setRefVisible(!!el);
             }}
-            onClick={() => {}}
+            onClick={toggleReturnModal}
             type="button"
           >
             <MdCameraAlt />
