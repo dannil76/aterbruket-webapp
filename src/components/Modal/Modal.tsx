@@ -53,9 +53,9 @@ const Button = styled.button`
   height: 32px;
   background: ${(props) => props.theme.colors.primaryDark};
   border-radius: 50%;
-  position: absolute;
+  position: fixed;
   border: none;
-  top: 24px;
+  margin-top: 24px;
   right: 24px;
   z-index: 1001;
 

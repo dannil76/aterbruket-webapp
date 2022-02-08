@@ -7,50 +7,7 @@ const TopSection = styled.section`
   flex-direction: column;
   box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
   width: 100%;
-
-  header {
-    position: relative;
-    width: 100%;
-    height: 60px;
-    position: fixed;
-    background-color: ${(props) => props.theme.colors.offWhite};
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
-
-    svg {
-      position: absolute;
-      left: 28px;
-      font-size: 24px;
-      color: ${(props) => props.theme.colors.darkest};
-    }
-    p,
-    .headerTitle {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 18px;
-      line-height: 132%;
-      color: ${(props) => props.theme.colors.darkest};
-      text-align: center;
-    }
-  }
-
-  .reservedHeader {
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-
-    .headerTitle--reserved {
-      margin: 0;
-    }
-
-    .reservedP {
-      color: ${(props) => props.theme.colors.primaryDark};
-      font-size: 14px;
-      margin: 0;
-    }
-  }
+  margin-top: 60px;
 
   span {
     margin-left: 24px;

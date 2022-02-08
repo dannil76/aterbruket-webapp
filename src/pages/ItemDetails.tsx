@@ -22,9 +22,11 @@ import {
   ReturnModal,
 } from "../components/ItemDetails/Borrow";
 import {
+  AdvertImage,
   MainSection,
   SubTitle,
   TopSection,
+  Header
 } from "../components/ItemDetails/Common";
 import PickUpModal from "../components/ItemDetails/PickUpModal";
 import RecycleContent from "../components/ItemDetails/Recycle/DefaultContent";
@@ -50,22 +52,6 @@ import { getCategoryByKey } from "../utils/handleCategories";
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
 const RegiveForm = React.lazy(() => import("../components/RegiveForm"));
-
-const ImgDiv = styled.div`
-  width: 100%;
-  height: 256px;
-  display: flex;
-  justify-content: center;
-  background-color: ${(props) => props.theme.colors.offWhite};
-  margin-top: 60px;
-
-  img {
-    max-height: 256px;
-    width: 100vw;
-    margin: 0;
-    object-fit: cover;
-  }
-`;
 
 const Separator = styled.div`
   width: 100%;
@@ -405,84 +391,80 @@ const ItemDetails: FC<ParamTypes> = () => {
     <>
       {renderSection(item.advertType, "modal", status)}
 
-      <TopSection>
-        {(status === "available" || status === "borrowPermissionDenied") && (
-          <header className="header">
+      {(status === "available" || status === "borrowPermissionDenied") && (
+        <Header>
+          <MdArrowBack onClick={goBackFunc} />
+          <p className="headerTitle">{item.title}</p>
+          {showHeaderBtn && isRecycleType && (
+            <HeaderButton
+              size="sm"
+              onClick={() => {
+                onClickReservBtn();
+              }}
+              type="button"
+            >
+              HAFFA!
+            </HeaderButton>
+          )}
+          {showHeaderBtn && isBorrowType && (
+            <HeaderButton
+              size="sm"
+              onClick={() => {
+                toggleReservationModal();
+              }}
+              type="button"
+            >
+              RESERVERA
+            </HeaderButton>
+          )}
+        </Header>
+      )}
+
+      {(status === "reserved" ||
+        status === "pickedUp" ||
+        status === "pickUpAllowed") && (
+          <Header reserved>
             <MdArrowBack onClick={goBackFunc} />
-            <p className="headerTitle">{item.title}</p>
-            {showHeaderBtn && isRecycleType && (
+
+            <div>
+              <p className="headerTitle">{item.title}</p>
+              {status === "reserved" || status === "pickUpAllowed" ? (
+                <p className="reservedP">Reserverad</p>
+              ) : (
+                <p className="reservedP">Uthämtad</p>
+              )}
+            </div>
+
+            {isRecycleType && showHeaderBtn && (
               <HeaderButton
                 size="sm"
+                color="primaryLight"
                 onClick={() => {
-                  onClickReservBtn();
+                  togglePickUpModal();
                 }}
                 type="button"
               >
-                HAFFA!
+                HÄMTA UT
               </HeaderButton>
             )}
-            {showHeaderBtn && isBorrowType && (
+
+            {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
               <HeaderButton
                 size="sm"
+                color="primaryLight"
                 onClick={() => {
-                  toggleReservationModal();
+                  togglePickUpModal();
                 }}
                 type="button"
               >
-                RESERVERA
+                HÄMTA UT
               </HeaderButton>
             )}
-          </header>
+          </Header>
         )}
 
-        {(status === "reserved" ||
-          status === "pickedUp" ||
-          status === "pickUpAllowed") && (
-            <header className="reservedHeader">
-              <MdArrowBack onClick={goBackFunc} />
-
-              <div>
-                <p className="headerTitle headerTitle--reserved">{item.title}</p>
-                {status === "reserved" || status === "pickUpAllowed" ? (
-                  <p className="reservedP">Reserverad</p>
-                ) : (
-                  <p className="reservedP">Uthämtad</p>
-                )}
-              </div>
-
-              {isRecycleType && showHeaderBtn && (
-                <HeaderButton
-                  size="sm"
-                  color="primaryLight"
-                  onClick={() => {
-                    togglePickUpModal();
-                  }}
-                  type="button"
-                >
-                  HÄMTA UT
-                </HeaderButton>
-              )}
-
-              {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
-                <HeaderButton
-                  size="sm"
-                  color="primaryLight"
-                  onClick={() => {
-                    togglePickUpModal();
-                  }}
-                  type="button"
-                >
-                  HÄMTA UT
-                </HeaderButton>
-              )}
-            </header>
-          )}
-
-        <ImgDiv>
-          {image && (
-            <img src={image} alt="" onClick={() => setShowCarousel(true)} />
-          )}
-        </ImgDiv>
+      <TopSection>
+        <AdvertImage src={image} alt={item.title} onClick={(e) => setShowCarousel(true)} />
 
         <div className="titleDiv">
           {isBorrowType && (

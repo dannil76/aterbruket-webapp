@@ -1,17 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
-import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import Form from "./Form";
 import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
 import { IAdvert } from "../interfaces/IAdvert";
-
-const ItemImg = styled.img`
-  width: 300px;
-  height: 300px;
-  margin: 0;
-`;
+import { Modal } from "../components/Modal";
+import { AdvertImage } from "../components/ItemDetails/Common";
 
 interface Props {
   item: IAdvert;
@@ -105,10 +100,8 @@ const EditItemForm: FC<Props> = ({
 
       {!fileUploading && (
         <>
-          <button type="button" onClick={() => setEditItem(false)}>
-            X
-          </button>
-          <ItemImg src={imageURL} />
+          <Modal.CloseButton onClick={() => setEditItem(false)} />
+          <AdvertImage src={imageURL} alt={values.title} />
           <Form
             values={values}
             fields={fields}

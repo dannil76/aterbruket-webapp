@@ -22,6 +22,7 @@ const FormContainer = styled.div`
   margin-bottom: 50px;
 
   form {
+    padding-top: 16px;
     display: flex;
     flex-direction: column;
     background-color: ${(props) => props.theme.colors.white};

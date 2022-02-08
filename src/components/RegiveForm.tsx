@@ -6,6 +6,7 @@ import { updateAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
 import { IAdvert } from "../interfaces/IAdvert";
+import { Modal } from "../components/Modal";
 
 interface Props {
   item: IAdvert;
@@ -92,9 +93,7 @@ const RegiveForm: FC<Props> = ({
 
       {!fileUploading && (
         <>
-          <button type="button" onClick={() => setRegive(false)}>
-            X
-          </button>
+          <Modal.CloseButton onClick={() => setRegive(false)} />
           <Form
             values={values}
             fields={fields}
