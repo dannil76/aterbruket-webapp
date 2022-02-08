@@ -10,6 +10,7 @@ export interface IReservation {
 export interface IAdvert {
   id: string;
   title: string;
+  giver: string;
   advertType: string;
   aterbruketId: string;
   status: string;

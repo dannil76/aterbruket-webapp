@@ -246,7 +246,7 @@ const ItemDetails: FC<ParamTypes> = () => {
   });
 
   const userSub = user?.sub ? user.sub : "";
-  const status = getStatus(item, userSub, new Date());
+  const status = getStatus(item, user, new Date());
   const activeReservation = getActiveReservation(item, userSub);
 
   const handleReservationDateRange = (
@@ -402,7 +402,7 @@ const ItemDetails: FC<ParamTypes> = () => {
       {renderSection(item.advertType, "modal", status)}
 
       <TopSection>
-        {status === "available" && (
+        {(status === "available" || status === "borrowPermissionDenied") && (
           <header className="header">
             <MdArrowBack onClick={goBackFunc} />
             <p className="headerTitle">{item.title}</p>
@@ -491,6 +491,23 @@ const ItemDetails: FC<ParamTypes> = () => {
           <h1>{item.title}</h1>
           <p>{item.aterbruketId}</p>
         </div>
+
+        {isBorrowType && status === "borrowPermissionDenied" && (
+          <>
+            <Button
+              disabled
+              size="xl"
+              marginBottom={24}
+              marginLeft={24}
+              marginRight={24}
+              shadow
+              type="button"
+            >
+              Behörighet saknas
+            </Button>
+            <span>Tyvärr, du saknar behörighet för att låna prylen.</span>
+          </>
+        )}
 
         {isRecycleType && status === "available" && (
           <Button

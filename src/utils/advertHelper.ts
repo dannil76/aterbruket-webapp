@@ -1,3 +1,4 @@
+import { User } from './../contexts/UserContext';
 import { isMobile } from "react-device-detect";
 import { IAdvert, IReservation } from "../interfaces/IAdvert";
 
@@ -32,9 +33,21 @@ export const getActiveReservation = (
   return mostRecentReservation;
 };
 
+export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
+  if (user.sub === advert.giver || advert.accessRestriction !== "selection") {
+    return true
+  }
+
+  if (advert?.accessRestrictionSelection && advert?.accessRestrictionSelection?.length > 0) {
+    return advert.accessRestrictionSelection.includes(user.company ? user.company : "");
+  }
+
+  return false;
+}
+
 export const getStatus = (
   item: IAdvert,
-  userSub: string,
+  user: User,
   date: Date
 ): string => {
   if (item.advertType === "recycle") {
@@ -47,7 +60,12 @@ export const getStatus = (
     pickedUp: "pickedUp",
     pickUpAllowed: "pickUpAllowed",
     returned: "returned",
+    borrowPermissionDenied: "borrowPermissionDenied"
   };
+
+  if(!hasUserBorrowPermission(user, item)) {
+    return statuses.borrowPermissionDenied;
+  }
 
   const allReservations = item?.advertBorrowCalendar?.calendarEvents
     ? item.advertBorrowCalendar.calendarEvents
@@ -55,7 +73,7 @@ export const getStatus = (
 
   const userReservations = allReservations?.filter(
     (reservation: IReservation) => {
-      return reservation.borrowedBySub === userSub;
+      return reservation.borrowedBySub === user.sub;
     }
   );
 
@@ -69,7 +87,7 @@ export const getStatus = (
     }
   );
 
-  if (mostRecentReservation?.status === "reserved") {
+  if (mostRecentReservation?.status === statuses.reserved) {
     if (
       date >= new Date(mostRecentReservation.dateStart) &&
       date <= new Date(mostRecentReservation.dateEnd)
@@ -80,7 +98,7 @@ export const getStatus = (
     return statuses.reserved;
   }
 
-  if (mostRecentReservation?.status === "pickedUp") {
+  if (mostRecentReservation?.status === statuses.pickedUp) {
     return statuses.pickedUp;
   }
 

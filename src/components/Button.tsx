@@ -13,6 +13,7 @@ export interface IButton extends React.HTMLAttributes<HTMLButtonElement> {
   marginRight?: number;
   marginLeft?: number;
   block?: boolean;
+  disabled?: boolean;
   [key: string]: any;
 }
 
@@ -83,11 +84,18 @@ const ButtonComponent = styled.button<IButton>`
     `
       box-shadow: 0px 0px 2px rgba(98, 98, 98, 0.18), 0px 3px 2px rgba(98, 98, 98, 0.12), 0px 6px 8px rgba(98, 98, 98, 0.12), 0px 10px 16px rgba(98, 98, 98, 0.12), 0px 26px 32px rgba(98, 98, 98, 0.12);
   `}
+  ${({ disabled }) =>
+    disabled &&
+    `
+      opacity: 0.3;
+      cursor: auto;
+  `}
 `;
 
 const Button = React.forwardRef<HTMLButtonElement, IButton>((props, ref) => {
   return (
     <ButtonComponent
+      disabled={props.disabled}
       ref={ref}
       size={props.size}
       secondary={props.secondary}
