@@ -33,7 +33,7 @@ import QRCode from "../components/QRCodeContainer";
 import UserContext from "../contexts/UserContext";
 import { createAdvert, updateAdvert } from "../graphql/mutations";
 import { getAdvert } from "../graphql/queries";
-import { IDateRange } from "../interfaces/IDateRange";
+import { ICalendarUpdateResult, IDateRange } from "../interfaces/IDateRange";
 import {
   convertToSwedishDate,
   getActiveReservation,
@@ -257,7 +257,7 @@ const ItemDetails: FC<ParamTypes> = () => {
     setReservationDateRange({ startDate, endDate, bookingType });
   };
 
-  const handleSaveReservation = async (): Promise<boolean> => {
+  const handleSaveReservation = async (): Promise<ICalendarUpdateResult> => {
     const newCalendarEvent = {
       dateRange: {
         startDate: reservationDateRange.startDate,
@@ -277,7 +277,7 @@ const ItemDetails: FC<ParamTypes> = () => {
     }
     await fetchItem();
 
-    return addEventResult.updateSuccessful;
+    return addEventResult;
   };
 
   const handleSaveReservationStatus = async (
@@ -330,10 +330,14 @@ const ItemDetails: FC<ParamTypes> = () => {
             dateRange={reservationDateRange}
             setDateRange={handleReservationDateRange}
             onFinish={() => {
-              handleSaveReservation().then((saveSuccessful) => {
-                return saveSuccessful
+              handleSaveReservation().then((saveReservationResult) => {
+                return saveReservationResult.updateSuccessful
                   ? toast("Prylen är nu bokad!")
-                  : toast.error("Prylen kunde tyvärr inte bokas");
+                  : toast.error(
+                      `Prylen kunde tyvärr inte bokas. ${
+                        saveReservationResult.errorMessage || ""
+                      }`
+                    );
               });
             }}
             availableCalendarDates={(date) =>

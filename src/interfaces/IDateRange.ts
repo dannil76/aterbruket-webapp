@@ -38,5 +38,6 @@ export interface ICalendarEvent {
 
 export interface ICalendarUpdateResult {
   updateSuccessful: boolean;
+  errorMessage?: string;
   updatedCalendarResult: ICalendarDataEvent;
 }

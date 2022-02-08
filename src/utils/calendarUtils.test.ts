@@ -35,8 +35,8 @@ describe("Create new calendar event", () => {
 
   const eventTwoDayReservation: ICalendarEvent = {
     dateRange: {
-      startDate: currentDay.format("YYYY-MM-DD"),
-      endDate: twoDaysFromToday.format("YYYY-MM-DD"),
+      startDate: twoDaysFromToday.add(1, "day").format("YYYY-MM-DD"),
+      endDate: twoDaysFromToday.add(2, "day").format("YYYY-MM-DD"),
     },
     eventType: "reserved",
   };
@@ -91,6 +91,159 @@ describe("Create new calendar event", () => {
 
     expect(addedRangeResult).toEqual(expectedResult);
   });
+
+  it("event shall not overlap with other events", () => {
+    const calendar = {
+      allowedDateStart: "2022-02-07",
+      calendarEvents: [
+        {
+          borrowedBySub: "3088c366-5092-4a70-a7f4-10cbe2fc6786",
+          dateEnd: "2022-02-11",
+          dateStart: "2022-02-09",
+          status: "reserved",
+        },
+      ],
+      allowedDateEnd: "2022-02-13",
+    };
+
+    const newEvent: ICalendarEvent = {
+      dateRange: { startDate: "2022-02-08", endDate: "2022-02-12" },
+      eventType: "reserved",
+    };
+
+    const expectedResult = {
+      errorMessage: "Prylen kan endast bokas under en sammanhängande period.",
+      updateSuccessful: false,
+      updatedCalendarResult: {
+        allowedDateEnd: "2022-02-13",
+        allowedDateStart: "2022-02-07",
+        calendarEvents: [
+          {
+            borrowedBySub: "3088c366-5092-4a70-a7f4-10cbe2fc6786",
+            dateEnd: "2022-02-11",
+            dateStart: "2022-02-09",
+            status: "reserved",
+          },
+        ],
+      },
+    };
+
+    expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
+      expectedResult
+    );
+  });
+
+  it("new event is allowed to overlap with returned events", () => {
+    const calendar = {
+      allowedDateStart: "2022-02-08",
+      calendarEvents: [
+        {
+          borrowedBySub: "8409a340-a3a8-4aff-a6c4-55ae026d16a8",
+          dateEnd: "2022-02-11",
+          dateStart: "2022-02-08",
+          status: "returned",
+        },
+      ],
+      allowedDateEnd: "2022-02-28",
+    };
+
+    const newEvent: ICalendarEvent = {
+      dateRange: { startDate: "2022-02-08", endDate: "2022-02-12" },
+      eventType: "reserved",
+    };
+
+    const expectedResult = {
+      updateSuccessful: true,
+      updatedCalendarResult: {
+        allowedDateEnd: "2022-02-28",
+        allowedDateStart: "2022-02-08",
+        calendarEvents: [
+          {
+            borrowedBySub: "8409a340-a3a8-4aff-a6c4-55ae026d16a8",
+            dateEnd: "2022-02-11",
+            dateStart: "2022-02-08",
+            status: "returned",
+          },
+          {
+            borrowedBySub: "22222-22222-22222-22222-22222",
+            dateEnd: "2022-02-12",
+            dateStart: "2022-02-08",
+            status: "reserved",
+          },
+        ],
+      },
+    };
+
+    expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
+      expectedResult
+    );
+  });
+
+  it("event shall not overlap with same dates", () => {
+    const expectedResult = {
+      updateSuccessful: false,
+      errorMessage: "Prylen kan endast bokas under en sammanhängande period.",
+      updatedCalendarResult: {
+        ...singleCalendarEvent,
+      },
+    };
+
+    const eventWithDuplicateDates = {
+      dateRange: {
+        startDate:
+          expectedResult.updatedCalendarResult.calendarEvents[0].dateStart,
+        endDate: expectedResult.updatedCalendarResult.calendarEvents[0].dateEnd,
+      },
+      eventType: "reserved",
+    };
+
+    const tryAddingSameDates = addDateRangeToEvents(
+      singleCalendarEvent,
+      eventWithDuplicateDates,
+      userSub2
+    );
+
+    expect(tryAddingSameDates).toEqual(expectedResult);
+  });
+
+  it("event shall not overlap with another event start date", () => {
+    const calendar = {
+      allowedDateStart: currentDay.format("YYYY-MM-DD"),
+      allowedDateEnd: sevenDaysFromToday.format("YYYY-MM-DD"),
+      calendarEvents: [
+        {
+          borrowedBySub: userSub1,
+          status: "reserved",
+          dateStart: twoDaysFromToday.format("YYYY-MM-DD"),
+          dateEnd: sevenDaysFromToday.format("YYYY-MM-DD"),
+        },
+      ],
+    };
+
+    const newEvent: ICalendarEvent = {
+      dateRange: {
+        startDate: currentDay.format("YYYY-MM-DD"),
+        endDate: calendar.calendarEvents[0].dateStart,
+      },
+      eventType: "reserved",
+    };
+
+    const expectedResult = {
+      updateSuccessful: false,
+      errorMessage: "Prylen kan endast bokas under en sammanhängande period.",
+      updatedCalendarResult: {
+        ...calendar,
+      },
+    };
+
+    const addDateRangeToEventsResult = addDateRangeToEvents(
+      calendar,
+      newEvent,
+      userSub2
+    );
+
+    expect(addDateRangeToEventsResult).toEqual(expectedResult);
+  });
 });
 
 describe("Is date available", () => {
@@ -143,6 +296,30 @@ describe("Is date available", () => {
     expect(isDateAvailable(moment(), calendarData)).toBeTruthy();
     expect(isDateAvailable(moment().add(7, "days"), calendarData)).toBeTruthy();
   });
+
+  it("event with status returned shall return dates available", () => {
+    const returnedDate = moment().add(5, "days");
+
+    const calendarWithReturnedEvent = {
+      allowedDateStart: moment().format("YYYY-MM-DD"),
+      allowedDateEnd: moment().add(7, "days").format("YYYY-MM-DD"),
+      calendarEvents: [
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          status: "returned",
+          dateStart: moment().add(4, "days").format("YYYY-MM-DD"),
+          dateEnd: returnedDate.format("YYYY-MM-DD"),
+        },
+      ],
+    };
+
+    const dateAvailableResult = isDateAvailable(
+      returnedDate,
+      calendarWithReturnedEvent
+    );
+
+    expect(dateAvailableResult).toBeTruthy();
+  });
 });
 
 describe("Update event status", () => {
@@ -192,6 +369,104 @@ describe("Update event status", () => {
             status: "pickedUp",
           },
         ],
+      },
+    };
+
+    expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
+      expectedResult
+    );
+  });
+
+  it("events with status returned shall not be possible to change", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-08",
+      calendarEvents: [
+        {
+          borrowedBySub: "1",
+          dateEnd: "2022-02-10",
+          dateStart: "2022-02-08",
+          status: "returned",
+        },
+      ],
+      allowedDateEnd: "2022-02-28",
+    };
+
+    const calendarEvent = {
+      borrowedBySub: "1",
+      dateEnd: "2022-02-10",
+      dateStart: "2022-02-08",
+      status: "reserved",
+    };
+    const newStatus = "pickedUp";
+
+    const expectedResult = {
+      updateSuccessful: false,
+      updatedCalendarResult: {
+        allowedDateStart: "2022-02-08",
+        calendarEvents: [
+          {
+            borrowedBySub: "1",
+            dateEnd: "2022-02-10",
+            dateStart: "2022-02-08",
+            status: "returned",
+          },
+        ],
+        allowedDateEnd: "2022-02-28",
+      },
+    };
+
+    expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
+      expectedResult
+    );
+  });
+
+  it("only change status for reserved event", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-08",
+      calendarEvents: [
+        {
+          borrowedBySub: "1",
+          dateEnd: "2022-02-10",
+          dateStart: "2022-02-08",
+          status: "returned",
+        },
+        {
+          borrowedBySub: "1",
+          dateEnd: "2022-02-10",
+          dateStart: "2022-02-08",
+          status: "reserved",
+        },
+      ],
+      allowedDateEnd: "2022-02-28",
+    };
+
+    const calendarEvent = {
+      borrowedBySub: "1",
+      dateEnd: "2022-02-10",
+      dateStart: "2022-02-08",
+      status: "reserved",
+    };
+    const newStatus = "pickedUp";
+
+    const expectedResult = {
+      updateSuccessful: true,
+      updatedCalendarResult: {
+        allowedDateStart: "2022-02-08",
+        calendarEvents: [
+          {
+            borrowedBySub: "1",
+            dateEnd: "2022-02-10",
+            dateStart: "2022-02-08",
+            status: "returned",
+          },
+          {
+            borrowedBySub: "1",
+            dateEnd: "2022-02-10",
+            dateStart: "2022-02-08",
+            status: "pickedUp",
+          },
+        ],
+        allowedDateEnd: "2022-02-28",
       },
     };
 

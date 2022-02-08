@@ -10,6 +10,17 @@ import {
   ICalendarEvent,
 } from "../interfaces/IDateRange";
 
+const isDateSameOrBetween = (
+  date: moment.Moment,
+  betweenDateStart: moment.MomentInput,
+  betweenDateEnd: moment.MomentInput
+) => {
+  return date.isBetween(betweenDateStart, betweenDateEnd, "day", "[]");
+};
+
+/**
+ * Note: Dates that occur on an event with status "returned" shall be available.
+ */
 const isDateAvailable = (
   date: moment.Moment,
   calendarData: ICalendarData | undefined
@@ -28,7 +39,10 @@ const isDateAvailable = (
 
   if (calendarData.calendarEvents?.length > 0) {
     return !calendarData.calendarEvents.some((event) => {
-      return date.isBetween(event.dateStart, event.dateEnd, "day", "[]");
+      return (
+        !(event.status === "returned") &&
+        isDateSameOrBetween(date, event.dateStart, event.dateEnd)
+      );
     });
   }
 
@@ -47,6 +61,49 @@ const addDateRangeToEvents = (
     dateEnd: newCalendarEvent.dateRange.endDate,
     status: newCalendarEvent.eventType,
   };
+
+  if (
+    !newCalendarEvent.dateRange.startDate ||
+    !newCalendarEvent.dateRange.endDate
+  ) {
+    return {
+      updateSuccessful: false,
+      errorMessage: "Datum ej valda, både start och slut datum behöver väljas.",
+      updatedCalendarResult: advertBorrowCalendar,
+    };
+  }
+
+  const overlappingDays = adCalendar.calendarEvents.some((event) => {
+    if (event.status === "returned") {
+      return false;
+    }
+
+    return (
+      isDateSameOrBetween(
+        moment(newCalendarEvent.dateRange.startDate),
+        event.dateStart,
+        event.dateEnd
+      ) ||
+      isDateSameOrBetween(
+        moment(newCalendarEvent.dateRange.endDate),
+        event.dateStart,
+        event.dateEnd
+      ) ||
+      isDateSameOrBetween(
+        moment(event.dateStart),
+        newCalendarEvent.dateRange.startDate,
+        newCalendarEvent.dateRange.endDate
+      )
+    );
+  });
+
+  if (overlappingDays) {
+    return {
+      updateSuccessful: false,
+      errorMessage: "Prylen kan endast bokas under en sammanhängande period.",
+      updatedCalendarResult: advertBorrowCalendar,
+    };
+  }
 
   advertBorrowCalendar.calendarEvents.push(calendarEvent);
 
@@ -75,6 +132,10 @@ const updateAdvertCalendar = async (
   );
 };
 
+/**
+ * Events with status "returned" shall bot be possible to change. This prevents edge case where a user reserved,
+ * picked up, returned an item and then tried to reserv the item again on the very same day.
+ */
 const updateEventStatus = (
   adCalendar: ICalendarData,
   calendarEvent: IReservation | null,
@@ -84,10 +145,11 @@ const updateEventStatus = (
   let statusUpdated: boolean;
 
   const foundEventIndex = adCalendarCopy.calendarEvents.findIndex(
-    (el: ICalendarDataEvent) =>
-      el.borrowedBySub === calendarEvent?.borrowedBySub &&
-      el.dateStart === calendarEvent.dateStart &&
-      el.dateEnd === calendarEvent.dateEnd
+    (event: ICalendarDataEvent) =>
+      event.borrowedBySub === calendarEvent?.borrowedBySub &&
+      event.dateStart === calendarEvent.dateStart &&
+      event.dateEnd === calendarEvent.dateEnd &&
+      event.status !== "returned"
   );
 
   if (foundEventIndex >= 0) {

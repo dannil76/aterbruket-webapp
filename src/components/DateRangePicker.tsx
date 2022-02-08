@@ -50,4 +50,8 @@ const DateRangePicker: React.FC<IDateRangePickerProps> = ({
   );
 };
 
+DateRangePicker.defaultProps = {
+  numberOfMonths: 1,
+};
+
 export default DateRangePicker;

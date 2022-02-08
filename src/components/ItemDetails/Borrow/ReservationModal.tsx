@@ -46,7 +46,6 @@ const ReservationModal: React.FC<Props> = ({
           <h4>När vill du låna prylen?</h4>
 
           <DateRangePicker
-            numberOfMonths={1}
             onValueChange={setDateRange}
             bookingType="reserved"
             blockedDay={availableCalendarDates}
