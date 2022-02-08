@@ -78,10 +78,10 @@ const Profile: FC = () => {
             <InformationFrame>{user.address}</InformationFrame>
           </>
         )}
-        {user.postalcode && (
+        {user.postalCode && (
           <>
             <InformationHeader>Postnummer</InformationHeader>
-            <InformationFrame>{user.postalcode}</InformationFrame>
+            <InformationFrame>{user.postalCode}</InformationFrame>
           </>
         )}
       </InformationContainer>

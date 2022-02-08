@@ -50,7 +50,6 @@ const AddItem: FC = () => {
       description: "",
       company: user.company ? user.company : "",
       department: user.department ? user.department : "",
-      location: user.address ? user.address : "",
       instructions: "",
       contactPerson: user.name ? user.name : "",
       email: user.email ? user.email : "",
@@ -73,6 +72,9 @@ const AddItem: FC = () => {
         allowedDateEnd: null,
         calendarEvents: [],
       },
+      address: user.address ? user.address : "",
+      postalCode: user.postalCode ? user.postalCode : "",
+      city: "Helsingborg",
     },
     createAdvert
   );

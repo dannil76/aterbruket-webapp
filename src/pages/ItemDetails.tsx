@@ -317,7 +317,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         default: <RecycleContent advert={item} status={status} />,
       },
       bottom: {
-        default: [<Separator />, <QRCode id={id} />],
+        default: [<Separator key="1" />, <QRCode key="2" id={id} />],
       },
     },
     borrow: {
@@ -434,45 +434,45 @@ const ItemDetails: FC<ParamTypes> = () => {
         {(status === "reserved" ||
           status === "pickedUp" ||
           status === "pickUpAllowed") && (
-          <header className="reservedHeader">
-            <MdArrowBack onClick={goBackFunc} />
+            <header className="reservedHeader">
+              <MdArrowBack onClick={goBackFunc} />
 
-            <div>
-              <p className="headerTitle headerTitle--reserved">{item.title}</p>
-              {status === "reserved" || status === "pickUpAllowed" ? (
-                <p className="reservedP">Reserverad</p>
-              ) : (
-                <p className="reservedP">Uthämtad</p>
+              <div>
+                <p className="headerTitle headerTitle--reserved">{item.title}</p>
+                {status === "reserved" || status === "pickUpAllowed" ? (
+                  <p className="reservedP">Reserverad</p>
+                ) : (
+                  <p className="reservedP">Uthämtad</p>
+                )}
+              </div>
+
+              {isRecycleType && showHeaderBtn && (
+                <HeaderButton
+                  size="sm"
+                  color="primaryLight"
+                  onClick={() => {
+                    togglePickUpModal();
+                  }}
+                  type="button"
+                >
+                  HÄMTA UT
+                </HeaderButton>
               )}
-            </div>
 
-            {isRecycleType && showHeaderBtn && (
-              <HeaderButton
-                size="sm"
-                color="primaryLight"
-                onClick={() => {
-                  togglePickUpModal();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </HeaderButton>
-            )}
-
-            {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
-              <HeaderButton
-                size="sm"
-                color="primaryLight"
-                onClick={() => {
-                  togglePickUpModal();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </HeaderButton>
-            )}
-          </header>
-        )}
+              {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
+                <HeaderButton
+                  size="sm"
+                  color="primaryLight"
+                  onClick={() => {
+                    togglePickUpModal();
+                  }}
+                  type="button"
+                >
+                  HÄMTA UT
+                </HeaderButton>
+              )}
+            </header>
+          )}
 
         <ImgDiv>
           {image && (

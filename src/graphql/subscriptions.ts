@@ -8,7 +8,6 @@ export const onCreateAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -64,6 +63,9 @@ export const onCreateAdvert = /* GraphQL */ `
       }
       accessRestriction
       accessRestrictionSelection
+      address
+      city
+      postalCode
       createdAt
       updatedAt
     }
@@ -75,7 +77,6 @@ export const onUpdateAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -131,6 +132,9 @@ export const onUpdateAdvert = /* GraphQL */ `
       }
       accessRestriction
       accessRestrictionSelection
+      address
+      city
+      postalCode
       createdAt
       updatedAt
     }
@@ -142,7 +146,6 @@ export const onDeleteAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -198,6 +201,9 @@ export const onDeleteAdvert = /* GraphQL */ `
       }
       accessRestriction
       accessRestrictionSelection
+      address
+      city
+      postalCode
       createdAt
       updatedAt
     }

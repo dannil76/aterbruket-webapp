@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 const compare = (
   param1: string | boolean | number,
   operator: string,

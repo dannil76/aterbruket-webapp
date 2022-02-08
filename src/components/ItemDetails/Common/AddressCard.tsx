@@ -33,24 +33,33 @@ const AddressCard: FC<Props> = ({ advert }) => {
   return (
     <Card>
       <div className="cardHeader">
-        {advert && advert.location && (
-          <Map mapTypeControl={false} location={advert.location} />
+        {advert && advert.address && (
+          <Map
+            mapTypeControl={false}
+            location={`${advert.address},${advert.postalCode},${advert.city}`}
+          />
         )}
 
-        {!advert.location && (
+        {!advert.address && (
           <Loader type="ThreeDots" color="#9db0c6" height={50} width={50} />
         )}
       </div>
       <div className="cardBody">
         <SubTitle>Adress</SubTitle>
-        <p>{advert.department}</p>
-        <p>{advert.location}</p>
+        <p>{advert.company}</p>
+        <p>
+          {advert.address}, {advert.postalCode}, {advert.city}
+        </p>
         <MapButton
           size="lg"
           secondary
           type="button"
           onClick={() =>
-            advert.location ? launchNavigation(advert.location) : null
+            advert.address
+              ? launchNavigation(
+                `${advert.address},${advert.postalCode},${advert.city}`
+              )
+              : null
           }
         >
           Hitta hit

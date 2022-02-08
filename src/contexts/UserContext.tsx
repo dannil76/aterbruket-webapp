@@ -8,7 +8,7 @@ export interface User {
   department?: string;
   company?: string;
   address?: string;
-  postalcode?: string;
+  postalCode?: string;
   isAdmin?: boolean;
 }
 
@@ -48,7 +48,7 @@ function UserProvider({ children }: ProviderProps) {
           department: authData?.attributes["custom:department"] || "",
           company: authData?.attributes["custom:company"] || "",
           address: authData?.attributes?.address || "",
-          postalcode: authData?.attributes["custom:postalcode"] || "",
+          postalCode: authData?.attributes["custom:postalcode"] || "",
           isAdmin,
         });
       }

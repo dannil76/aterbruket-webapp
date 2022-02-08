@@ -25,7 +25,9 @@
   "phoneNumber": "0701010191",
   "quantity": 1,
   "department": "Digitaliseringsavd - Verksamhetslösningar - Digital utvecklin",
-  "location": "Drottninggatan 14",
+  "address": "Drottninggatan 14",
+  "postalCode": "123 45",
+  "city": "Helsingborg",
   "areaOfUse": [
     {
       "indoors": true,

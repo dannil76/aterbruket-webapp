@@ -2,7 +2,6 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   id: ID! @primaryKey(sortKeyFields: ["version"])
   title: String!
   description: String
-  location: String
   height: String
   width: String
   length: String
@@ -38,6 +37,9 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   advertBorrowCalendar: AdvertBorrowCalendar
   accessRestriction: String
   accessRestrictionSelection: [String]
+  address: String
+  city: String
+  postalCode: String
 }
 
 type AdvertBorrowCalendar {

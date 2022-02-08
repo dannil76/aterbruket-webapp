@@ -25,7 +25,9 @@
   "quantity": 1,
   "phoneNumber": "",
   "department": "Digitaliseringsavd - Verksamhetslösningar - Digital utvecklin",
-  "location": "Drottninggatan 14",
+  "address": "Drottninggatan 14",
+  "postalCode": "123 45",
+  "city": "Helsingborg",
   "areaOfUse": [
     {
       "indoors": false,

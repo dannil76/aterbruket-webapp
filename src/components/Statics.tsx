@@ -145,7 +145,7 @@ const Statics: FC = () => {
       filteredItems = allItems;
     } else if (filterOn === ATERBRUKETADRESS) {
       filteredItems = allItems.filter((item: any) => {
-        return item.location.includes(filterOn);
+        return item.address.includes(filterOn);
       });
     } else {
       filteredItems = allItems.filter((item: any) => {
@@ -163,7 +163,7 @@ const Statics: FC = () => {
       filteredItems = allItems;
     } else if (filterOn === ATERBRUKETADRESS) {
       filteredItems = allItemsOverTime.filter((item: any) => {
-        return item.location.includes(filterOn);
+        return item.address.includes(filterOn);
       });
     } else {
       filteredItems = allItemsOverTime.filter((item: any) => {

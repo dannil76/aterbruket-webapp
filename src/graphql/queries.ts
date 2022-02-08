@@ -8,7 +8,6 @@ export const getAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -64,6 +63,9 @@ export const getAdvert = /* GraphQL */ `
       }
       accessRestriction
       accessRestrictionSelection
+      address
+      city
+      postalCode
       createdAt
       updatedAt
     }
@@ -90,7 +92,6 @@ export const listAdverts = /* GraphQL */ `
         id
         title
         description
-        location
         height
         width
         length
@@ -140,6 +141,9 @@ export const listAdverts = /* GraphQL */ `
         }
         accessRestriction
         accessRestrictionSelection
+        address
+        city
+        postalCode
         createdAt
         updatedAt
       }

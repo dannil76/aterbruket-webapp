@@ -24,7 +24,9 @@ export interface IAdvert {
   areaOfUse?: Array<ItemAreaOfUseInput | null> | null;
   description?: string;
   department?: string;
-  location?: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
   contactPerson?: string;
   email?: string;
   phoneNumber?: string;

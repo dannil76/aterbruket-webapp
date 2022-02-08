@@ -64,7 +64,9 @@ const EditItemForm: FC<Props> = ({
       company: item.company,
 
       department: item.department,
-      location: item.location,
+      address: item.address,
+      postalCode: item.postalCode,
+      city: item.city,
       contactPerson: item.contactPerson,
       email: item.email,
       phoneNumber: item.phoneNumber,
