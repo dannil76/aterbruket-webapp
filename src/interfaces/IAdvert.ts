@@ -1,4 +1,4 @@
-import { ItemAMaterialInput, ItemAreaOfUseInput } from "../API";
+import { ItemAMaterialInput, ItemAreaOfUseInput, AdministrationInput } from "../API";
 
 export interface IReservation {
   borrowedBySub: string;
@@ -44,7 +44,7 @@ export interface IAdvert {
   accessories?: string[];
   borrowDifficultyLevel?: string;
   accessRestriction?: string;
-  accessRestrictionSelection?: string[];
+  accessRestrictionSelection?: AdministrationInput | null;
   reservedBySub?: string;
   createdAt: string;
   updatedAt?: string;

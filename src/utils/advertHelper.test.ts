@@ -1,3 +1,4 @@
+import { IAdvert } from './../interfaces/IAdvert';
 import { getStatus, getActiveReservation, hasUserBorrowPermission } from "./advertHelper";
 import BorrowAdvert from "../mocks/BorrowAdvert.json";
 import RecycleAdvert from "../mocks/RecycleAdvert.json";
@@ -49,14 +50,20 @@ const reservations = [
   },
 ];
 
-const borrowAdvert = BorrowAdvert;
-borrowAdvert.advertBorrowCalendar.calendarEvents = reservations;
+const borrowAdvert = <IAdvert>{
+    ...BorrowAdvert,
+    advertBorrowCalendar: {
+      allowedDateEnd: "2022-01-01",
+      allowedDateStart: "2030-01-01",
+      calendarEvents: reservations
+    }
+};
 
 const date = new Date("2022-02-01");
 
 describe("Get status", () => {
   test("Recycle advert returns available", () =>
-    expect(getStatus(RecycleAdvert, user1, date)).toBe("available"));
+    expect(getStatus(RecycleAdvert as IAdvert, user1, date)).toBe("available"));
 
   test("Borrow advert returns available", () =>
     expect(getStatus(borrowAdvert, user1, date)).toBe("available"));
@@ -73,7 +80,7 @@ describe("Get status", () => {
   const borrowAdvert1 = {
     ...BorrowAdvert,
     accessRestriction: "selection",
-    accessRestrictionSelection: ["Othercompany"]
+    accessRestrictionSelection: {"arbetsmarknadsforvaltningen": true},
   };
   test("Borrow advert returns borrowPermissionDenied", () =>
     expect(getStatus(borrowAdvert1, user5, date)).toBe("borrowPermissionDenied"));
@@ -92,18 +99,19 @@ describe("Get active reservation", () => {
 
 describe("Checks if user has permission to borrow advert",  () => {
   test("Returns true if advert has no restrictions", () =>
-    expect(hasUserBorrowPermission(user1, BorrowAdvert)).toBeTruthy());
+    expect(hasUserBorrowPermission(user1, BorrowAdvert as IAdvert)).toBeTruthy());
 
-  const borrowAdvert1 = {...BorrowAdvert,
+  const borrowAdvert1 = {
+    ...BorrowAdvert,
     accessRestriction: "selection",
-    accessRestrictionSelection: ["Kulturförvaltningen"]
+    accessRestrictionSelection: {"kulturforvaltningen": true}
   };
   test("Returns false if user don't have permission", () =>
     expect(hasUserBorrowPermission(user2, borrowAdvert1)).toBeFalsy());
   const borrowAdvert2 = {
     ...BorrowAdvert,
     accessRestriction: "selection",
-    accessRestrictionSelection: ["Stadsledningsförvaltningen"]
+    accessRestrictionSelection: {"stadsledningsforvaltningen": true}
   };
   test("Returns true if user has permission", () =>
     expect(hasUserBorrowPermission(user3, borrowAdvert2)).toBeTruthy());

@@ -36,10 +36,22 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   borrowDifficultyLevel: String
   advertBorrowCalendar: AdvertBorrowCalendar
   accessRestriction: String
-  accessRestrictionSelection: [String]
+  accessRestrictionSelection: Administration
   address: String
   city: String
   postalCode: String
+}
+
+type Administration {
+  arbetsmarknadsforvaltningen: Boolean
+  fastighetsforvaltningen: Boolean
+  kulturforvaltningen: Boolean
+  miljoforvaltningen: Boolean
+  skolOchFritidsforvaltningen: Boolean
+  socialforvaltningen: Boolean
+  stadsbyggnadsforvaltningen: Boolean
+  stadsledningsforvaltningen: Boolean
+  vardOchOmsorgsforvaltningen: Boolean
 }
 
 type AdvertBorrowCalendar {

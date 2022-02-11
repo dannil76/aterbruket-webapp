@@ -66,7 +66,7 @@ const AddItem: FC = () => {
       accessories: [],
       borrowDifficultyLevel: "",
       accessRestriction: "none",
-      accessRestrictionSelection: [],
+      accessRestrictionSelection: {},
       advertBorrowCalendar: {
         allowedDateStart: null,
         allowedDateEnd: null,

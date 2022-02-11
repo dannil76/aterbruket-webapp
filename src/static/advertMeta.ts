@@ -55,47 +55,47 @@ const materials = [
 const administrations = [
   {
     id: 1,
-    key: "Arbetsmarknadsförvaltningen",
+    key: "arbetsmarknadsforvaltningen",
     title: "Arbetsmarknadsförvaltningen",
   },
   {
     id: 2,
-    key: "Fastighetsförvaltningen",
+    key: "fastighetsforvaltningen",
     title: "Fastighetsförvaltningen",
   },
   {
     id: 3,
-    key: "Kulturförvaltningen",
+    key: "kulturforvaltningen",
     title: "Kulturförvaltningen",
   },
   {
     id: 4,
-    key: "Miljöförvaltningen",
+    key: "miljoforvaltningen",
     title: "Miljöförvaltningen",
   },
   {
     id: 5,
-    key: "Skol- och fritidsförvaltningen",
+    key: "skolOchFritidsforvaltningen",
     title: "Skol- och fritidsförvaltningen",
   },
   {
     id: 6,
-    key: "Socialförvaltningen",
+    key: "socialforvaltningen",
     title: "Socialförvaltningen",
   },
   {
     id: 7,
-    key: "Stadsbyggnadsförvaltningen",
+    key: "stadsbyggnadsforvaltningen",
     title: "Stadsbyggnadsförvaltningen",
   },
   {
     id: 8,
-    key: "Stadsledningsförvaltningen",
+    key: "stadsledningsforvaltningen",
     title: "Stadsledningsförvaltningen",
   },
   {
     id: 9,
-    key: "Vård- och omsorgsförvaltningen",
+    key: "vardOchOmsorgsforvaltningen",
     title: "Vård- och omsorgsförvaltningen",
   },
 ];

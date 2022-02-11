@@ -65,7 +65,17 @@ export const createAdvert = /* GraphQL */ `
         }
       }
       accessRestriction
-      accessRestrictionSelection
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
       address
       city
       postalCode
@@ -137,7 +147,17 @@ export const updateAdvert = /* GraphQL */ `
         }
       }
       accessRestriction
-      accessRestrictionSelection
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
       address
       city
       postalCode
@@ -209,7 +229,17 @@ export const deleteAdvert = /* GraphQL */ `
         }
       }
       accessRestriction
-      accessRestrictionSelection
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
       address
       city
       postalCode

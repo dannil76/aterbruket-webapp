@@ -1,6 +1,8 @@
 import { User } from './../contexts/UserContext';
 import { isMobile } from "react-device-detect";
 import { IAdvert, IReservation } from "../interfaces/IAdvert";
+import { administrations } from "../static/advertMeta";
+import { AdministrationInput } from "../API";
 
 export const getActiveReservation = (
   item: IAdvert,
@@ -34,15 +36,19 @@ export const getActiveReservation = (
 };
 
 export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
-  if (user.sub === advert.giver || advert.accessRestriction !== "selection") {
+  if (advert.accessRestriction !== "selection") {
     return true
   }
 
-  if (advert?.accessRestrictionSelection && advert?.accessRestrictionSelection?.length > 0) {
-    return advert.accessRestrictionSelection.includes(user.company ? user.company : "");
+  const userDepartmentKey = administrations.find(
+    (administration) => administration.title === user.company
+  )?.key;
+
+  if (!userDepartmentKey) {
+    return false;
   }
 
-  return false;
+  return advert?.accessRestrictionSelection?.[userDepartmentKey as keyof AdministrationInput];
 }
 
 export const getStatus = (
