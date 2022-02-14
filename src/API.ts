@@ -470,7 +470,7 @@ export enum ModelSortDirection {
 
 export type ModelAdvertConnection = {
   __typename: "ModelAdvertConnection",
-  items?:  Array<Advert | null >,
+  items?:  Array<Advert >,
   nextToken?: string | null,
 };
 
@@ -486,7 +486,7 @@ export type ModelPageFilterInput = {
 
 export type ModelPageConnection = {
   __typename: "ModelPageConnection",
-  items?:  Array<Page | null >,
+  items?:  Array<Page >,
   nextToken?: string | null,
 };
 
@@ -968,6 +968,13 @@ export type ListAdvertsQuery = {
         __typename: "AdvertBorrowCalendar",
         allowedDateStart?: string | null,
         allowedDateEnd?: string | null,
+        calendarEvents?:  Array< {
+          __typename: "CalendarEvent",
+          borrowedBySub?: string | null,
+          status?: string | null,
+          dateStart?: string | null,
+          dateEnd?: string | null,
+        } | null > | null,
       } | null,
       accessRestriction?: string | null,
       accessRestrictionSelection?:  {
@@ -987,7 +994,7 @@ export type ListAdvertsQuery = {
       postalCode?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null >,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -1027,7 +1034,7 @@ export type ListPagesQuery = {
       content?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null >,
+    } >,
     nextToken?: string | null,
   } | null,
 };

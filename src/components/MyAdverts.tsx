@@ -42,7 +42,6 @@ const MyAdverts: FC = () => {
       })
     )) as GraphQLResult<ListAdvertsQuery>;
 
-
     const advertItem: any = result.data?.listAdverts?.items;
     if (advertItem.length > 0) {
       setPaginationOption({

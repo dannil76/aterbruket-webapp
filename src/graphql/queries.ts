@@ -148,6 +148,12 @@ export const listAdverts = /* GraphQL */ `
         advertBorrowCalendar {
           allowedDateStart
           allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+          }
         }
         accessRestriction
         accessRestrictionSelection {

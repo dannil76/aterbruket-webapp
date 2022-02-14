@@ -79,7 +79,7 @@ const AdvertContainer: FC<IAdvert> = ({
     filteredItems = items.filter((item: any) => {
       return (
         item.title.toLowerCase().indexOf(searchValue.toLocaleLowerCase()) !==
-        -1 ||
+          -1 ||
         item.description
           .toLowerCase()
           .indexOf(searchValue.toLocaleLowerCase()) !== -1 ||

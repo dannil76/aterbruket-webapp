@@ -106,7 +106,7 @@ const Header: FC<MyProps> = () => {
     setVisible(
       (prevScrollPos > currentScrollPos &&
         prevScrollPos - currentScrollPos > 300) ||
-      currentScrollPos < 100
+        currentScrollPos < 100
     );
 
     // set state to new scroll position
@@ -197,16 +197,16 @@ const Header: FC<MyProps> = () => {
             {path === "profile"
               ? "Kontaktuppgifter"
               : subPath === "myadverts"
-                ? "Dina grejer som kan Haffas!"
-                : subPath === "statics"
-                  ? "Haffa statistik"
-                  : path === "haffat"
-                    ? "Grejer du Haffat!"
-                    : path === "add"
-                      ? "Gör en annons!"
-                      : path === "about"
-                        ? "Om Haffa!"
-                        : "Haffa en möbel!"}
+              ? "Dina grejer som kan Haffas!"
+              : subPath === "statics"
+              ? "Haffa statistik"
+              : path === "haffat"
+              ? "Haffat!"
+              : path === "add"
+              ? "Gör en annons!"
+              : path === "about"
+              ? "Om Haffa!"
+              : "Haffa en möbel!"}
           </h2>
         </HeaderDiv>
       )}

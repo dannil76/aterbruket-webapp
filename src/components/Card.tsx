@@ -157,7 +157,7 @@ const Card: FC<Props> = ({
   };
   useEffect(() => {
     fetchImage();
-    return () => { };
+    return () => {};
   }, []);
 
   const updateItem = async (newStatus: string) => {
@@ -188,7 +188,7 @@ const Card: FC<Props> = ({
       fetchReservedAdverts();
       setItemUpdated(false);
     }
-    return () => { };
+    return () => {};
   }, [itemUpdated]);
 
   const handlePickUp = () => {
@@ -258,7 +258,6 @@ const Card: FC<Props> = ({
                 }}
               >
                 <span>Hämta!</span>
-
                 <MdArrowForward />
               </button>
             )}
