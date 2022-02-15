@@ -425,6 +425,7 @@ export default function Form(props: {
             {field.title}
           </Label>
           <DateRangePicker
+            required={required}
             onValueChange={props.handleDateRangeChange}
             bookingType="createNewCalendar"
           />

@@ -76,7 +76,7 @@ export default [
     name: "allowedBorrowDateRange",
     fieldType: "dateRangePicker",
     disabled: false,
-    required: false,
+    required: true,
     title: "Tillgänglig period",
     conditions: [
       {
