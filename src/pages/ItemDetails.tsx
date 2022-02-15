@@ -26,7 +26,7 @@ import {
   MainSection,
   SubTitle,
   TopSection,
-  Header
+  Header,
 } from "../components/ItemDetails/Common";
 import PickUpModal from "../components/ItemDetails/PickUpModal";
 import RecycleContent from "../components/ItemDetails/Recycle/DefaultContent";
@@ -333,6 +333,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         ),
         pickUpAllowed: (
           <PickUpModal
+            image={image}
             advert={item}
             isVisible={isPickUpModalVisible}
             toggleModal={togglePickUpModal}
@@ -347,6 +348,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         ),
         pickedUp: (
           <ReturnModal
+            image={image}
             advert={item}
             isVisible={isReturnModalVisible}
             toggleModal={toggleReturnModal}

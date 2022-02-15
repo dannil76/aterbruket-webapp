@@ -5,8 +5,8 @@ import useForm from "../hooks/useForm";
 import { updateAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
 import { IAdvert } from "../interfaces/IAdvert";
-import { Modal } from "../components/Modal";
-import { AdvertImage } from "../components/ItemDetails/Common";
+import { Modal } from "./Modal";
+import { AdvertImage } from "./ItemDetails/Common";
 
 interface Props {
   item: IAdvert;

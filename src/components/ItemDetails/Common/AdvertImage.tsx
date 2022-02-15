@@ -4,6 +4,7 @@ import styled from "styled-components";
 const ImageContainer = styled.div`
   width: 100%;
   max-height: 380px;
+  overflow: hidden;
 
   img {
     width: 100%;
@@ -25,6 +26,6 @@ const AdvertImage: React.FC<Props> = ({ src, alt, onClick }) => {
       <img src={src} alt={alt} />
     </ImageContainer>
   );
-}
+};
 
 export default AdvertImage;

@@ -1,5 +1,5 @@
-import { User } from './../contexts/UserContext';
 import { isMobile } from "react-device-detect";
+import { User } from "../contexts/UserContext";
 import { IAdvert, IReservation } from "../interfaces/IAdvert";
 import { administrations } from "../static/advertMeta";
 import { AdministrationInput } from "../API";
@@ -37,7 +37,7 @@ export const getActiveReservation = (
 
 export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
   if (advert.accessRestriction !== "selection") {
-    return true
+    return true;
   }
 
   const userDepartmentKey = administrations.find(
@@ -48,14 +48,12 @@ export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
     return false;
   }
 
-  return advert?.accessRestrictionSelection?.[userDepartmentKey as keyof AdministrationInput];
-}
+  return advert?.accessRestrictionSelection?.[
+    userDepartmentKey as keyof AdministrationInput
+  ];
+};
 
-export const getStatus = (
-  item: IAdvert,
-  user: User,
-  date: Date
-): string => {
+export const getStatus = (item: IAdvert, user: User, date: Date): string => {
   if (item.advertType === "recycle") {
     return item.status;
   }
@@ -66,10 +64,10 @@ export const getStatus = (
     pickedUp: "pickedUp",
     pickUpAllowed: "pickUpAllowed",
     returned: "returned",
-    borrowPermissionDenied: "borrowPermissionDenied"
+    borrowPermissionDenied: "borrowPermissionDenied",
   };
 
-  if(!hasUserBorrowPermission(user, item)) {
+  if (!hasUserBorrowPermission(user, item)) {
     return statuses.borrowPermissionDenied;
   }
 
