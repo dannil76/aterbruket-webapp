@@ -14,10 +14,16 @@ const DateRangePicker: React.FC<IDateRangePickerProps> = ({
   enabledDateRange,
   blockedDay,
   bookingType,
+  initialStartDate,
+  initialEndDate,
   ...props
 }: IDateRangePickerProps) => {
-  const [startDate, setStartDate] = useState<moment.Moment | null>(null);
-  const [endDate, setEndDate] = useState<moment.Moment | null>(null);
+  const [startDate, setStartDate] = useState<moment.Moment | null>(
+    initialStartDate ? moment(initialStartDate) : null
+  );
+  const [endDate, setEndDate] = useState<moment.Moment | null>(
+    initialEndDate ? moment(initialEndDate) : null
+  );
   const [focusedInput, setFocusedInput] = useState<
     "startDate" | "endDate" | null
   >(null);

@@ -15,6 +15,8 @@ export interface IDateRangePickerProps {
   enabledDateRange?: IDateRange;
   blockedDay?: (day: moment.Moment) => boolean;
   bookingType: string;
+  initialStartDate?: string;
+  initialEndDate?: string;
   [key: string]: any;
 }
 
