@@ -16,6 +16,7 @@ import { IOption } from "../interfaces/IForm";
 import { Modal, useModal } from "../components/Modal";
 import { useQrCamera } from "../components/QrCamera";
 import QrModal from "../components/QrModal";
+import showBetaInfoToaster from "../utils/showBetaInfoToaster";
 
 const AdvertContainer = React.lazy(
   () => import("../components/AdvertContainer")
@@ -285,6 +286,10 @@ const Home: FC = () => {
     }
   }, [authState, filterValueUpdated, activeSorting]);
 
+  useEffect(() => {
+    showBetaInfoToaster();
+  }, []);
+
   const categoryData = getAllCategories();
   const filterOptions = [...categoryData, ...conditions];
   const activeFilterOptions = filterOptions.filter((item: IOption) => {
@@ -302,8 +307,11 @@ const Home: FC = () => {
   return (
     <main>
       <Suspense fallback={<div>Loading...</div>}>
-
-        <QrModal isVisible={isQrModalVisible} toggleModal={toggleQrModal} setResult={setQrCameraResult}>
+        <QrModal
+          isVisible={isQrModalVisible}
+          toggleModal={toggleQrModal}
+          setResult={setQrCameraResult}
+        >
           <QrModalContent>
             <h1>Skanna QR-kod</h1>
           </QrModalContent>
@@ -311,15 +319,14 @@ const Home: FC = () => {
 
         <Modal isVisible={isModalVisible}>
           <Modal.Body autoHeight>
-            <ModalAddItemContent toggleModal={toggleModal} toggleQrModal={toggleQrModal} />
+            <ModalAddItemContent
+              toggleModal={toggleModal}
+              toggleQrModal={toggleQrModal}
+            />
           </Modal.Body>
         </Modal>
 
-        <ScanBtn
-          id="scanBtn"
-          type="button"
-          onClick={() => toggleQrModal()}
-        >
+        <ScanBtn id="scanBtn" type="button" onClick={() => toggleQrModal()}>
           <MdPhotoCamera />
         </ScanBtn>
         {/* <TabCtn>
@@ -337,11 +344,7 @@ const Home: FC = () => {
             />
           </div>
 
-          <button
-            onClick={() => setIsOpen(true)}
-            type="button"
-            id="filterBtn"
-          >
+          <button onClick={() => setIsOpen(true)} type="button" id="filterBtn">
             Filter <MdTune className="filterIcon" />
           </button>
 
@@ -384,7 +387,6 @@ const Home: FC = () => {
           <MdNewReleases />
           <p>Gör en egen annons!</p>
         </AddBtn>
-
       </Suspense>
     </main>
   );
