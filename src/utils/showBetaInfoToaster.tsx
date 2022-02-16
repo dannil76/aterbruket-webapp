@@ -7,7 +7,7 @@ const handleClose = () => {
 
 const ToasterBetaInfo = () => (
   <>
-    <h2>Det här är en betaversion! Hör gärna av dig med feedback.</h2>
+    <h4>Det här är en betaversion! Hör gärna av dig med feedback.</h4>
     <a href="mailto:tommy.boije@helsingborg.se?subject=Haffa - Feedback betaversion">
       tommy.boije@helsingborg.se
     </a>
