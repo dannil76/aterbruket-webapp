@@ -1,10 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
 
-const showToasterBetaInfo = localStorage.getItem(
-  "HaffaApp:showToasterBetaInfo"
-);
-
 const handleClose = () => {
   localStorage.setItem("HaffaApp:showToasterBetaInfo", "false");
 };
@@ -19,6 +15,10 @@ const ToasterBetaInfo = () => (
 );
 
 const showBetaInfoToaster: () => string | number | null = () => {
+  const showToasterBetaInfo = localStorage.getItem(
+    "HaffaApp:showToasterBetaInfo"
+  );
+
   return !(showToasterBetaInfo === "false")
     ? toast.warning(<ToasterBetaInfo />, {
         autoClose: false,
