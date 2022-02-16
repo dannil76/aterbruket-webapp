@@ -77,6 +77,7 @@ const EditItemForm: FC<Props> = ({
       borrowDifficultyLevel: item.borrowDifficultyLevel,
       accessRestriction: item.accessRestriction,
       accessRestrictionSelection: item.accessRestrictionSelection,
+      advertBorrowCalendar: item?.advertBorrowCalendar,
     },
     updateAdvert
   );

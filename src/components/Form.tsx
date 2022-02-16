@@ -428,6 +428,10 @@ export default function Form(props: {
             required={required}
             onValueChange={props.handleDateRangeChange}
             bookingType="createNewCalendar"
+            initialStartDate={
+              props.values?.advertBorrowCalendar.allowedDateStart
+            }
+            initialEndDate={props.values?.advertBorrowCalendar.allowedDateEnd}
           />
         </FieldSection>
       );
