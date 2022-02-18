@@ -49,11 +49,8 @@ npm install -g @aws-amplify/cli
 ### Installation
 
 1. Clone repo
-
 2. Install dependencies `$ npm install`
-3. Checkout existing sandbox environment `$ amplify env checkout <ENV NAME>`
-OR create new sandbox environment `$ amplify env add`
-
+3. Initialize Amplify project `$ amplify init`
 
 ### Run app
 
