@@ -6,6 +6,7 @@ import useForm from "../hooks/useForm";
 import { createAdvert } from "../graphql/mutations";
 import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
+import { administrations } from "../static/advertMeta";
 
 const Form = React.lazy(() => import("../components/Form"));
 
@@ -17,6 +18,9 @@ const ItemImg = styled.img`
 
 const AddItem: FC = () => {
   const { user } = useContext(UserContext);
+  const company = administrations.find(
+    (administration) => user.company === administration.title
+  );
   const {
     values,
     handleInputChange,
@@ -48,7 +52,7 @@ const AddItem: FC = () => {
         wood: false,
       },
       description: "",
-      company: user.company ? user.company : "",
+      company: company ? company.key : "",
       department: user.department ? user.department : "",
       instructions: "",
       contactPerson: user.name ? user.name : "",
