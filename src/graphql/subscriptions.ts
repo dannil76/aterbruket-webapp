@@ -76,6 +76,12 @@ export const onCreateAdvert = /* GraphQL */ `
       address
       city
       postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -155,6 +161,12 @@ export const onUpdateAdvert = /* GraphQL */ `
       address
       city
       postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -234,6 +246,12 @@ export const onDeleteAdvert = /* GraphQL */ `
       address
       city
       postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }

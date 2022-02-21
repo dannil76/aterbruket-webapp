@@ -76,6 +76,12 @@ export const getAdvert = /* GraphQL */ `
       address
       city
       postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -170,6 +176,12 @@ export const listAdverts = /* GraphQL */ `
         address
         city
         postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
         createdAt
         updatedAt
       }

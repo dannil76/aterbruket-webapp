@@ -66,6 +66,14 @@
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
           "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        },
+        "emailnotification": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
+          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "sesSenderEmail": "foob@bar.com",
+          "sesRecipientEmail": "foob@bar.com",
+          "sesAppUrl": "http://localhost:3000",
+          "cognitoUserPoolId": "eu-west-1_fo0b4r"
         }
       },
       "auth": {
@@ -91,6 +99,14 @@
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
           "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        },
+        "emailnotification": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "sesSenderEmail": "foob@bar.com",
+          "sesRecipientEmail": "foob@bar.com",
+          "sesAppUrl": "https://prod.d21bj89y0jdxx1.amplifyapp.com",
+          "cognitoUserPoolId": "eu-west-1_ukriyEPzq"
         }
       },
       "auth": {
@@ -116,6 +132,14 @@
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
           "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        },
+        "emailnotification": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "sesSenderEmail": "foob@bar.com",
+          "sesRecipientEmail": "foob@bar.com",
+          "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com",
+          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD"
         }
       },
       "auth": {

@@ -40,6 +40,14 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   address: String
   city: String
   postalCode: String
+  missingAccessories: [MissingAccessories]
+}
+
+type MissingAccessories {
+  reportedBy: String!
+  reportedDate: AWSDateTime!
+  accessories: [String]!
+  lastReturnedBy: String!
 }
 
 type Administration {

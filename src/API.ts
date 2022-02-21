@@ -44,6 +44,7 @@ export type CreateAdvertInput = {
   address?: string | null,
   city?: string | null,
   postalCode?: string | null,
+  missingAccessories?: Array< MissingAccessoriesInput | null > | null,
 };
 
 export enum ItemStatus {
@@ -106,6 +107,13 @@ export type AdministrationInput = {
   stadsbyggnadsforvaltningen?: boolean | null,
   stadsledningsforvaltningen?: boolean | null,
   vardOchOmsorgsforvaltningen?: boolean | null,
+};
+
+export type MissingAccessoriesInput = {
+  reportedBy: string,
+  reportedDate: string,
+  accessories: Array< string | null >,
+  lastReturnedBy: string,
 };
 
 export type ModelAdvertConditionInput = {
@@ -258,6 +266,7 @@ export type Advert = {
   address?: string | null,
   city?: string | null,
   postalCode?: string | null,
+  missingAccessories?:  Array<MissingAccessories | null > | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -310,6 +319,14 @@ export type Administration = {
   vardOchOmsorgsforvaltningen?: boolean | null,
 };
 
+export type MissingAccessories = {
+  __typename: "MissingAccessories",
+  reportedBy?: string,
+  reportedDate?: string,
+  accessories?: Array< string | null >,
+  lastReturnedBy?: string,
+};
+
 export type UpdateAdvertInput = {
   id: string,
   title?: string | null,
@@ -352,6 +369,7 @@ export type UpdateAdvertInput = {
   address?: string | null,
   city?: string | null,
   postalCode?: string | null,
+  missingAccessories?: Array< MissingAccessoriesInput | null > | null,
 };
 
 export type DeleteAdvertInput = {
@@ -470,7 +488,7 @@ export enum ModelSortDirection {
 
 export type ModelAdvertConnection = {
   __typename: "ModelAdvertConnection",
-  items?:  Array<Advert >,
+  items?:  Array<Advert | null >,
   nextToken?: string | null,
 };
 
@@ -486,7 +504,7 @@ export type ModelPageFilterInput = {
 
 export type ModelPageConnection = {
   __typename: "ModelPageConnection",
-  items?:  Array<Page >,
+  items?:  Array<Page | null >,
   nextToken?: string | null,
 };
 
@@ -575,6 +593,13 @@ export type CreateAdvertMutation = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -665,6 +690,13 @@ export type UpdateAdvertMutation = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -755,6 +787,13 @@ export type DeleteAdvertMutation = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -896,6 +935,13 @@ export type GetAdvertQuery = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -992,9 +1038,16 @@ export type ListAdvertsQuery = {
       address?: string | null,
       city?: string | null,
       postalCode?: string | null,
+      missingAccessories?:  Array< {
+        __typename: "MissingAccessories",
+        reportedBy: string,
+        reportedDate: string,
+        accessories: Array< string | null >,
+        lastReturnedBy: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -1034,7 +1087,7 @@ export type ListPagesQuery = {
       content?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -1119,6 +1172,13 @@ export type OnCreateAdvertSubscription = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1204,6 +1264,13 @@ export type OnUpdateAdvertSubscription = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1289,6 +1356,13 @@ export type OnDeleteAdvertSubscription = {
     address?: string | null,
     city?: string | null,
     postalCode?: string | null,
+    missingAccessories?:  Array< {
+      __typename: "MissingAccessories",
+      reportedBy: string,
+      reportedDate: string,
+      accessories: Array< string | null >,
+      lastReturnedBy: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
