@@ -23,7 +23,7 @@ exports.handler = async (event) => {
     }
 
     if (streamedItem.eventName === 'INSERT') {
-      if (streamRecord.NewImage.version.N === '0' && streamRecord.NewImage.advertType.S === 'recycle') {
+      if (streamRecord.NewImage.version.N === '0') {
         await sendNewAdvertNotification(streamRecord, appUrl, recipientEmail, senderEmail);
       }
     }
