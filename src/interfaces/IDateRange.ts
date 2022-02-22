@@ -31,6 +31,7 @@ export interface ICalendarDataEvent {
   status: string;
   dateStart: null | string;
   dateEnd: null | string;
+  returnDateTime?: string;
 }
 
 export interface ICalendarEvent {
@@ -41,5 +42,5 @@ export interface ICalendarEvent {
 export interface ICalendarUpdateResult {
   updateSuccessful: boolean;
   errorMessage?: string;
-  updatedCalendarResult: ICalendarDataEvent;
+  updatedCalendarResult: ICalendarData;
 }

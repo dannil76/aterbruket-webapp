@@ -2,6 +2,7 @@ import moment from "moment";
 import { ICalendarEvent } from "../interfaces/IDateRange";
 import {
   addDateRangeToEvents,
+  getLastReturnedCalendarEvent,
   isDateAvailable,
   updateEventStatus,
 } from "./calendarUtils";
@@ -298,7 +299,7 @@ describe("Is date available", () => {
   });
 
   it("event with status returned shall return dates available", () => {
-    const returnedDate = moment().add(5, "days");
+    const returnDate = moment().add(5, "days");
 
     const calendarWithReturnedEvent = {
       allowedDateStart: moment().format("YYYY-MM-DD"),
@@ -308,13 +309,13 @@ describe("Is date available", () => {
           borrowedBySub: "11111-11111-11111-11111-11111",
           status: "returned",
           dateStart: moment().add(4, "days").format("YYYY-MM-DD"),
-          dateEnd: returnedDate.format("YYYY-MM-DD"),
+          dateEnd: returnDate.format("YYYY-MM-DD"),
         },
       ],
     };
 
     const dateAvailableResult = isDateAvailable(
-      returnedDate,
+      returnDate,
       calendarWithReturnedEvent
     );
 
@@ -323,7 +324,7 @@ describe("Is date available", () => {
 });
 
 describe("Update event status", () => {
-  it("change event type", () => {
+  it("update event status to pickedUp", () => {
     const adCalendar = {
       allowedDateStart: "2022-02-02",
       calendarEvents: [
@@ -377,6 +378,45 @@ describe("Update event status", () => {
     );
   });
 
+  it("update event status to returned", () => {
+    const currentDateTime = moment().format("YYYY-MM-DD");
+    const tomorrowDateTime = moment().add(1, "day").format("YYYY-MM-DD");
+
+    const adCalendar = {
+      allowedDateStart: currentDateTime,
+      calendarEvents: [
+        {
+          borrowedBySub: "22222-22222-22222-22222-22222",
+          dateEnd: tomorrowDateTime,
+          dateStart: currentDateTime,
+          status: "reserved",
+        },
+      ],
+      allowedDateEnd: tomorrowDateTime,
+    };
+    const calendarEvent = {
+      borrowedBySub: "22222-22222-22222-22222-22222",
+      dateEnd: tomorrowDateTime,
+      dateStart: currentDateTime,
+      status: "reserved",
+    };
+    const newStatus = "returned";
+
+    const updateEventStatusResult = updateEventStatus(
+      adCalendar,
+      calendarEvent,
+      newStatus
+    );
+    const {
+      returnDateTime,
+      status,
+    } = updateEventStatusResult.updatedCalendarResult.calendarEvents[0];
+
+    expect(updateEventStatusResult.updatedCalendarResult).toBeTruthy();
+    expect(status).toMatch("returned");
+    expect(moment(returnDateTime).diff(moment())).toBeLessThan(500);
+  });
+
   it("events with status returned shall not be possible to change", () => {
     const adCalendar = {
       allowedDateStart: "2022-02-08",
@@ -386,6 +426,7 @@ describe("Update event status", () => {
           dateEnd: "2022-02-10",
           dateStart: "2022-02-08",
           status: "returned",
+          returnDateTime: "2022-10-10T09:58:48.881Z",
         },
       ],
       allowedDateEnd: "2022-02-28",
@@ -409,6 +450,7 @@ describe("Update event status", () => {
             dateEnd: "2022-02-10",
             dateStart: "2022-02-08",
             status: "returned",
+            returnDateTime: "2022-10-10T09:58:48.881Z",
           },
         ],
         allowedDateEnd: "2022-02-28",
@@ -429,6 +471,7 @@ describe("Update event status", () => {
           dateEnd: "2022-02-10",
           dateStart: "2022-02-08",
           status: "returned",
+          returnDateTime: "2022-10-10T09:58:48.881Z",
         },
         {
           borrowedBySub: "1",
@@ -458,6 +501,7 @@ describe("Update event status", () => {
             dateEnd: "2022-02-10",
             dateStart: "2022-02-08",
             status: "returned",
+            returnDateTime: "2022-10-10T09:58:48.881Z",
           },
           {
             borrowedBySub: "1",
@@ -473,5 +517,142 @@ describe("Update event status", () => {
     expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
       expectedResult
     );
+  });
+});
+
+describe("Get last event", () => {
+  it("get last event of multiple returned", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-02",
+      allowedDateEnd: "2022-02-06",
+      calendarEvents: [
+        {
+          borrowedBySub: "22222-22222-22222-22222-22222",
+          dateEnd: "2022-02-04",
+          dateStart: "2022-02-05",
+          status: "returned",
+          returnDateTime: "2022-05-17T09:58:48.881Z",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-02-03",
+          dateStart: "2022-02-02",
+          status: "returned",
+          returnDateTime: "2022-03-17T09:58:48.881Z",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-02-03",
+          dateStart: "2022-02-04",
+          status: "returned",
+          returnDateTime: "2022-04-10T09:58:48.881Z",
+        },
+      ],
+    };
+
+    const expectedResult = {
+      borrowedBySub: "22222-22222-22222-22222-22222",
+      dateEnd: "2022-02-04",
+      dateStart: "2022-02-05",
+      status: "returned",
+      returnDateTime: "2022-05-17T09:58:48.881Z",
+    };
+
+    expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(expectedResult);
+  });
+
+  it("return last event with a returned date time", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-02",
+      allowedDateEnd: "2022-02-06",
+      calendarEvents: [
+        {
+          borrowedBySub: "22222-22222-22222-22222-22222",
+          dateEnd: "2022-02-04",
+          dateStart: "2022-02-05",
+          status: "returned",
+          returnDateTime: "2022-05-17T09:58:48.881Z",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-12-01",
+          dateStart: "2022-12-02",
+          status: "reserved",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-02-03",
+          dateStart: "2022-02-04",
+          status: "returned",
+          returnDateTime: "2022-04-10T09:58:48.881Z",
+        },
+      ],
+    };
+
+    const expectedResult = {
+      borrowedBySub: "22222-22222-22222-22222-22222",
+      dateEnd: "2022-02-04",
+      dateStart: "2022-02-05",
+      status: "returned",
+      returnDateTime: "2022-05-17T09:58:48.881Z",
+    };
+
+    expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(expectedResult);
+  });
+
+  it("return undefined if no object found with returned date time", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-02",
+      allowedDateEnd: "2022-02-06",
+      calendarEvents: [
+        {
+          borrowedBySub: "22222-22222-22222-22222-22222",
+          dateEnd: "2022-02-04",
+          dateStart: "2022-02-05",
+          status: "reserved",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-12-01",
+          dateStart: "2022-12-02",
+          status: "reserved",
+        },
+        {
+          borrowedBySub: "11111-11111-11111-11111-11111",
+          dateEnd: "2022-02-03",
+          dateStart: "2022-02-04",
+          status: "reserved",
+        },
+      ],
+    };
+
+    expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+  });
+
+  it("return undefined if empty", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-21",
+      allowedDateEnd: "2022-02-28",
+      calendarEvents: [],
+    };
+
+    expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+  });
+
+  it("one event", () => {
+    const adCalendar = {
+      allowedDateStart: "2022-02-21",
+      calendarEvents: [
+        {
+          borrowedBySub: "8409a340-a3a8-4aff-a6c4-55ae026d16a8",
+          dateEnd: "2022-02-22",
+          dateStart: "2022-02-21",
+          status: "reserved",
+        },
+      ],
+      allowedDateEnd: "2022-02-28",
+    };
+
+    expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
   });
 });

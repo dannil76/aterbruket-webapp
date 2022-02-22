@@ -43,6 +43,7 @@ import {
 } from "../utils/advertHelper";
 import {
   addDateRangeToEvents,
+  getLastReturnedCalendarEvent,
   isDateAvailable,
   updateAdvertCalendar,
   updateEventStatus,
@@ -267,7 +268,8 @@ const ItemDetails: FC<ParamTypes> = () => {
   };
 
   const handleSaveReservationStatus = async (
-    newStatus: string
+    newStatus: string,
+    missingAccessories?: string[]
   ): Promise<boolean> => {
     const updatedEvent = updateEventStatus(
       item.advertBorrowCalendar,
@@ -276,6 +278,24 @@ const ItemDetails: FC<ParamTypes> = () => {
     );
 
     if (updatedEvent.updateSuccessful) {
+      const lastReturnedEvent = getLastReturnedCalendarEvent(
+        item.advertBorrowCalendar
+      );
+
+      if (
+        newStatus === "pickedUp" &&
+        typeof missingAccessories !== "undefined" &&
+        missingAccessories.length &&
+        typeof lastReturnedEvent !== "undefined"
+      ) {
+        (item.missingAccessories = item.missingAccessories || []).push({
+          reportedBy: userSub,
+          reportedDate: new Date().toISOString(),
+          accessories: missingAccessories,
+          lastReturnedBy: lastReturnedEvent?.borrowedBySub,
+        });
+      }
+
       await updateAdvertCalendar(item, updatedEvent.updatedCalendarResult);
     }
     await fetchItem();
@@ -337,12 +357,14 @@ const ItemDetails: FC<ParamTypes> = () => {
             advert={item}
             isVisible={isPickUpModalVisible}
             toggleModal={togglePickUpModal}
-            onFinish={() => {
-              handleSaveReservationStatus("pickedUp").then((statusSaved) => {
-                return statusSaved
-                  ? toast("Snyggt! Prylen är nu lånad och i ditt ansvar!")
-                  : toast.error("Prylen kunde tyvärr inte lånas.");
-              });
+            onFinish={(missingAccessories) => {
+              handleSaveReservationStatus("pickedUp", missingAccessories).then(
+                (statusSaved) => {
+                  return statusSaved
+                    ? toast("Snyggt! Prylen är nu lånad och i ditt ansvar!")
+                    : toast.error("Prylen kunde tyvärr inte lånas.");
+                }
+              );
             }}
           />
         ),
@@ -425,48 +447,52 @@ const ItemDetails: FC<ParamTypes> = () => {
       {(status === "reserved" ||
         status === "pickedUp" ||
         status === "pickUpAllowed") && (
-          <Header reserved>
-            <MdArrowBack onClick={goBackFunc} />
+        <Header reserved>
+          <MdArrowBack onClick={goBackFunc} />
 
-            <div>
-              <p className="headerTitle">{item.title}</p>
-              {status === "reserved" || status === "pickUpAllowed" ? (
-                <p className="reservedP">Reserverad</p>
-              ) : (
-                <p className="reservedP">Uthämtad</p>
-              )}
-            </div>
-
-            {isRecycleType && showHeaderBtn && (
-              <HeaderButton
-                size="sm"
-                color="primaryLight"
-                onClick={() => {
-                  togglePickUpModal();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </HeaderButton>
+          <div>
+            <p className="headerTitle">{item.title}</p>
+            {status === "reserved" || status === "pickUpAllowed" ? (
+              <p className="reservedP">Reserverad</p>
+            ) : (
+              <p className="reservedP">Uthämtad</p>
             )}
+          </div>
 
-            {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
-              <HeaderButton
-                size="sm"
-                color="primaryLight"
-                onClick={() => {
-                  togglePickUpModal();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </HeaderButton>
-            )}
-          </Header>
-        )}
+          {isRecycleType && showHeaderBtn && (
+            <HeaderButton
+              size="sm"
+              color="primaryLight"
+              onClick={() => {
+                togglePickUpModal();
+              }}
+              type="button"
+            >
+              HÄMTA UT
+            </HeaderButton>
+          )}
+
+          {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
+            <HeaderButton
+              size="sm"
+              color="primaryLight"
+              onClick={() => {
+                togglePickUpModal();
+              }}
+              type="button"
+            >
+              HÄMTA UT
+            </HeaderButton>
+          )}
+        </Header>
+      )}
 
       <TopSection>
-        <AdvertImage src={image} alt={item.title} onClick={(e) => setShowCarousel(true)} />
+        <AdvertImage
+          src={image}
+          alt={item.title}
+          onClick={(e) => setShowCarousel(true)}
+        />
 
         <div className="titleDiv">
           {isBorrowType && (

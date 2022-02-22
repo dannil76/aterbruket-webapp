@@ -73,6 +73,7 @@ type CalendarEvent {
   status: String
   dateStart: AWSDate
   dateEnd: AWSDate
+  returnDateTime: AWSDateTime
 }
 
 enum ItemAdvertType {

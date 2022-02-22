@@ -67,7 +67,7 @@ interface Props {
   advert: IAdvert;
   isVisible: boolean;
   toggleModal: () => void;
-  onFinish: () => void;
+  onFinish: (missingAccessories: string[] | undefined) => void;
 }
 
 const PickUpModal: React.FC<Props> = ({
@@ -77,10 +77,16 @@ const PickUpModal: React.FC<Props> = ({
   onFinish,
   image,
 }) => {
-  const [currentStep, isQrResultValid, setQrResult, nextStep, prevStep, reset] =
-    useItemDetailsModal({
-      advert,
-    });
+  const [
+    currentStep,
+    isQrResultValid,
+    setQrResult,
+    nextStep,
+    prevStep,
+    reset,
+  ] = useItemDetailsModal({
+    advert,
+  });
 
   const { accessories = [] } = advert;
   const initialChecklist = accessories.map((accessory) => ({
@@ -90,11 +96,14 @@ const PickUpModal: React.FC<Props> = ({
   }));
   const [checklistItems, setChecklistItems] = useState(initialChecklist);
 
-  const handleFinish = useCallback(() => {
-    onFinish();
-    reset();
-    toggleModal();
-  }, [onFinish, reset, toggleModal]);
+  const handleFinish = useCallback(
+    (missingAccessories?: string[]) => {
+      onFinish(missingAccessories);
+      reset();
+      toggleModal();
+    },
+    [onFinish, reset, toggleModal]
+  );
 
   const handleCancel = () => {
     reset();
@@ -103,12 +112,11 @@ const PickUpModal: React.FC<Props> = ({
 
   const handleMissingAccessories = () => {
     const missingAccessories = checklistItems.filter((item) => !item.checked);
-    const missingAccessoriesString = missingAccessories
-      .map((item) => item.label)
-      .join(", ");
-    console.log(`missing accessories: ${missingAccessoriesString}`);
+    const missingAccessoriesLabels = missingAccessories.map(
+      (item) => item.label
+    );
 
-    handleFinish();
+    handleFinish(missingAccessoriesLabels);
   };
 
   useEffect(() => {

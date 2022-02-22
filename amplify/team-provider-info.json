@@ -16,6 +16,14 @@
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-ehszilbox-151015-deployment",
           "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+        },
+        "emailnotification": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-ehszilbox-151015-deployment",
+          "s3Key": "amplify-builds/emailnotification-4761327865377a4c6847-build.zip",
+          "sesSenderEmail": "foob@bar.com",
+          "sesRecipientEmail": "foob@bar.com",
+          "sesAppUrl": "http://localhost:3000",
+          "cognitoUserPoolId": "eu-west-1_fo0b4r",
         }
       },
       "auth": {

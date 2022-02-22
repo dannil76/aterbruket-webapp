@@ -62,6 +62,7 @@ export const createAdvert = /* GraphQL */ `
           status
           dateStart
           dateEnd
+          returnDateTime
         }
       }
       accessRestriction
@@ -150,6 +151,7 @@ export const updateAdvert = /* GraphQL */ `
           status
           dateStart
           dateEnd
+          returnDateTime
         }
       }
       accessRestriction
@@ -238,6 +240,7 @@ export const deleteAdvert = /* GraphQL */ `
           status
           dateStart
           dateEnd
+          returnDateTime
         }
       }
       accessRestriction

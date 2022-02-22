@@ -115,7 +115,7 @@ const addDateRangeToEvents = (
 
 const updateAdvertCalendar = async (
   ad: IAdvert,
-  advertBorrowCalendar: ICalendarDataEvent
+  advertBorrowCalendar: ICalendarData
 ): Promise<void> => {
   const input = {
     ...ad,
@@ -133,7 +133,7 @@ const updateAdvertCalendar = async (
 };
 
 /**
- * Events with status "returned" shall bot be possible to change. This prevents edge case where a user reserved,
+ * Events with status "returned" shall not be possible to change. This prevents edge case where a user reserved,
  * picked up, returned an item and then tried to reserv the item again on the very same day.
  */
 const updateEventStatus = (
@@ -155,6 +155,12 @@ const updateEventStatus = (
   if (foundEventIndex >= 0) {
     statusUpdated = true;
     adCalendarCopy.calendarEvents[foundEventIndex].status = newStatus;
+
+    if (newStatus === "returned") {
+      adCalendarCopy.calendarEvents[
+        foundEventIndex
+      ].returnDateTime = new Date().toISOString();
+    }
   } else {
     statusUpdated = false;
   }
@@ -165,9 +171,30 @@ const updateEventStatus = (
   };
 };
 
+const getLastReturnedCalendarEvent = (
+  adCalendar: ICalendarData
+): undefined | ICalendarDataEvent => {
+  const { calendarEvents } = adCalendar;
+
+  const statusReturnedEvents = calendarEvents.filter(
+    (event) => event.status === "returned"
+  );
+
+  if (statusReturnedEvents.length < 1) {
+    return undefined;
+  }
+
+  const sortedByReturnDate = statusReturnedEvents.sort((a, b) =>
+    moment(a.returnDateTime)?.diff(moment(b.returnDateTime))
+  );
+
+  return sortedByReturnDate.pop();
+};
+
 export {
   isDateAvailable,
   addDateRangeToEvents,
   updateAdvertCalendar,
   updateEventStatus,
+  getLastReturnedCalendarEvent,
 };
