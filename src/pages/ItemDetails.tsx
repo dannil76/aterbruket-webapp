@@ -33,7 +33,7 @@ import RecycleContent from "../components/ItemDetails/Recycle/DefaultContent";
 import { useModal } from "../components/Modal";
 import QRCode from "../components/QRCodeContainer";
 import UserContext from "../contexts/UserContext";
-import { createAdvert, updateAdvert } from "../graphql/mutations";
+import { createAdvert, updateAdvert, deleteAdvert } from "../graphql/mutations";
 import { getAdvert } from "../graphql/queries";
 import { ICalendarUpdateResult, IDateRange } from "../interfaces/IDateRange";
 import {
@@ -411,6 +411,22 @@ const ItemDetails: FC<ParamTypes> = () => {
     return components[type][section][advertStatus];
   };
 
+  const handleDeleteAdvert = async (advertId: string) => {
+    if (window.confirm("Är du säker på att du vill ta bort annonsen?")) {
+      try {
+        await API.graphql({
+          query: deleteAdvert,
+          variables: { input: { id: advertId, version: 0 } },
+        });
+        history.push("/app");
+        toast.success("Annonsen är nu borttagen!");
+      } catch (error) {
+        console.error(error);
+        toast.warn("Ett okänt fel inträffade 😵 Försök igen!");
+      }
+    }
+  };
+
   const allDetails = (
     <>
       {renderSection(item.advertType, "modal", status)}
@@ -661,7 +677,7 @@ const ItemDetails: FC<ParamTypes> = () => {
               <EditButton
                 size="xl"
                 color="primaryLighter"
-                marginBottom={24}
+                marginBottom={8}
                 marginLeft={24}
                 marginRight={24}
                 onClick={() => setEditItem(true)}
@@ -670,6 +686,17 @@ const ItemDetails: FC<ParamTypes> = () => {
                 <MdEdit />
                 Ändra
               </EditButton>
+
+              <Button
+                color="darkest"
+                size="sm"
+                transparent
+                marginBottom={16}
+                onClick={() => handleDeleteAdvert(item.id)}
+              >
+                Ta bort annons
+              </Button>
+
               {item.giver === user.sub && (
                 <span>Den här annonsen har du lagt upp.</span>
               )}
