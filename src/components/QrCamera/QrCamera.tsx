@@ -24,7 +24,6 @@ interface Props {
 
 const QrCamera: FC<Props> = ({ setResult }: Props) => {
   const handleScan = (result: any): any => {
-    console.log("handleScan result", result);
     if (result) {
       setResult(result);
     }
@@ -41,7 +40,7 @@ const QrCamera: FC<Props> = ({ setResult }: Props) => {
         onError={handleError}
         onScan={handleScan}
         style={{ width: "100%", borderRadius: "9.5px 9.5px 0 0" }}
-        showViewFinder={true}
+        showViewFinder
       />
     </CameraContainer>
   );
