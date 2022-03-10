@@ -76,8 +76,12 @@ export default [
     name: "allowedBorrowDateRange",
     fieldType: "dateRangePicker",
     disabled: false,
-    required: true,
+    required: false,
     title: "Tillgänglig period",
+    description:
+      "Välj närifrån din pryl är tillgänglig för utlåning och hur länge. \n" +
+      "Om du lämnar “slutdatum” tomt så blir din pryl tillgänglig tillsvidare. \n" +
+      "PS: Du kan alltid ändra tidsperioden senare!\n",
     conditions: [
       {
         field: "advertType",

@@ -433,6 +433,9 @@ export default function Form(props: {
             }
             initialEndDate={props.values?.advertBorrowCalendar.allowedDateEnd}
           />
+          {field.description && (
+            <FieldDescription>{field.description}</FieldDescription>
+          )}
         </FieldSection>
       );
     }

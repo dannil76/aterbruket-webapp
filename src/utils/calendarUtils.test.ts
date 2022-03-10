@@ -67,6 +67,48 @@ describe("Create new calendar event", () => {
     expect(addedRangeResult).toEqual(expectedResult);
   });
 
+  it("create first calendar event with allowed dates set to null", () => {
+    const nullAllowedDateCalendar = {
+      allowedDateStart: null,
+      calendarEvents: [],
+      allowedDateEnd: null,
+    };
+
+    const newCalendarEvent = {
+      dateRange: {
+        startDate: "2022-02-02",
+        endDate: "2022-02-03",
+      },
+      eventType: "reserved",
+    };
+
+    const userSub = "11111-11111-11111-11111-11111";
+
+    const expectedResult = {
+      updateSuccessful: true,
+      updatedCalendarResult: {
+        allowedDateStart: null,
+        allowedDateEnd: null,
+        calendarEvents: [
+          {
+            borrowedBySub: userSub,
+            dateStart: "2022-02-02",
+            dateEnd: "2022-02-03",
+            status: "reserved",
+          },
+        ],
+      },
+    };
+
+    const addedRangeResult = addDateRangeToEvents(
+      nullAllowedDateCalendar,
+      newCalendarEvent,
+      userSub
+    );
+
+    expect(addedRangeResult).toEqual(expectedResult);
+  });
+
   it("create second calendar event", () => {
     const expectedResult = {
       updateSuccessful: true,
@@ -132,6 +174,47 @@ describe("Create new calendar event", () => {
     expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
       expectedResult
     );
+  });
+
+  it("event shall not overlap with other events in calendar with allowed dates set to null", () => {
+    const nullAllowedDateCalendar = {
+      allowedDateStart: null,
+      calendarEvents: [
+        {
+          borrowedBySub: "3088c366-5092-4a70-a7f4-10cbe2fc6786",
+          dateEnd: "2022-02-11",
+          dateStart: "2022-02-09",
+          status: "reserved",
+        },
+      ],
+      allowedDateEnd: null,
+    };
+
+    const newEvent: ICalendarEvent = {
+      dateRange: { startDate: "2022-02-08", endDate: "2022-02-12" },
+      eventType: "reserved",
+    };
+
+    const expectedResult = {
+      errorMessage: "Prylen kan endast bokas under en sammanhängande period.",
+      updateSuccessful: false,
+      updatedCalendarResult: {
+        allowedDateEnd: null,
+        allowedDateStart: null,
+        calendarEvents: [
+          {
+            borrowedBySub: "3088c366-5092-4a70-a7f4-10cbe2fc6786",
+            dateEnd: "2022-02-11",
+            dateStart: "2022-02-09",
+            status: "reserved",
+          },
+        ],
+      },
+    };
+
+    expect(
+      addDateRangeToEvents(nullAllowedDateCalendar, newEvent, userSub2)
+    ).toEqual(expectedResult);
   });
 
   it("new event is allowed to overlap with returned events", () => {
@@ -254,6 +337,18 @@ describe("Is date available", () => {
       allowedDateEnd: moment().add(1, "days").format("YYYY-MM-DD"),
       calendarEvents: [],
     });
+
+    expect(result).toBeTruthy();
+  });
+
+  it("all dates shall be available if allowed dates set to null", () => {
+    const nullAllowedDateCalendar = {
+      allowedDateStart: null,
+      calendarEvents: [],
+      allowedDateEnd: null,
+    };
+
+    const result = isDateAvailable(moment(), nullAllowedDateCalendar);
 
     expect(result).toBeTruthy();
   });

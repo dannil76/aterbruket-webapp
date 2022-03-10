@@ -21,8 +21,8 @@ export interface IDateRangePickerProps {
 }
 
 export interface ICalendarData {
-  allowedDateStart: string;
-  allowedDateEnd: string;
+  allowedDateStart: null | string;
+  allowedDateEnd: null | string;
   calendarEvents: ICalendarDataEvent[];
 }
 
