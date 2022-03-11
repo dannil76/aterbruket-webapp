@@ -41,6 +41,10 @@ export default [
     disabled: false,
     required: true,
     title: "Lägg till en bild",
+    attributes: {
+      accept: "image/png, image/jpeg",
+      capture: true,
+    },
   },
   {
     name: "category",
