@@ -186,9 +186,8 @@ const MultipleChoiceContainer = styled.div<MultipleChoiceDivProps>`
       }
     }
 
-    ${
-      reverse &&
-      `
+    ${reverse &&
+    `
     > div {
       flex-direction: row-reverse;
       justify-content: space-between;
@@ -341,7 +340,7 @@ export default function Form(props: {
             value={props.values[field.name]}
             placeholder={field.placeholder}
             required={field.required}
-            maxLength={200}
+            {...field.attributes}
           />
           {field.description && (
             <FieldDescription>{field.description}</FieldDescription>

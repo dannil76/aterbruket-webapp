@@ -128,6 +128,9 @@ export default [
     description:
       "En kort text om prylen som gör den intressant att haffa. Detaljerad information om mått, färg mm lämnar du i nästa steg 😊",
     placeholder: "Beskriv grejen...",
+    attributes: {
+      maxLength: "300",
+    },
   },
   {
     name: "quantity",
