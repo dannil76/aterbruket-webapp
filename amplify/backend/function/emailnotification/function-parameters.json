@@ -6,16 +6,20 @@
       "environmentVariableName": "SES_SENDER_EMAIL"
     },
     {
-      "cloudFormationParameterName": "sesRecipientEmail",
-      "environmentVariableName": "SES_RECIPIENT_EMAIL"
-    },
-    {
       "cloudFormationParameterName": "sesAppUrl",
       "environmentVariableName": "SES_APP_URL"
     },
     {
       "cloudFormationParameterName": "cognitoUserPoolId",
       "environmentVariableName": "COGNITO_USER_POOL_ID"
+    },
+    {
+      "cloudFormationParameterName": "sesRecycleRecipientEmail",
+      "environmentVariableName": "SES_RECYCLE_RECIPIENT_EMAIL"
+    },
+    {
+      "cloudFormationParameterName": "sesBorrowRecipientEmail",
+      "environmentVariableName": "SES_BORROW_RECIPIENT_EMAIL"
     }
   ]
 }

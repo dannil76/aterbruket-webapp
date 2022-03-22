@@ -6,7 +6,6 @@ const UserPool = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-1
 
 exports.handler = async (event) => {
   const appUrl = process.env.SES_APP_URL;
-  const recipientEmail = process.env.SES_RECIPIENT_EMAIL;
   const senderEmail = process.env.SES_SENDER_EMAIL;
   const userPoolId = process.env.COGNITO_USER_POOL_ID;
 
@@ -24,6 +23,8 @@ exports.handler = async (event) => {
 
     if (streamedItem.eventName === 'INSERT') {
       if (streamRecord.NewImage.version.N === '0') {
+        let recipientEmail = streamRecord.NewImage.advertType.S === 'borrow' ? process.env.SES_BORROW_RECIPIENT_EMAIL : process.env.SES_RECYCLE_RECIPIENT_EMAIL;
+        recipientEmail = recipientEmail.split(',');
         await sendNewAdvertNotification(streamRecord, appUrl, recipientEmail, senderEmail);
       }
     }
@@ -85,7 +86,7 @@ const sendMissingAccessoryNotification = async (streamRecord, userPoolId, sender
   }).promise();
 }
 
-const sendNewAdvertNotification = async (streamRecord, appUrl, recipientEmail, senderEmail) => {
+const sendNewAdvertNotification = async (streamRecord, appUrl, recipients, senderEmail) => {
   const args = {
     url: appUrl,
     id: streamRecord.NewImage.id.S,
@@ -102,7 +103,7 @@ const sendNewAdvertNotification = async (streamRecord, appUrl, recipientEmail, s
 
   return await SES.sendEmail({
     Destination: {
-      ToAddresses: [recipientEmail],
+      ToAddresses: recipients,
     },
     Source: senderEmail,
     Message: {

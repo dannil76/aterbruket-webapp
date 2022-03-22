@@ -27,13 +27,16 @@
     "sesSenderEmail": {
       "Type": "String"
     },
-    "sesRecipientEmail": {
-      "Type": "String"
-    },
     "sesAppUrl": {
       "Type": "String"
     },
     "cognitoUserPoolId": {
+      "Type": "String"
+    },
+    "sesRecycleRecipientEmail": {
+      "Type": "String"
+    },
+    "sesBorrowRecipientEmail": {
       "Type": "String"
     }
   },
@@ -93,14 +96,17 @@
             "SES_SENDER_EMAIL": {
               "Ref": "sesSenderEmail"
             },
-            "SES_RECIPIENT_EMAIL": {
-              "Ref": "sesRecipientEmail"
-            },
             "SES_APP_URL": {
               "Ref": "sesAppUrl"
             },
             "COGNITO_USER_POOL_ID": {
               "Ref": "cognitoUserPoolId"
+            },
+            "SES_RECYCLE_RECIPIENT_EMAIL": {
+              "Ref": "sesRecycleRecipientEmail"
+            },
+            "SES_BORROW_RECIPIENT_EMAIL": {
+              "Ref": "sesBorrowRecipientEmail"
             }
           }
         },

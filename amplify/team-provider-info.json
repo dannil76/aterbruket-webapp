@@ -23,7 +23,7 @@
           "sesSenderEmail": "foob@bar.com",
           "sesRecipientEmail": "foob@bar.com",
           "sesAppUrl": "http://localhost:3000",
-          "cognitoUserPoolId": "eu-west-1_fo0b4r",
+          "cognitoUserPoolId": "eu-west-1_fo0b4r"
         }
       },
       "auth": {
@@ -77,11 +77,12 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
-          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
           "sesSenderEmail": "foob@bar.com",
-          "sesRecipientEmail": "foob@bar.com",
           "sesAppUrl": "http://localhost:3000",
-          "cognitoUserPoolId": "eu-west-1_fo0b4r"
+          "cognitoUserPoolId": "eu-west-1_fo0b4r",
+          "sesRecycleRecipientEmail": "foo@bar.se",
+          "sesBorrowRecipientEmail": "bor@row.se"
         }
       },
       "auth": {
