@@ -111,11 +111,12 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
           "sesSenderEmail": "foob@bar.com",
-          "sesRecipientEmail": "foob@bar.com",
+          "sesRecycleRecipientEmail": "foob@bar.com",
           "sesAppUrl": "https://prod.d21bj89y0jdxx1.amplifyapp.com",
-          "cognitoUserPoolId": "eu-west-1_ukriyEPzq"
+          "cognitoUserPoolId": "eu-west-1_ukriyEPzq",
+          "sesBorrowRecipientEmail": "foob@bar.com"
         }
       },
       "auth": {
@@ -144,11 +145,12 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-6b633844486761796661-build.zip",
+          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
           "sesSenderEmail": "foob@bar.com",
-          "sesRecipientEmail": "foob@bar.com",
+          "sesRecycleRecipientEmail": "foob@bar.com",
           "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com",
-          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD"
+          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
+          "sesBorrowRecipientEmail": "foob@bar.com"
         }
       },
       "auth": {
