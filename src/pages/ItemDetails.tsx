@@ -323,7 +323,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         default: <RecycleContent advert={item} status={status} />,
       },
       bottom: {
-        default: [<Separator key="1" />, <QRCode key="2" id={id} recycleId={item.aterbruketId} />],
+        default: [<Separator key="1" />, <QRCode key="2" id={id} recycleId={item.aterbruketId} itemTitle={item.title} />],
       },
     },
     borrow: {

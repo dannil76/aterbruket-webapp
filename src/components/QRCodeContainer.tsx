@@ -29,9 +29,10 @@ const QRCodeCont = styled.div`
 interface IProps {
   id: string;
   recycleId?: string;
+  itemTitle?: string;
 }
 
-const QRCodeContainer: FC<IProps> = ({ id, recycleId }: IProps) => {
+const QRCodeContainer: FC<IProps> = ({ id, recycleId, itemTitle }: IProps) => {
   const downloadLabel = () => {
     const doc = new JSPDF({
       orientation: "landscape",
@@ -92,7 +93,7 @@ const QRCodeContainer: FC<IProps> = ({ id, recycleId }: IProps) => {
             paddingLeft: 5,
           }}
         >
-          helsingborg.se/haffa
+          { itemTitle }
         </span>
       </div>
     </QRCodeCont>
@@ -101,6 +102,7 @@ const QRCodeContainer: FC<IProps> = ({ id, recycleId }: IProps) => {
 
 QRCodeContainer.defaultProps = {
   recycleId: undefined,
+  itemTitle: "helsingborg.se/haffa",
 };
 
 export default QRCodeContainer;
