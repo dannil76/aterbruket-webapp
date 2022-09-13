@@ -390,7 +390,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         pickedUp: <ReturnContent advert={item} />,
       },
       bottom: {
-        default: [<Separator />, <QRCode id={id} />],
+        default: [<Separator />, <QRCode id={id} itemTitle={item.title}/>],
       },
     },
   };
