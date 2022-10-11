@@ -116,4 +116,3 @@ type Page @model @auth(rules: [{allow: private, operations: [read]}, {allow: gro
   title: String!
   content: String
 }
- 

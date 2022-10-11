@@ -23,7 +23,7 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-464c346d697a6377676b-build.zip",
+          "s3Key": "amplify-builds/emailnotification-7030594852384f352f41-build.zip",
           "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",
