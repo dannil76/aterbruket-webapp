@@ -67,7 +67,7 @@ export async function sendMissingAccessoryNotification(
                 },
             },
         }).promise();
-    } catch (error: unknown) {
+    } catch (error) {
         const typedError = error as Error;
         if (typedError) {
             logException(`Send e-mail failed with ${typedError.message}`);

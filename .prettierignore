@@ -2,3 +2,5 @@
 /build
 /dist
 /node_modules
+team-provider-info.json
+*cloudformation-template.json

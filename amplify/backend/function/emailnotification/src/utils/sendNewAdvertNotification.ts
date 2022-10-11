@@ -45,7 +45,7 @@ export default async function sendNewAdvertNotification(
                 },
             },
         }).promise();
-    } catch (error: unknown) {
+    } catch (error) {
         const typedError = error as Error;
         if (typedError) {
             logException(`Send e-mail failed with ${typedError.message}`);

@@ -1,36 +1,36 @@
 {
-    "release": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-aterbruketwebapp-release-103017-authRole",
-            "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-authRole",
-            "Region": "eu-west-1",
-            "DeploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-            "UnauthRoleName": "amplify-aterbruketwebapp-release-103017-unauthRole",
-            "StackName": "amplify-aterbruketwebapp-release-103017",
-            "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-release-103017/6c465920-7453-11ec-82a5-0aaa2eb05b4d",
-            "AmplifyAppId": "d21bj89y0jdxx1"
+  "release": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aterbruketwebapp-release-103017-authRole",
+      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+      "UnauthRoleName": "amplify-aterbruketwebapp-release-103017-unauthRole",
+      "StackName": "amplify-aterbruketwebapp-release-103017",
+      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-release-103017/6c465920-7453-11ec-82a5-0aaa2eb05b4d",
+      "AmplifyAppId": "d21bj89y0jdxx1"
+    },
+    "categories": {
+      "auth": {
+        "aterbruketwebapp75287c9a": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "migrateADUser": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
         },
-        "categories": {
-            "auth": {
-                "aterbruketwebapp75287c9a": {},
-                "userPoolGroups": {}
-            },
-            "function": {
-                "migrateADUser": {
-                    "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-                    "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-                },
-                "emailnotification": {
-                    "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-                    "s3Key": "amplify-builds/emailnotification-527277416530764e687a-build.zip",
-                    "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
-                    "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
-                    "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",
-                    "sesSenderEmail": "hbgworkshbg@gmail.com",
-                    "sesBorrowRecipientEmail": "hbgworkshbg@gmail.com"
-                }
-            }
+        "emailnotification": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+          "s3Key": "amplify-builds/emailnotification-45426b47565265626c41-build.zip",
+          "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
+          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
+          "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",
+          "sesSenderEmail": "hbgworkshbg@gmail.com",
+          "sesBorrowRecipientEmail": "hbgworkshbg@gmail.com"
         }
+      }
     }
+  }
 }
