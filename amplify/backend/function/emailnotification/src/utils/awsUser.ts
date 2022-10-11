@@ -31,7 +31,7 @@ export class AwsUser {
             attributeHash[attribute.Name] = attribute.Value ?? '';
         });
 
-        logDebug(`Found user ${user.Username}`)
+        logDebug(`Found user ${user.Username}`);
         return {
             username: user.Username,
             name: attributeHash.name,

@@ -12,7 +12,9 @@ export default async function sendNewAdvertNotification(
     item: BorrowInfo,
 ): Promise<boolean> {
     if (!config.recycleEmail || !config.appUrl || !item) {
-        logWarning(`Missing values: recycleEmail: ${config.recycleEmail}, appUrl: ${config.appUrl}`)
+        logWarning(
+            `Missing values: recycleEmail: ${config.recycleEmail}, appUrl: ${config.appUrl}`,
+        );
         return false;
     }
 
@@ -29,7 +31,7 @@ export default async function sendNewAdvertNotification(
         getString(item.city),
     );
 
-    logDebug(`Send e-mail to ${email}`)
+    logDebug(`Send e-mail to ${email}`);
     try {
         await SES.sendEmail({
             Destination: {
@@ -43,12 +45,14 @@ export default async function sendNewAdvertNotification(
                 },
             },
         }).promise();
-    }
-    catch (error: any) {
-        logException(`Send e-mail failed with ${error.message}`)
+    } catch (error: unknown) {
+        const typedError = error as Error;
+        if (typedError) {
+            logException(`Send e-mail failed with ${typedError.message}`);
+        }
         return false;
     }
 
-    logDebug(`Email has been sent.`)
+    logDebug(`Email has been sent.`);
     return true;
 }

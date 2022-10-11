@@ -10,7 +10,7 @@ import { logWarning } from './logHelper';
 
 export function getString(value: StringRecord | undefined): string {
     if (!value) {
-        logWarning("missing string value")
+        logWarning('missing string value');
         return '';
     }
 
@@ -19,7 +19,7 @@ export function getString(value: StringRecord | undefined): string {
 
 export function getNumber(value: NumberRecord | undefined): number {
     if (!value) {
-        logWarning("missing number value")
+        logWarning('missing number value');
         return -1;
     }
 
@@ -29,7 +29,7 @@ export function getNumber(value: NumberRecord | undefined): number {
 
 export function getDate(value: DateRecord | undefined): Date {
     if (!value) {
-        logWarning("missing date value")
+        logWarning('missing date value');
         return new Date(0); // TODO
     }
 
@@ -40,7 +40,7 @@ export function getDate(value: DateRecord | undefined): Date {
 
 export function getList<T>(value: ListRecord<T> | undefined): T[] {
     if (!value) {
-        logWarning("missing list value")
+        logWarning('missing list value');
         return [] as T[];
     }
 
@@ -59,7 +59,7 @@ export function getModel<T>(
     value: ModifiedRecord<T> | undefined,
 ): T | undefined {
     if (!value) {
-        logWarning("missing object value")
+        logWarning('missing object value');
         return undefined;
     }
 

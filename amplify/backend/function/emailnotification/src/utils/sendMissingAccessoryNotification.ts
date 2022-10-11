@@ -18,7 +18,7 @@ const config = new Config();
 export async function sendMissingAccessoryNotification(
     newItem: BorrowInfo,
 ): Promise<boolean> {
-    logDebug(`Start sendMissingAccessoryNotification.`)
+    logDebug(`Start sendMissingAccessoryNotification.`);
     const missing = getList<ModelRecord<MissingAccessory>>(
         newItem?.missingAccessories,
     );
@@ -52,7 +52,7 @@ export async function sendMissingAccessoryNotification(
     );
 
     const toAddress = getString(newItem?.email);
-    logDebug(`Send email to ${toAddress}.`)
+    logDebug(`Send email to ${toAddress}.`);
 
     try {
         await SES.sendEmail({
@@ -67,14 +67,15 @@ export async function sendMissingAccessoryNotification(
                 },
             },
         }).promise();
-    }
-    catch (error: any) {
-        logException(`Send e-mail failed with ${error.message}`)
+    } catch (error: unknown) {
+        const typedError = error as Error;
+        if (typedError) {
+            logException(`Send e-mail failed with ${typedError.message}`);
+        }
+
         return false;
     }
 
-
-
-    logDebug(`Email sent. Return true.`)
+    logDebug(`Email sent. Return true.`);
     return true;
 }

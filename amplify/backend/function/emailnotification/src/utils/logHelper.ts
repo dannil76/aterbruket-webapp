@@ -1,12 +1,12 @@
-
-export function logDebug(message: string) {
-    console.log(message)
+/* eslint-disable no-console */
+export function logDebug(message: string): void {
+    console.log(message);
 }
 
-export function logWarning(message: string) {
-    console.warn(message)
+export function logWarning(message: string): void {
+    console.warn(message);
 }
 
-export function logException(message: string) {
-    console.error(message)
+export function logException(message: string): void {
+    console.error(message);
 }

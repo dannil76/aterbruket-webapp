@@ -9,7 +9,7 @@ export async function onModify(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem || !newItem) {
-        logWarning(`New or previous item is undefined. Return false.`)
+        logWarning(`New or previous item is undefined. Return false.`);
         return false;
     }
 
@@ -31,11 +31,11 @@ export async function onDelete(
     previousItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem) {
-        logWarning(`Item is undefined. Return false.`)
+        logWarning(`Item is undefined. Return false.`);
         return false;
     }
 
-    logDebug(`Do nothing on delete.`)
+    logDebug(`Do nothing on delete.`);
     return true;
 }
 
@@ -43,7 +43,7 @@ export async function onInsert(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!newItem) {
-        logWarning(`Item is undefined. Return false.`)
+        logWarning(`Item is undefined. Return false.`);
         return false;
     }
 

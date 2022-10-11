@@ -9,7 +9,7 @@ export async function onModify(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem || !newItem) {
-        logWarning(`New or previous item is undefined. Return false.`)
+        logWarning(`New or previous item is undefined. Return false.`);
         return false;
     }
 
@@ -21,11 +21,15 @@ export async function onModify(
     );
 
     if (newlyMissing.length > previousMissing.length) {
-        logDebug(`Missing accessories has been changed. Was ${previousMissing.length} but now ${newlyMissing.length}`)
+        logDebug(
+            `Missing accessories has been changed. Was ${previousMissing.length} but now ${newlyMissing.length}`,
+        );
         return sendMissingAccessoryNotification(newItem);
     }
 
-    logDebug(`Number of missing accessories has not been changed. Was ${previousMissing.length} but now ${newlyMissing.length}`)
+    logDebug(
+        `Number of missing accessories has not been changed. Was ${previousMissing.length} but now ${newlyMissing.length}`,
+    );
     return true;
 }
 
@@ -33,11 +37,11 @@ export async function onDelete(
     previousItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem) {
-        logWarning(`Item is undefined. Return false.`)
+        logWarning(`Item is undefined. Return false.`);
         return false;
     }
 
-    logDebug(`Do nothing on delete.`)
+    logDebug(`Do nothing on delete.`);
     return true;
 }
 
@@ -45,7 +49,7 @@ export async function onInsert(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!newItem) {
-        logWarning(`Item is undefined. Return false.`)
+        logWarning(`Item is undefined. Return false.`);
         return false;
     }
 

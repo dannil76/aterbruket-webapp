@@ -5,9 +5,9 @@ import { getEnum } from './utils/eventHelper';
 import { logDebug, logWarning } from './utils/logHelper';
 
 exports.handler = async function NotifyByEmail(event: Event): Promise<string> {
-    logDebug("emailnotification started")
+    logDebug('emailnotification started');
     const operations = event.Records.map((record: EventRecord) => {
-        logDebug(`read event ${record.eventName}`)
+        logDebug(`read event ${record.eventName}`);
         const streamRecord = record.dynamodb;
         const previousItem = streamRecord.OldImage;
         const newItem = streamRecord.NewImage;
@@ -15,7 +15,7 @@ exports.handler = async function NotifyByEmail(event: Event): Promise<string> {
             getEnum<AdvertType>(newItem?.advertType) ??
             getEnum<AdvertType>(previousItem?.advertType);
 
-        logDebug(`event type: ${advertType}`)
+        logDebug(`event type: ${advertType}`);
         if (advertType === AdvertType.BORROW) {
             switch (record.eventName) {
                 case EventType.INSERT:
@@ -46,16 +46,20 @@ exports.handler = async function NotifyByEmail(event: Event): Promise<string> {
             }
         }
 
-        logWarning(`Type ${advertType} is unknown. Return true.`)
+        logWarning(`Type ${advertType} is unknown. Return true.`);
         return Promise.resolve(true);
     });
 
-    logDebug(`Number of events ${operations.length}`)
+    logDebug(`Number of events ${operations.length}`);
     const statuses = await Promise.all(operations);
 
-    if (statuses.some((status) => { !status })) {
-        throw new Error("One or more events failed")
+    if (
+        statuses.some((status) => {
+            return !status;
+        })
+    ) {
+        throw new Error('One or more events failed');
     }
 
-    return `Handled ${operations.length} successfully`
+    return `Handled ${operations.length} successfully`;
 };
