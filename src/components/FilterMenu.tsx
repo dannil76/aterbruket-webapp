@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { MdCancel } from "react-icons/md";
 import FilterCheckbox from "./FilterCheckbox";
 import SortRadioButtons from "./SortRadioButtons";
-import { fieldsForm } from "../utils/formUtils";
+import { getCategoriesByParent } from "../utils/handleCategories";
+import { conditions } from "../static/advertMeta";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
 
 const FilterCtn = styled.div`
@@ -138,6 +139,9 @@ const FilterMenu: FC<Props> = ({
     secText: activeSorting.secText,
   });
   const [showToggle, setShowToggle] = useState(activeSorting.sortTitle);
+
+  const advertCategories = getCategoriesByParent([1]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add(FLITER_OPEN_CLASS);
@@ -148,7 +152,7 @@ const FilterMenu: FC<Props> = ({
 
   const handleSaveFilter = () => {
     let categories: any = [];
-    let cateValues: any = [];
+    const cateValues: any = [];
     let conditions: any = [];
 
     Object.entries(saveValues).forEach((entry: any) => {
@@ -244,13 +248,17 @@ const FilterMenu: FC<Props> = ({
           showToggle={showToggle}
         />
         <FilterCheckbox
+          id="category"
+          title="Kategori"
           setSaveValues={setSaveValues}
-          group={fieldsForm[3]}
+          options={advertCategories}
           saveValues={saveValues}
         />
         <FilterCheckbox
+          id="condition"
+          title="Skick"
           setSaveValues={setSaveValues}
-          group={fieldsForm[11]}
+          options={conditions}
           saveValues={saveValues}
         />
         <button

@@ -1,11 +1,11 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
 import React, { useEffect, useState, FC, useContext } from "react";
-import UserContext from "../contexts/UserContext";
 import { FaChair } from "react-icons/fa";
 import { RiArrowUpSLine, RiArrowDownSLine } from "react-icons/ri";
 
 import styled from "styled-components";
+import UserContext from "../contexts/UserContext";
 
 const GroupDiv = styled.div`
   display: flex;
@@ -68,13 +68,11 @@ interface Props {
 
 const StaticsIcons: FC<Props> = ({ group }) => {
   const { categoryAmount, sweOp } = group;
-  console.log(categoryAmount);
 
   return (
     <GroupDiv>
       {categoryAmount &&
         Object.entries(categoryAmount).map(([key, value]) => {
-          console.log(key, value);
           if ((value as number) > 0) {
             return (
               <ItemGroup key={key}>

@@ -1,18 +1,30 @@
 export interface IFields {
   name: string;
-  dataType?: string;
   fieldType: string | number;
-  disabled: boolean;
+  disabled?: boolean;
   required?: boolean;
   title: string;
   placeholder?: string;
-  option?: IOption[];
-  swe?: string[] | undefined;
-  eng?: string[] | undefined;
+  options?: IOption[];
+  conditions?: ConditionLogic[] | undefined;
+  description?: string;
+  attributes?: Attributes;
 }
 
-interface IOption {
-  name: string;
-  swe?: string[] | undefined;
-  eng?: string[] | undefined;
+export interface Attributes {
+  [key: string]: any;
+}
+
+export interface ConditionLogic {
+  field: string;
+  operator: string;
+  value: string | boolean | number;
+}
+
+export interface IOption {
+  id: number;
+  parent?: number | null;
+  key: string;
+  title: string;
+  disabled?: boolean;
 }

@@ -23,7 +23,6 @@ const GroupDiv = styled.div`
 
 const StaticsCharts = ({ group }) => {
   const { label, values } = group;
-  console.log(group);
   const data = {
     labels: label,
     datasets: [
@@ -42,8 +41,6 @@ const StaticsCharts = ({ group }) => {
       },
     ],
   };
-
-  console.log(data);
   return (
     <GroupDiv>
       <Doughnut data={data} id="myChart" />

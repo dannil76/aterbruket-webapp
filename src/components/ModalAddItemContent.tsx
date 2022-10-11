@@ -3,16 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { MdClose, MdAdd } from "react-icons/md";
 import { ImQrcode } from "react-icons/im";
+import { enableBodyScroll } from "body-scroll-lock";
 
-const Modal = styled.div`
-position: absolute;
-bottom: 0;
-background-color: #F5F5F5;
-border-radius: 10px 10px 0 0;
-width: 100%;   
-height 157px;
-
-`;
 const ModalHeader = styled.div`
   width: 100%;
   height: 61px;
@@ -20,11 +12,11 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-size: 18px;
   font-weight: 500;
-  border-radius: 10px 10px 0 0;
-  background-color: #f8f8f8;
+  border-radius: 9.5px 9.5px 0 0;
+  background-color: ${(props) => props.theme.colors.offWhite};
+  box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
 
   .closeBtn {
     height: 20px;
@@ -42,11 +34,12 @@ const ModalHeader = styled.div`
 
 const ModalBody = styled.div`
   width: 100%;
-  height: calc(100% - 61px);
-  background-color: #f5f5f5;
+  background-color: ${(props) => props.theme.colors.grayLighter};
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 16px;
+  padding-bottom: 32px;
 
   .link {
     width: 160px;
@@ -86,46 +79,44 @@ const ModalBody = styled.div`
 `;
 
 type Props = {
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlreadyAQRCode: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleModal: () => void;
+  toggleQrModal: () => void;
 };
 
-const ModalAddItemContent: FC<Props> = ({
-  setModalOpen,
-  setAlreadyAQRCode,
-}: Props) => (
-  <Modal>
+const ModalAddItemContent: FC<Props> = ({ toggleModal, toggleQrModal }: Props) => (
+  <>
     <ModalHeader>
       <button
         className="closeBtn"
         type="button"
-        onClick={() => setModalOpen(false)}
+        onClick={() => toggleModal()}
       >
         <MdClose />
       </button>
       <p>Skapa en ny annons</p>
     </ModalHeader>
     <ModalBody>
-      <Link className="link" to="/add">
-        <button
-          className="selectBtn scanBtn"
-          type="button"
-          onClick={() => {
-            setModalOpen(false);
-            setAlreadyAQRCode(true);
-          }}
-        >
-          <ImQrcode className="btnIcon" />
-          Skanna QR
-        </button>
-      </Link>
-      <Link className="link" to="/add">
+
+      <button
+        className="selectBtn scanBtn"
+        type="button"
+        onClick={() => {
+          toggleModal();
+          toggleQrModal();
+          enableBodyScroll(document.body);
+        }}
+      >
+        <ImQrcode className="btnIcon" />
+        Skanna QR
+      </button>
+
+      <Link className="link" to="/add" >
         <button
           className="selectBtn addBtn"
           type="button"
           onClick={() => {
-            setModalOpen(false);
-            setAlreadyAQRCode(false);
+            toggleModal();
+            enableBodyScroll(document.body);
           }}
         >
           <MdAdd className="btnIcon" />
@@ -133,7 +124,7 @@ const ModalAddItemContent: FC<Props> = ({
         </button>
       </Link>
     </ModalBody>
-  </Modal>
+  </>
 );
 
 export default ModalAddItemContent;

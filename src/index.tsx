@@ -4,10 +4,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import Amplify from "aws-amplify";
+import ReactPWAInstallProvider from "react-pwa-install";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import awsExports from "./aws-exports";
-import ReactPWAInstallProvider, { useReactPWAInstall } from "react-pwa-install";
 
 ReactDOM.render(
   <ReactPWAInstallProvider enableLogging>

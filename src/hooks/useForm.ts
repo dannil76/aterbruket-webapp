@@ -2,12 +2,12 @@
 /* eslint-disable no-console */
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import imageCompression from "browser-image-compression";
 import HandleClimatImpact from "./HandleClimatImpact";
 import { createAdvert } from "../graphql/mutations";
+import { IDateRange } from "../interfaces/IDateRange";
 
 const recreateInitial = async (mutation: any, values: any) => {
   delete values.createdAt;
@@ -33,6 +33,13 @@ const useForm = (initialValues: any, mutation: string) => {
     setValues({
       ...values,
       [parent]: { ...values[parent], [target.name]: value },
+    });
+  };
+
+  const handleSetValue = (value: string[] | string, key: string) => {
+    setValues({
+      ...values,
+      [key]: value,
     });
   };
 
@@ -73,6 +80,17 @@ const useForm = (initialValues: any, mutation: string) => {
     setValues({
       ...values,
       [name]: value.trimStart(),
+    });
+  };
+
+  const handleDateRangeChange = async (changeEvent: IDateRange) => {
+    setValues({
+      ...values,
+      advertBorrowCalendar: {
+        allowedDateStart: changeEvent?.startDate,
+        allowedDateEnd: changeEvent?.endDate,
+        calendarEvents: [],
+      },
     });
   };
 
@@ -128,41 +146,17 @@ const useForm = (initialValues: any, mutation: string) => {
     }
   };
 
-  /*  const sendEmail = (data: any) => {
-    const templateParams = {
-      id: data.id,
-      contactPerson: data.contactPerson,
-      department: data.department,
-      location: data.location,
-      phoneNumber: data.phoneNumber,
-      email: data.email,
-    };
-    emailjs
-      .send(
-        "default_service",
-        "template_slykgia",
-        templateParams,
-        "user_nGtt95bDVTNyRyXq3porD"
-      )
-      .then(
-        function (response) {
-          console.log("SUCCESS sending email!", response.status, response.text);
-        },
-        function (error) {
-          console.log("FAILED sending email", error);
-        }
-      );
-  }; */
-
   return {
     values,
     redirect,
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
     result,
     file,
     fileUploading,
+    handleSetValue,
   };
 };
 

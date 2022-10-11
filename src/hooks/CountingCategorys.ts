@@ -1,4 +1,4 @@
-import { fieldsForm } from "../utils/formUtils";
+import { IOption } from "../interfaces/IForm";
 
 const minCommonCategory = (obj: any) => {
   let maxValue = Infinity as any;
@@ -30,47 +30,39 @@ const mostCommonCategory = (obj: any) => {
   return { most: maxKey, mostNum: maxValue };
 };
 
-const translate = (word: any) => {
-  let translatedGroup = {};
-  const found = fieldsForm.find((element) => {
-    return element.name === "category";
-  });
-
-  if (found && found.swe) {
-    found.eng.find((x: any, idx: number) => {
-      Object.entries(word).forEach((entry: any) => {
-        const [key, value] = entry;
-
-        if (x === key) {
-          const sweKey = found.swe[idx];
-          translatedGroup = { ...translatedGroup, [sweKey]: value };
-        }
-      });
-    });
-  }
-  return translatedGroup;
+type Amount = {
+  [key: string]: number;
 };
 
-const CountingCategorys = (groups: any, Categorys: any) => {
+const translate = (items: Amount, categories: IOption[]) => {
+  const newItems = <Amount>{};
+
+  Object.entries(items).forEach(([key, val]) => {
+    const categoryObject = categories.find((c) => c.key === key);
+    newItems[categoryObject?.title ? categoryObject.title : key] = val;
+  });
+
+  return newItems;
+};
+
+const CountingCategorys = (groups: any, categories: IOption[]) => {
   groups.forEach((group: any) => {
-    const cateAmount = {
-      ...Categorys,
-    } as any;
+    const categoryAmounts = <Amount>{};
 
     const eachGroup = group;
     const itemsInGroup = eachGroup.items;
 
-    itemsInGroup.forEach((i: any) => {
-      if (i.category in cateAmount) {
-        cateAmount[i.category] += 1;
+    itemsInGroup.forEach((i: Amount) => {
+      if (i.category in categoryAmounts) {
+        categoryAmounts[i.category] += 1;
       } else {
-        cateAmount[i.category] = 1;
+        categoryAmounts[i.category] = 1;
       }
     });
-    eachGroup.categoryAmount = translate(cateAmount);
+    eachGroup.categoryAmount = translate(categoryAmounts, categories);
 
-    const mostComon = mostCommonCategory(cateAmount);
-    const minComon = minCommonCategory(cateAmount);
+    const mostComon = mostCommonCategory(categoryAmounts);
+    const minComon = minCommonCategory(categoryAmounts);
 
     eachGroup.min = minComon.min;
     eachGroup.minNum = minComon.minNum;

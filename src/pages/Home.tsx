@@ -8,25 +8,28 @@ import { AuthState } from "@aws-amplify/ui-components";
 import { sortBy } from "sort-by-typescript";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import { fieldsForm } from "../utils/formUtils";
-import convertToSwe from "../utils/convert";
 import UserContext from "../contexts/UserContext";
 import { DEFAULTSORTVALUE } from "../utils/sortValuesUtils";
+import { getAllCategories } from "../utils/handleCategories";
+import { conditions } from "../static/advertMeta";
+import { IOption } from "../interfaces/IForm";
+import { Modal, useModal } from "../components/Modal";
+import { useQrCamera } from "../components/QrCamera";
+import QrModal from "../components/QrModal";
+import showBetaInfoToaster from "../utils/showBetaInfoToaster";
 
 const AdvertContainer = React.lazy(
   () => import("../components/AdvertContainer")
 );
 const FilterMenu = React.lazy(() => import("../components/FilterMenu"));
-const Modal = React.lazy(() => import("../components/Modal"));
 const ModalAddItemContent = React.lazy(
   () => import("../components/ModalAddItemContent")
 );
-const OpenCamera = React.lazy(() => import("../components/OpenCamera"));
 const Pagination = React.lazy(() => import("../components/Pagination"));
 
 const AddBtn = styled.button`
   position: fixed;
-  bottom: 10vh;
+  bottom: 100px;
   background-color: ${(props) => props.theme.colors.primaryDark};
   color: white;
   display: flex;
@@ -76,7 +79,7 @@ const ScanBtn = styled.button`
 `;
 
 const SearchFilterDiv = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 600px;
   display: flex;
   justify-content: space-around;
@@ -106,7 +109,7 @@ const SearchFilterDiv = styled.div`
       align-items: flex-start;
       border-radius: 17.5px;
       border: none;
-      background-color: ${(props) => props.theme.colors.lightGray};
+      background-color: ${(props) => props.theme.colors.grayLighter};
     }
   }
 
@@ -128,27 +131,6 @@ const SearchFilterDiv = styled.div`
   }
 `;
 
-/* const TabCtn = styled.div`
-  width: 100%;
-  background-color: ${(props) => props.theme.colors.offWhite};
-
-  button {
-    border: none;
-    color: #707070;
-    background-color: transparent;
-    font-weight: 900;
-    padding: 10px;
-    margin-left: 30px;
-    :active,
-    :focus {
-      color: ${(props) => props.theme.colors.primaryDark};
-      border: none;
-      border-bottom: 2px solid #a0c855;
-      outline: none;
-    }
-  }
-`; */
-
 const MessageCtn = styled.div`
   width: 50%;
   text-align: center;
@@ -163,36 +145,20 @@ const MessageCtn = styled.div`
   }
 `;
 
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
+const Spacer = styled.div`
+  width: 100%;
+  height: 72px;
+`;
+
+const QrModalContent = styled.div`
+  text-align: center;
+`;
 
 interface Item {
   condition: string;
 }
 
-type Props = {
-  modalOpen: boolean;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlreadyAQRCode: React.Dispatch<React.SetStateAction<boolean>>;
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
-};
-
-const Home: FC<Props> = ({
-  modalOpen,
-  setModalOpen,
-  setAlreadyAQRCode,
-  qrCamera,
-  setQrCamera,
-}: Props) => {
-  const [showQRCamera, setShowQRCamera] = useState(false);
+const Home: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -239,6 +205,7 @@ const Home: FC<Props> = ({
       );
     }
   };
+
   const filterConditions: any = (fetchedData: any, conditions: any) => {
     let copyItems: any[] = [];
     let results: any[] = [];
@@ -317,132 +284,109 @@ const Home: FC<Props> = ({
     if (authState === AuthState.SignedIn) {
       fetchItems();
     }
-    return () => {};
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState, filterValueUpdated, activeSorting]);
 
-  const categoryData = fieldsForm[3];
-  const conditionData = fieldsForm[11];
-  const indexes: number[] = [];
-  let filteredSweValues: string[] = [];
+  useEffect(() => {
+    showBetaInfoToaster();
+  }, []);
 
-  if (categoryData.eng && conditionData.eng) {
-    const valuesInEng = [...categoryData.eng, ...conditionData.eng];
-    const valuesInSwe = [...categoryData.swe, ...conditionData.swe];
+  const categoryData = getAllCategories();
+  const filterOptions = [...categoryData, ...conditions];
+  const activeFilterOptions = filterOptions.filter((item: IOption) => {
+    return allValues.includes(item.key);
+  });
 
-    const findSameValuesIndex = (engValues: any, allFilterValues: any) => {
-      return engValues.filter((i: string) => {
-        if (allFilterValues.indexOf(i) >= 0) {
-          indexes.push(engValues.indexOf(i));
-          return true;
-        }
-        return false;
-      });
-    };
+  const [isModalVisible, toggleModal] = useModal();
+  const [isQrModalVisible, toggleQrModal] = useModal();
+  const [qrCameraresult, setQrCameraResult] = useQrCamera();
 
-    findSameValuesIndex(valuesInEng, allValues);
-    filteredSweValues = convertToSwe(valuesInSwe, indexes);
-  }
-
-  if (qrCamera.result.length > 2) {
-    return <Redirect to={`/item/${qrCamera.result}`} />;
+  if (qrCameraresult !== null) {
+    return <Redirect to={`/item/${qrCameraresult}`} />;
   }
 
   return (
     <main>
       <Suspense fallback={<div>Loading...</div>}>
-        {showQRCamera ? (
-          <>
-            <button type="button" onClick={() => setShowQRCamera(false)}>
-              X
-            </button>
-            <OpenCamera qrCamera={qrCamera} setQrCamera={setQrCamera} />
-          </>
-        ) : (
-          <>
-            <Modal modalOpen={modalOpen}>
-              <ModalAddItemContent
-                setModalOpen={setModalOpen}
-                setAlreadyAQRCode={setAlreadyAQRCode}
-              />
-            </Modal>
-            <ScanBtn
-              id="scanBtn"
-              type="button"
-              onClick={() => setShowQRCamera(true)}
-            >
-              <MdPhotoCamera />
-            </ScanBtn>
-            {/* <TabCtn>
+        <QrModal
+          isVisible={isQrModalVisible}
+          toggleModal={toggleQrModal}
+          setResult={setQrCameraResult}
+        >
+          <QrModalContent>
+            <h1>Skanna QR-kod</h1>
+          </QrModalContent>
+        </QrModal>
+
+        <Modal isVisible={isModalVisible}>
+          <Modal.Body autoHeight>
+            <ModalAddItemContent
+              toggleModal={toggleModal}
+              toggleQrModal={toggleQrModal}
+            />
+          </Modal.Body>
+        </Modal>
+
+        <ScanBtn id="scanBtn" type="button" onClick={() => toggleQrModal()}>
+          <MdPhotoCamera />
+        </ScanBtn>
+        {/* <TabCtn>
             <button type="button">INSPIRATION</button>
             <button type="button">KATEGORIER</button>
           </TabCtn> */}
-            <SearchFilterDiv>
-              <div className="searchWrapper">
-                <MdSearch id="searchIcon" />
-                <input
-                  id="searchInput"
-                  type="text"
-                  placeholder="Sök"
-                  onChange={updateSearch}
-                />
-              </div>
-
-              <button
-                onClick={() => setIsOpen(true)}
-                type="button"
-                id="filterBtn"
-              >
-                Filter <MdTune className="filterIcon" />
-              </button>
-
-              <FilterMenu
-                setAllValues={setAllValues}
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                filterValueUpdated={filterValueUpdated}
-                setFilterValueUpdated={setFilterValueUpdated}
-                filterValue={filterValue}
-                setFilterValue={setFilterValue}
-                setConditionValues={setConditionValues}
-                activeSorting={activeSorting}
-                setActiveSorting={setActiveSorting}
-              />
-            </SearchFilterDiv>
-            <AdvertContainer
-              filteredSweValues={filteredSweValues}
-              items={renderItems}
-              searchValue={searchValue}
-              itemsFrom="home"
-              activeSorting={activeSorting}
+        <SearchFilterDiv>
+          <div className="searchWrapper">
+            <MdSearch id="searchIcon" />
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Sök"
+              onChange={updateSearch}
             />
-            {items.length > 0 && (
-              <Pagination
-                paginationOption={paginationOption}
-                handlePagination={handlePages}
-              />
-            )}
-            {error && (
-              <MessageCtn>
-                <MdTune className="filterIcon" />
-                <h4 className="message">
-                  Du råkade visst filtrera bort precis allt{" "}
-                </h4>
-              </MessageCtn>
-            )}
-            <AddBtn
-              type="button"
-              onClick={() => {
-                setModalOpen(true);
-                setAlreadyAQRCode(false);
-              }}
-            >
-              <MdNewReleases />
-              <p>Gör en egen annons!</p>
-            </AddBtn>
-          </>
+          </div>
+
+          <button onClick={() => setIsOpen(true)} type="button" id="filterBtn">
+            Filter <MdTune className="filterIcon" />
+          </button>
+
+          <FilterMenu
+            setAllValues={setAllValues}
+            setIsOpen={setIsOpen}
+            isOpen={isOpen}
+            filterValueUpdated={filterValueUpdated}
+            setFilterValueUpdated={setFilterValueUpdated}
+            filterValue={filterValue}
+            setFilterValue={setFilterValue}
+            setConditionValues={setConditionValues}
+            activeSorting={activeSorting}
+            setActiveSorting={setActiveSorting}
+          />
+        </SearchFilterDiv>
+        <AdvertContainer
+          activeFilterOptions={activeFilterOptions}
+          items={renderItems}
+          searchValue={searchValue}
+          itemsFrom="home"
+          activeSorting={activeSorting}
+        />
+        {items.length > 0 && (
+          <Pagination
+            paginationOption={paginationOption}
+            handlePagination={handlePages}
+          />
         )}
+        {error && (
+          <MessageCtn>
+            <MdTune className="filterIcon" />
+            <h4 className="message">
+              Du råkade visst filtrera bort precis allt{" "}
+            </h4>
+          </MessageCtn>
+        )}
+        <Spacer />
+        <AddBtn type="button" onClick={() => toggleModal()}>
+          <MdNewReleases />
+          <p>Gör en egen annons!</p>
+        </AddBtn>
       </Suspense>
     </main>
   );

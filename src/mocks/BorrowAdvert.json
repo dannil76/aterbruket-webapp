@@ -1,0 +1,72 @@
+{
+  "id": "754db895-e323-4f7d-9cad-06a152dc2661",
+  "version": 0,
+  "instructions": "",
+  "returnInformation": "Bra att veta vid återlämning",
+  "purchasePrice": "",
+  "accessories": [
+    "Hjälm",
+    "Laddare"
+  ],
+  "status": "available",
+  "advertType": "borrow",
+  "email": "foo.bar@helsingborg.se",
+  "pickUpInstructions": "Så här haffar du prylen",
+  "contactPerson": "Foo Bar",
+  "length": "",
+  "company": "Stadsledningsförvaltningen",
+  "width": "",
+  "missingItemsInformation": "Om något går sönder eller försvinner",
+  "color": "",
+  "accessRestriction": "none",
+  "borrowDifficultyLevel": "easy",
+  "__typename": "Advert",
+  "quantity": 1,
+  "phoneNumber": "",
+  "department": "Digitaliseringsavd - Verksamhetslösningar - Digital utvecklin",
+  "address": "Drottninggatan 14",
+  "postalCode": "123 45",
+  "city": "Helsingborg",
+  "areaOfUse": [
+    {
+      "indoors": false,
+      "outside": false
+    }
+  ],
+  "createdAt": "2022-02-01T07:31:19.892Z",
+  "aterbruketId": "",
+  "giver": "0b293fb6-3cad-42a4-a476-9e115406f415",
+  "pickUpInformation": "Bra att veta inför uthämtning",
+  "updatedAt": "2022-02-01T07:31:19.892Z",
+  "height": "",
+  "category": "vehicle",
+  "images": [
+    {
+      "alt": "scooter.png",
+      "src": "b82c4619-6ec4-4936-941b-4d7cb969d6ca"
+    }
+  ],
+  "description": "Beskrivning",
+  "revisions": 0,
+  "title": "Elscooter",
+  "material": [
+    {
+      "metal": false,
+      "plastic": false,
+      "other": false,
+      "wood": false
+    }
+  ],
+  "advertBorrowCalendar": {
+    "allowedDateStart": "2022-02-01",
+    "allowedDateEnd": "2022-02-06",
+    "calendarEvents": [
+      {
+        "borrowedBySub": "8409a340-a3a8-4aff-a6c4-55ae026d16a8",
+        "status": "reserved",
+        "dateStart": "2022-02-01",
+        "dateEnd": "2022-02-02"
+      }
+    ]
+  }
+}

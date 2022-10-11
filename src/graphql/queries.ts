@@ -8,7 +8,6 @@ export const getAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -45,6 +44,45 @@ export const getAdvert = /* GraphQL */ `
       purchasePrice
       company
       aterbruketId
+      advertType
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
+      pickUpInstructions
+      accessories
+      borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+          returnDateTime
+        }
+      }
+      accessRestriction
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
+      address
+      city
+      postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -71,7 +109,6 @@ export const listAdverts = /* GraphQL */ `
         id
         title
         description
-        location
         height
         width
         length
@@ -108,6 +145,45 @@ export const listAdverts = /* GraphQL */ `
         purchasePrice
         company
         aterbruketId
+        advertType
+        missingItemsInformation
+        pickUpInformation
+        returnInformation
+        pickUpInstructions
+        accessories
+        borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+            returnDateTime
+          }
+        }
+        accessRestriction
+        accessRestrictionSelection {
+          arbetsmarknadsforvaltningen
+          fastighetsforvaltningen
+          kulturforvaltningen
+          miljoforvaltningen
+          skolOchFritidsforvaltningen
+          socialforvaltningen
+          stadsbyggnadsforvaltningen
+          stadsledningsforvaltningen
+          vardOchOmsorgsforvaltningen
+        }
+        address
+        city
+        postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
         createdAt
         updatedAt
       }

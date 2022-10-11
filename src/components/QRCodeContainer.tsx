@@ -1,8 +1,7 @@
-import React, { FC } from "react";
+import { jsPDF as JSPDF } from "jspdf";
 import QRCode from "qrcode.react";
+import React, { FC } from "react";
 import styled from "styled-components";
-import { jsPDF } from "jspdf";
-import HBGLogo from "../pics/HBG_logo_staende_SV.jpg";
 
 const QRCodeCont = styled.div`
   display: flex;
@@ -10,26 +9,14 @@ const QRCodeCont = styled.div`
   margin-top: 25px;
   align-items: center;
   flex-direction: column;
+
   #labelDiv {
     border: 1px solid black;
-    width: 265px;
-    height: 121px;
     border-radius: 9.5px;
     box-shadow: 0px 0px 2px rgba(98, 98, 98, 0.18),
       0px 1px 2px rgba(98, 98, 98, 0.18);
   }
-  p {
-    margin: 2px 0px 0px 10px;
-    font-size: 11px;
-  }
-  .pTop {
-    font-size: 20px;
-  }
-  .qrAndLogoDiv {
-    display: flex;
-    justify-content: space-between;
-    padding: 7px 16px 7px 16px;
-  }
+
   .pDownload {
     color: grey;
     font-style: italic;
@@ -37,78 +24,85 @@ const QRCodeCont = styled.div`
     text-align: center;
     margin-bottom: 8px;
   }
-  img {
-    width: 46px;
-    height: 48px;
-    margin-top: 4px;
-  }
 `;
 
 interface IProps {
   id: string;
+  recycleId?: string;
+  itemTitle?: string;
 }
 
-const QRCodeContainer: FC<IProps> = ({ id }: IProps) => {
+const QRCodeContainer: FC<IProps> = ({ id, recycleId, itemTitle }: IProps) => {
   const downloadLabel = () => {
-    const doc = new jsPDF("l", "px", [265, 121], true);
+    const doc = new JSPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [108, 81],
+    });
 
-    const pdfDiv: any | null = document.getElementById("labelDiv");
+    const pdfDiv: HTMLElement | null = document.getElementById("labelDiv");
 
     if (pdfDiv !== null) {
       doc.html(pdfDiv, {
-        callback: function (doc) {
+        callback: () => {
           doc.save(`${id}.pdf`);
         },
       });
     }
   };
+
   return (
     <QRCodeCont>
       <p className="pDownload">
         Klicka på etiketten nedan för att ladda ner den som PDF
       </p>
       <div
+        tabIndex={0}
+        role="link"
+        onKeyPress={downloadLabel}
         onClick={downloadLabel}
-        className="labelDiv"
         id="labelDiv"
         style={{
-          width: "265px",
-          height: "121px",
-          padding: "5px",
+          lineHeight: "6px",
+          width: 108,
+          height: 80,
+          fontSize: "9px",
         }}
       >
-        <p
-          className="pTop"
-          style={{ fontSize: "20px", margin: "2px 0px 0px 10px" }}
-        >
-          DEN HÄR KAN DU <strong>HAFFA</strong>
-        </p>
-        <p style={{ fontSize: "11px", margin: "2px 0px 0px 10px" }}>
-          <strong>Återbruka, dela, cirkulera mera</strong> i Helsingborg.
-        </p>
-        <p style={{ fontSize: "9px", margin: "2px 0px 0px 10px" }}>
-          Scanna QR-koden och bidra till en mer hållbar värld.
-        </p>
         <div
-          className="qrAndLogoDiv"
           style={{
             display: "flex",
-            justifyContent: "space-between",
-            padding: "7px 16px 7px 16px",
+            paddingTop: 5,
+            paddingLeft: 5,
+            marginBottom: 3,
           }}
         >
-          <QRCode value={id} id="mycanvas" size={45} />
-          <img
-            src={HBGLogo}
-            alt="Helsingborg logga"
-            width="auto"
-            height="45"
-            style={{ paddingLeft: "130px" }}
-          />
+          <QRCode value={id} level="L" size={59} />
+          {recycleId && (
+            <span
+              style={{
+                paddingLeft: 5,
+              }}
+            >
+              {recycleId}
+            </span>
+          )}
         </div>
+        <span
+          style={{
+            paddingLeft: 5,
+          }}
+        >
+          { itemTitle }
+        </span>
       </div>
     </QRCodeCont>
   );
+};
+
+QRCodeContainer.defaultProps = {
+  recycleId: undefined,
+  itemTitle: "helsingborg.se/haffa",
 };
 
 export default QRCodeContainer;

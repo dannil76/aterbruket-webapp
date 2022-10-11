@@ -1,6 +1,6 @@
 import CountingCategorys from "./CountingCategorys";
 /// Ska öven hantera overTime
-const filterStatus = (advertItems: any, Categorys: any) => {
+const filterStatus = (advertItems: any, categories: any) => {
   const newStatusGroup = [
     {
       option: "available",
@@ -21,6 +21,7 @@ const filterStatus = (advertItems: any, Categorys: any) => {
       items: [] as any,
     },
   ];
+
   advertItems.forEach((i: any) => {
     const index = newStatusGroup.findIndex(
       (group) => group.option === i.status
@@ -28,7 +29,7 @@ const filterStatus = (advertItems: any, Categorys: any) => {
     newStatusGroup[index].items.push(i);
   });
 
-  const groups = CountingCategorys(newStatusGroup, Categorys);
+  const groups = CountingCategorys(newStatusGroup, categories);
   return groups;
 };
 

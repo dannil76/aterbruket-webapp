@@ -1,6 +1,6 @@
 projects:
   aterbruketwebapp:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/aterbruketwebapp/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -8,8 +8,9 @@ projects:
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName: src/API.ts
+        generatedFileName: src/graphql/models.ts
         docsFilePath: src/graphql
+        maxDepth: 4
 extensions:
   amplify:
     version: 3

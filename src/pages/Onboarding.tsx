@@ -164,11 +164,11 @@ const Onboarding: FC = () => {
           </div>
           <div data-swiper-parallax="-400">
             <SwiperFooterButtons>
-              <Button size="lg" shadow className="swipe-next">
-                Nu kör vi!
-              </Button>
-              <Button size="lg" transparent onClick={disableOnboarding}>
+              <Button size="lg" shadow onClick={disableOnboarding}>
                 Logga in
+              </Button>
+              <Button size="lg" transparent className="swipe-next">
+                Läs mer
               </Button>
             </SwiperFooterButtons>
           </div>
@@ -280,7 +280,7 @@ const Onboarding: FC = () => {
             </Text>
             <Text>
               Med Haffa genererar du enkelt en QR-kod som du klistrar på din
-              pryl och den som lånar kan enkelt scanna koden med sin telefon för
+              pryl och den som lånar kan enkelt skanna koden med sin telefon för
               att låna eller lämna tillbaka.{" "}
             </Text>
           </div>

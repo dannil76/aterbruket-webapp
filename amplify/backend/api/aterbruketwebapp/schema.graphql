@@ -2,12 +2,11 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   id: ID! @primaryKey(sortKeyFields: ["version"])
   title: String!
   description: String
-  location: String
   height: String
   width: String
   length: String
   status: ItemStatus
-  category: ItemCategory
+  category: String
   material: [ItemAMaterial]
   condition: ItemCondition
   color: String
@@ -28,30 +27,64 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   purchasePrice: String
   company: String
   aterbruketId: String
+  advertType: ItemAdvertType
+  missingItemsInformation: String
+  pickUpInformation: String
+  returnInformation: String
+  pickUpInstructions: String
+  accessories: [String]
+  borrowDifficultyLevel: String
+  advertBorrowCalendar: AdvertBorrowCalendar
+  accessRestriction: String
+  accessRestrictionSelection: Administration
+  address: String
+  city: String
+  postalCode: String
+  missingAccessories: [MissingAccessories]
+}
+
+type MissingAccessories {
+  reportedBy: String!
+  reportedDate: AWSDateTime!
+  accessories: [String]!
+  lastReturnedBy: String!
+}
+
+type Administration {
+  arbetsmarknadsforvaltningen: Boolean
+  fastighetsforvaltningen: Boolean
+  kulturforvaltningen: Boolean
+  miljoforvaltningen: Boolean
+  skolOchFritidsforvaltningen: Boolean
+  socialforvaltningen: Boolean
+  stadsbyggnadsforvaltningen: Boolean
+  stadsledningsforvaltningen: Boolean
+  vardOchOmsorgsforvaltningen: Boolean
+}
+
+type AdvertBorrowCalendar {
+  allowedDateStart: AWSDate
+  allowedDateEnd: AWSDate
+  calendarEvents: [CalendarEvent]
+}
+
+type CalendarEvent {
+  borrowedBySub: String
+  status: String
+  dateStart: AWSDate
+  dateEnd: AWSDate
+  returnDateTime: AWSDateTime
+}
+
+enum ItemAdvertType {
+  recycle
+  borrow
 }
 
 enum ItemStatus {
   available
   reserved
   pickedUp
-}
-
-enum ItemCategory {
-  desk
-  raiseAndLowerableDesk
-  kidsFurniture
-  table
-  other
-  storageFurniture
-  officeChair
-  sparepart
-  seatingFurniture
-  sofaAndBench
-  wanted
-  painting
-  outdoorItem
-  appliances
-  constructionMaterial
 }
 
 type ItemAMaterial {
@@ -83,3 +116,4 @@ type Page @model @auth(rules: [{allow: private, operations: [read]}, {allow: gro
   title: String!
   content: String
 }
+ 

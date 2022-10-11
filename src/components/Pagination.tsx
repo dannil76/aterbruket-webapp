@@ -35,11 +35,10 @@ const Button = styled.button`
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 10px;
   display: flex;
   width: 100%;
   justify-content: center;
-  margin: 10px 0 60px 0;
+  margin: 10px 0 80px 0;
 `;
 
 type PaginationOption = {

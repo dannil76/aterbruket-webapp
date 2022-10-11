@@ -1,412 +1,102 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable import/no-named-as-default-member */
-/* eslint-disable-next-line react-hooks/exhaustive-deps */
-
-import React, {
-  FC,
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  Suspense,
-} from "react";
-import { useParams, useHistory } from "react-router-dom";
-import Loader from "react-loader-spinner";
-import styled from "styled-components";
 import { graphqlOperation, GraphQLResult } from "@aws-amplify/api";
 import { API, Storage } from "aws-amplify";
-import {
-  MdArrowBack,
-  MdEdit,
-  MdPlace,
-  MdPerson,
-  MdPhone,
-} from "react-icons/md";
-import { FiAtSign } from "react-icons/fi";
-import QRCode from "../components/QRCodeContainer";
+import React, {
+  FC,
+  Suspense,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { MdArrowBack, MdCameraAlt, MdEdit, MdPeople } from "react-icons/md";
+import Loader from "react-loader-spinner";
+import { useHistory, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 import { GetAdvertQuery } from "../API";
-import { getAdvert } from "../graphql/queries";
-import { createAdvert, updateAdvert } from "../graphql/mutations";
-import Map from "../components/Map";
+import Button from "../components/Button";
+import {
+  DefaultContent as BorrowContent,
+  ReservationModal,
+  ReturnContent,
+  ReturnModal,
+} from "../components/ItemDetails/Borrow";
+import {
+  AdvertImage,
+  MainSection,
+  SubTitle,
+  TopSection,
+  Header,
+} from "../components/ItemDetails/Common";
+import PickUpModal from "../components/ItemDetails/PickUpModal";
+import RecycleContent from "../components/ItemDetails/Recycle/DefaultContent";
+import { useModal } from "../components/Modal";
+import QRCode from "../components/QRCodeContainer";
 import UserContext from "../contexts/UserContext";
-import showDays from "../hooks/showDays";
-import { fieldsForm } from "../utils/formUtils";
+import { createAdvert, updateAdvert, deleteAdvert } from "../graphql/mutations";
+import { getAdvert } from "../graphql/queries";
+import { ICalendarUpdateResult, IDateRange } from "../interfaces/IDateRange";
+import {
+  convertToSwedishDate,
+  getActiveReservation,
+  getStatus,
+} from "../utils/advertHelper";
+import {
+  addDateRangeToEvents,
+  getLastReturnedCalendarEvent,
+  isDateAvailable,
+  updateAdvertCalendar,
+  updateEventStatus,
+} from "../utils/calendarUtils";
+import { getCategoryByKey } from "../utils/handleCategories";
 
 const CarouselComp = React.lazy(() => import("../components/CarouselComp"));
 const EditItemForm = React.lazy(() => import("../components/EditItemForm"));
 const RegiveForm = React.lazy(() => import("../components/RegiveForm"));
 
-const TopSection = styled.div`
-  background-color: ${(props) => props.theme.colors.offWhite};
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-direction: column;
-  box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
-
-  .reservedHeader {
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-
-    .headerTitle--reserved {
-      margin: 26px 0 0 0;
-    }
-    .reservedP {
-      color: ${(props) => props.theme.colors.primaryDark};
-      font-size: 14px;
-      margin: 0;
-    }
-  }
-
-  header {
-    position: relative;
-    width: 100%;
-    height: 75px;
-    position: fixed;
-    background-color: ${(props) => props.theme.colors.offWhite};
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    svg {
-      position: absolute;
-      left: 28px;
-      bottom: 16px;
-      font-size: 24px;
-      color: ${(props) => props.theme.colors.darkest};
-    }
-    p,
-    .headerTitle {
-      margin: 35px 0 0 0;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 18px;
-      line-height: 132%;
-      color: ${(props) => props.theme.colors.darkest};
-      max-width: 40%;
-    }
-    .btn--haffa--header,
-    .btn--pickUp--header {
-      width: auto;
-      height: auto;
-      margin: 0;
-      position: absolute;
-      bottom: 7px;
-      right: 16px;
-      padding: 8px 12px;
-      font-size: 16px;
-      box-shadow: none;
-    }
-
-    .btn--pickUp--header {
-      background-color: ${(props) => props.theme.colors.primaryLight};
-    }
-  }
-
-  .btn--pickUp {
-    background-color: ${(props) => props.theme.colors.primaryLight};
-  }
-
-  .btn--edit {
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-    border: 2px solid #6f9725;
-    box-sizing: border-box;
-    border-radius: 4.5px;
-    color: ${(props) => props.theme.colors.darkest};
-    position: relative;
-
-    svg {
-      color: #6f9725;
-      position: absolute;
-      left: 115px;
-      top: 16px;
-    }
-  }
-  span {
-    font-style: italic;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.dark};
-    margin: 0 102px 24px 24px;
-  }
-  .titleDiv {
-    width: 100%;
-    h4 {
-      margin: 48px 32px 12px 32px;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 18px;
-      line-height: 112%;
-      letter-spacing: 0.0025em;
-      color: ${(props) => props.theme.colors.primaryDark};
-    }
-    h1 {
-      font-style: normal;
-      font-weight: 900;
-      font-size: 36px;
-      line-height: 124%;
-      margin: 8px 32px 12px 32px;
-    }
-    p {
-      margin: 8px 32px 24px 32px;
-      color: ${(props) => props.theme.colors.primaryDark};
-      font-style: normal;
-      font-weight: bold;
-      font-size: 16px;
-    }
-  }
-
-  .removeReservation {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.dark};
-    margin: 0 0 32px 0;
-    border: none;
-    outline: none;
-    background-color: transparent;
-  }
-
-  .regiveBtn {
-    width: 111px;
-  }
+const Separator = styled.div`
+  width: 100%;
+  border-top: 3px dashed ${(props) => props.theme.colors.grayLighter};
 `;
 
-const Button = styled.button`
-  box-shadow: 0px 0px 2px rgba(98, 98, 98, 0.18),
-    0px 3px 2px rgba(98, 98, 98, 0.12), 0px 6px 8px rgba(98, 98, 98, 0.12),
-    0px 10px 16px rgba(98, 98, 98, 0.12), 0px 26px 32px rgba(98, 98, 98, 0.12);
-  border-radius: 4.5px;
-  background-color: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.white};
+const BottomSection = styled.section`
+  width: 100%;
+  padding-bottom: 64px;
+`;
+
+const HeaderButton = styled(Button)`
   font-weight: 900;
-  font-size: 18px;
-  line-height: 132%;
-  letter-spacing: 0.015em;
-  width: 340px;
-  height: 56px;
-  border: none;
-  margin: 0 12px 24px 12px;
+  position: absolute;
+  right: 16px;
 `;
 
-const ImgDiv = styled.div`
-  width: 100%;
-  height: 256px;
+const EditButton = styled(Button)`
+  border: 2px solid #6f9725;
+  color: ${(props) => props.theme.colors.darkest};
+  svg {
+    color: #6f9725;
+  }
+`;
+
+const LoaderWrapper = styled.div`
+  height: 100vh;
   display: flex;
-  justify-content: center;
-  background-color: ${(props) => props.theme.colors.offWhite};
-  margin-top: 75px;
-
-  img {
-    max-height: 256px;
-    width: 100vw;
-    margin: 0;
-    object-fit: cover;
-  }
-`;
-
-const Line = styled.div`
-   {
-    width: 96%;
-    border-top: 3px dashed ${(props) => props.theme.colors.lightGray};
-  }
-`;
-
-const MainSection = styled.section`
-  width: 100%;
-  margin: 0 auto;
-
-  h4 {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 144%;
-    margin: 0;
-
-    color: ${(props) => props.theme.colors.primary};
-  }
-  .dark {
-    margin: 48px 0 28px 24px;
-    color: ${(props) => props.theme.colors.darkest};
-    align-self: flex-start;
-  }
-  .description {
-    box-sizing: border-box;
-    margin: 0 24px;
-  }
-
-  p {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.darkest};
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    table-layout: fixed;
-
-    td {
-      padding: 16px 0 0 23px;
-      border: none;
-    }
-
-    td:nth-child(2) {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 18px;
-      line-height: 144%;
-      text-align: right;
-      padding: 16px 24px 0 0;
-      word-wrap: break-word;
-
-      span {
-        color: ${(props) => props.theme.colors.dark};
-      }
-    }
-  }
-`;
-
-const CardGroups = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: center;
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    width: 90%;
-    height: 326px;
-
-    background-color: ${(props) => props.theme.colors.white};
-    border-radius: 9.5px;
-    filter: drop-shadow(0px 0px 2px rgba(98, 98, 98, 0.18)),
-      drop-shadow(0px 1px 2px rgba(98, 98, 98, 0.18));
-  }
-  .contactCard {
-    height: auto;
-  }
-
-  .cardHeader {
-    z-index: 0;
-    width: 100%;
-    height: 30%;
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-    border-radius: 9.5px 9.5px 0px 0px;
-  }
-  .cardBody {
-    box-sizing: border-box;
-    margin: 0 24px;
-    padding: 0 24px;
-    width: 100%;
-    height: 70%;
-    border-radius: 0px 0px 9.5px 9.5px;
-  }
-  h5 {
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 150%;
-    color: ${(props) => props.theme.colors.primary};
-    margin: 24px 0px 12px 0px;
-  }
-  p {
-    margin: 0;
-  }
-  .btn--adress {
-    margin: 16px 0;
-    width: 100%;
-    text-align: left;
-    padding: 16px;
-    // background-color: ${(props) => props.theme.colors.lightGray};
-    //color: ${(props) => props.theme.colors.offWhite};
-    background-color: ${(props) => props.theme.colors.primaryLighter};
-    color: ${(props) => props.theme.colors.primaryDark};
-    position: relative;
-    opacity: 0.2; // remove this when function is working
-    outline: none;
-
-    svg {
-      color: ${(props) => props.theme.colors.secondaryDark};
-      position: absolute;
-      top: 17px;
-      right: 14px;
-    }
-  }
-
-  .contactPersonDiv {
-    box-sizing: border-box;
-    padding: 0 24px;
-    width: 100%;
-    display: flex;
-    margin: 16px 0;
-    align-items: center;
-
-    h4 {
-      margin: 0 16px;
-      align-self: unset;
-    }
-    .company {
-      margin: 0 16px;
-    }
-    .circle {
-      padding: 0;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background-color: #f2f6ee;
-      position: relative;
-    }
-    svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: ${(props) => props.theme.colors.illustration};
-      font-size: 24px;
-    }
-  }
-  .contactInfo {
-    box-sizing: border-box;
-    padding: 0 8px 0 8px;
-    display: flex;
-    align-items: center;
-    min-width: 290px;
-    height: 48px;
-    background-color: #f5f5f5;
-    border-radius: 4.5px;
-    margin: 0 0 10px 0;
-    line-break: anywhere;
-
-    a {
-      color: ${(props) => props.theme.colors.darker};
-      margin-left: 8px;
-      text-decoration: inherit;
-      color: inherit;
-      :visited {
-        text-decoration: inherit;
-        color: inherit;
-      }
-    }
-    svg {
-      font-size: 20px;
-      color: ${(props) => props.theme.colors.dark};
-    }
-  }
+  justify-content: center;
 `;
+
+const ReservationSection = styled.div`
+  text-align: center;
+  margin-bottom: 16px;
+`;
+
+interface IComponents {
+  [key: string]: {
+    [key: string]: {
+      [key: string]: JSX.Element | null | JSX.Element[];
+    };
+  };
+}
 
 interface ParamTypes {
   id: string;
@@ -424,11 +114,16 @@ const ItemDetails: FC<ParamTypes> = () => {
   const buttonOutOfScreen = useRef(null);
   const [refVisible, setRefVisible] = useState(false);
   const [showHeaderBtn, setShowHeaderBtn] = useState(false);
+  const [isReservationModalVisible, toggleReservationModal] = useModal();
+  const [isPickUpModalVisible, togglePickUpModal] = useModal();
+  const [isReturnModalVisible, toggleReturnModal] = useModal();
 
-  const fetchImage = (item: any) => {
-    Storage.get(item.images[0].src).then((url: any) => {
+  const itemCategory = getCategoryByKey(item?.category);
+
+  const fetchImage = (advert: any) => {
+    Storage.get(advert.images[0].src).then((url: any) => {
       setImage(url);
-      setItem(item);
+      setItem(advert);
     });
   };
 
@@ -451,12 +146,11 @@ const ItemDetails: FC<ParamTypes> = () => {
   useEffect(() => {
     fetchItem();
     setItemUpdated(false);
-    return () => {};
   }, [itemUpdated]);
 
   let handler: any;
   const scrollFunc = () => {
-    handler = function () {
+    handler = () => {
       const element: any = buttonOutOfScreen.current;
 
       const buttonPos: any = element.offsetTop - element.offsetHeight;
@@ -503,192 +197,471 @@ const ItemDetails: FC<ParamTypes> = () => {
 
     await API.graphql(graphqlOperation(createAdvert, { input: item }));
   };
+
   const onClickReservBtn = () => {
     updateItem("reserved");
     setShowHeaderBtn(false);
   };
+
   const onClickRemoveResBtn = () => {
     updateItem("available");
     setShowHeaderBtn(false);
   };
+
   const onClickPickUpBtn = () => {
     updateItem("pickedUp");
     setShowHeaderBtn(false);
   };
-  const translate = (word: string, cat: any) => {
-    let sweWord = "";
 
-    fieldsForm.find((el) => {
-      if (el.name === cat && el.option) {
-        el.option.map((op: any) => {
-          if (op.eng[0] === word) {
-            sweWord = op.swe[0];
-          }
-        });
-      } else if (el.name === cat && el.swe) {
-        el.eng.map((op: any, idx: number) => {
-          if (op === word) {
-            sweWord = el.swe[idx];
-          }
-        });
-      }
-    });
-    return sweWord;
-  };
-  const mapingObject = (obj: any, cat: string) => {
-    let str = "";
-    Object.entries(obj[0]).forEach(([key, value]) => {
-      if (value) {
-        const sweWord = translate(key, cat);
-        if (str.length === 0) {
-          str = `${str} ${sweWord}`;
-        } else {
-          str = `${str}, ${sweWord}`;
-        }
-      }
-    });
-    return <td key={str}>{str}</td>;
-  };
   const history = useHistory();
 
   const goBackFunc = () => {
     history.goBack();
   };
 
-  const mailtoHref = `mailto:${item.email}?subject=En kollega vill Haffa "${item.title}"&body=Hej ${item.contactPerson}!%0d%0aDin kollega ${user.name} vill Haffa "${item.title}" och har en fundering:`;
-  const telHref = `tel:${item.phoneNumber}`;
+  const isRecycleType = item.advertType === "recycle";
+  const isBorrowType = item.advertType === "borrow";
+
+  const [reservationDateRange, setReservationDateRange] = useState<{
+    startDate: string | null;
+    endDate: string | null;
+    bookingType: string;
+  }>({
+    startDate: null,
+    endDate: null,
+    bookingType: "",
+  });
+
+  const userSub = user?.sub ? user.sub : "";
+  const status = getStatus(item, user, new Date());
+  const activeReservation = getActiveReservation(item, userSub);
+
+  const handleReservationDateRange = (
+    changeEvent: IDateRange,
+    bookingType: string
+  ) => {
+    const { startDate, endDate } = changeEvent;
+    setReservationDateRange({ startDate, endDate, bookingType });
+  };
+
+  const handleSaveReservation = async (): Promise<ICalendarUpdateResult> => {
+    const newCalendarEvent = {
+      dateRange: {
+        startDate: reservationDateRange.startDate,
+        endDate: reservationDateRange.endDate,
+      },
+      eventType: reservationDateRange.bookingType,
+    };
+
+    const addEventResult = addDateRangeToEvents(
+      item.advertBorrowCalendar,
+      newCalendarEvent,
+      userSub
+    );
+
+    if (addEventResult.updateSuccessful) {
+      await updateAdvertCalendar(item, addEventResult.updatedCalendarResult);
+    }
+    await fetchItem();
+
+    return addEventResult;
+  };
+
+  const handleSaveReservationStatus = async (
+    newStatus: string,
+    missingAccessories?: string[]
+  ): Promise<boolean> => {
+    const updatedEvent = updateEventStatus(
+      item.advertBorrowCalendar,
+      activeReservation,
+      newStatus
+    );
+
+    if (updatedEvent.updateSuccessful) {
+      const lastReturnedEvent = getLastReturnedCalendarEvent(
+        item.advertBorrowCalendar
+      );
+
+      if (
+        newStatus === "pickedUp" &&
+        typeof missingAccessories !== "undefined" &&
+        missingAccessories.length &&
+        typeof lastReturnedEvent !== "undefined"
+      ) {
+        (item.missingAccessories = item.missingAccessories || []).push({
+          reportedBy: userSub,
+          reportedDate: new Date().toISOString(),
+          accessories: missingAccessories,
+          lastReturnedBy: lastReturnedEvent?.borrowedBySub,
+        });
+      }
+
+      await updateAdvertCalendar(item, updatedEvent.updatedCalendarResult);
+    }
+    await fetchItem();
+
+    return updatedEvent.updateSuccessful;
+  };
+
+  const components: IComponents = {
+    recycle: {
+      modal: {
+        reserved: (
+          <PickUpModal
+            advert={item}
+            isVisible={isPickUpModalVisible}
+            toggleModal={togglePickUpModal}
+            onFinish={() => {
+              onClickPickUpBtn();
+              toast("Snyggt! Prylen är nu haffad!");
+            }}
+          />
+        ),
+        default: null,
+      },
+      content: {
+        default: <RecycleContent advert={item} status={status} />,
+      },
+      bottom: {
+        default: [<Separator key="1" />, <QRCode key="2" id={id} recycleId={item.aterbruketId} itemTitle={item.title} />],
+      },
+    },
+    borrow: {
+      modal: {
+        available: (
+          <ReservationModal
+            advert={item}
+            isVisible={isReservationModalVisible}
+            toggleModal={toggleReservationModal}
+            dateRange={reservationDateRange}
+            setDateRange={handleReservationDateRange}
+            onFinish={() => {
+              handleSaveReservation().then((saveReservationResult) => {
+                return saveReservationResult.updateSuccessful
+                  ? toast("Prylen är nu bokad!")
+                  : toast.error(
+                      `Prylen kunde tyvärr inte bokas. ${
+                        saveReservationResult.errorMessage || ""
+                      }`
+                    );
+              });
+            }}
+            availableCalendarDates={(date) =>
+              !isDateAvailable(date, item.advertBorrowCalendar)
+            }
+          />
+        ),
+        pickUpAllowed: (
+          <PickUpModal
+            image={image}
+            advert={item}
+            isVisible={isPickUpModalVisible}
+            toggleModal={togglePickUpModal}
+            onFinish={(missingAccessories) => {
+              handleSaveReservationStatus("pickedUp", missingAccessories).then(
+                (statusSaved) => {
+                  return statusSaved
+                    ? toast("Snyggt! Prylen är nu lånad och i ditt ansvar!")
+                    : toast.error("Prylen kunde tyvärr inte lånas.");
+                }
+              );
+            }}
+          />
+        ),
+        pickedUp: (
+          <ReturnModal
+            image={image}
+            advert={item}
+            isVisible={isReturnModalVisible}
+            toggleModal={toggleReturnModal}
+            onFinish={() => {
+              handleSaveReservationStatus("returned").then((statusSaved) => {
+                return statusSaved
+                  ? toast("Snyggt! Prylen är nu återlämnad!")
+                  : toast.error("Prylen kunde tyvärr inte lämnas tillbaka.");
+              });
+            }}
+          />
+        ),
+        default: null,
+      },
+      content: {
+        default: <BorrowContent advert={item} />,
+        pickedUp: <ReturnContent advert={item} />,
+      },
+      bottom: {
+        default: [<Separator />, <QRCode id={id} itemTitle={item.title}/>],
+      },
+    },
+  };
+
+  const renderSection = (
+    type: string,
+    section: string,
+    advertStatus: string
+  ): JSX.Element | null | JSX.Element[] => {
+    if (!type || !section || !advertStatus) {
+      return null;
+    }
+
+    if (typeof components[type][section][advertStatus] === "undefined") {
+      return components[type][section].default;
+    }
+
+    return components[type][section][advertStatus];
+  };
+
+  const handleDeleteAdvert = async (advertId: string) => {
+    if (window.confirm("Är du säker på att du vill ta bort annonsen?")) {
+      try {
+        await API.graphql({
+          query: deleteAdvert,
+          variables: { input: { id: advertId, version: 0 } },
+        });
+        history.push("/app");
+        toast.success("Annonsen är nu borttagen!");
+      } catch (error) {
+        console.error(error);
+        toast.warn("Ett okänt fel inträffade 😵 Försök igen!");
+      }
+    }
+  };
 
   const allDetails = (
     <>
-      <TopSection>
-        {item.status === "available" && (
-          <header className="header">
-            <MdArrowBack onClick={goBackFunc} />
-            <p className="headerTitle">{item.title}</p>
-            {showHeaderBtn && (
-              <Button
-                className="btn--haffa--header"
-                onClick={() => {
-                  onClickReservBtn();
-                }}
-                type="button"
-              >
-                HAFFA!
-              </Button>
-            )}
-          </header>
-        )}
+      {renderSection(item.advertType, "modal", status)}
 
-        {(item.status === "reserved" || item.status === "pickedUp") && (
-          <header className="reservedHeader">
-            <MdArrowBack onClick={goBackFunc} />
-            <p
-              className="headerTitle headerTitle--reserved"
-              style={{ marginLeft: showHeaderBtn ? "-30px" : "0" }}
+      {(status === "available" || status === "borrowPermissionDenied") && (
+        <Header>
+          <MdArrowBack onClick={goBackFunc} />
+          <p className="headerTitle">{item.title}</p>
+          {showHeaderBtn && isRecycleType && (
+            <HeaderButton
+              size="sm"
+              onClick={() => {
+                onClickReservBtn();
+              }}
+              type="button"
             >
-              {item.title}
-            </p>
-            {item.status === "reserved" ? (
+              HAFFA!
+            </HeaderButton>
+          )}
+          {showHeaderBtn && isBorrowType && (
+            <HeaderButton
+              size="sm"
+              onClick={() => {
+                toggleReservationModal();
+              }}
+              type="button"
+            >
+              RESERVERA
+            </HeaderButton>
+          )}
+        </Header>
+      )}
+
+      {(status === "reserved" ||
+        status === "pickedUp" ||
+        status === "pickUpAllowed") && (
+        <Header reserved>
+          <MdArrowBack onClick={goBackFunc} />
+
+          <div>
+            <p className="headerTitle">{item.title}</p>
+            {status === "reserved" || status === "pickUpAllowed" ? (
               <p className="reservedP">Reserverad</p>
             ) : (
               <p className="reservedP">Uthämtad</p>
             )}
-            {showHeaderBtn && (
-              <Button
-                className="btn--pickUp--header"
-                onClick={() => {
-                  onClickPickUpBtn();
-                }}
-                type="button"
-              >
-                HÄMTA UT
-              </Button>
-            )}
-          </header>
-        )}
+          </div>
 
-        {!image ? (
-          <Loader type="ThreeDots" color="#9db0c6" height={50} width={50} />
-        ) : (
-          <ImgDiv>
-            <img src={image} alt="" onClick={() => setShowCarousel(true)} />
-          </ImgDiv>
-        )}
+          {isRecycleType && showHeaderBtn && (
+            <HeaderButton
+              size="sm"
+              color="primaryLight"
+              onClick={() => {
+                togglePickUpModal();
+              }}
+              type="button"
+            >
+              HÄMTA UT
+            </HeaderButton>
+          )}
+
+          {isBorrowType && showHeaderBtn && status === "pickUpAllowed" && (
+            <HeaderButton
+              size="sm"
+              color="primaryLight"
+              onClick={() => {
+                togglePickUpModal();
+              }}
+              type="button"
+            >
+              HÄMTA UT
+            </HeaderButton>
+          )}
+        </Header>
+      )}
+
+      <TopSection>
+        <AdvertImage
+          src={image}
+          alt={item.title}
+          onClick={(e) => setShowCarousel(true)}
+        />
+
         <div className="titleDiv">
-          <h4>
-            {item.category
-              ? translate(item.category, "category")
-              : item.category}
-          </h4>
+          {isBorrowType && (
+            <h4>
+              <MdPeople /> Delning
+            </h4>
+          )}
+          {isRecycleType && <h4>{itemCategory?.title}</h4>}
+
           <h1>{item.title}</h1>
           <p>{item.aterbruketId}</p>
         </div>
 
-        {item.status ===
-          "available" /* && item.giver !== user.attributes.sub */ && (
+        {isBorrowType && status === "borrowPermissionDenied" && (
+          <>
+            <Button
+              disabled
+              size="xl"
+              marginBottom={24}
+              marginLeft={24}
+              marginRight={24}
+              shadow
+              type="button"
+            >
+              Behörighet saknas
+            </Button>
+            <span>Tyvärr, du saknar behörighet för att låna prylen.</span>
+          </>
+        )}
+
+        {isRecycleType && status === "available" && (
           <Button
+            size="xl"
+            marginBottom={24}
+            marginLeft={24}
+            marginRight={24}
+            shadow
             ref={(el: any) => {
               buttonOutOfScreen.current = el;
               setRefVisible(!!el);
             }}
-            className="btn--haffa"
             onClick={() => {
               onClickReservBtn();
             }}
             type="button"
           >
-            Haffa!
+            HAFFA!
           </Button>
         )}
 
-        {item.status === "reserved" && item.reservedBySub === user.sub && (
-          <>
-            <Button
-              ref={(el: any) => {
-                buttonOutOfScreen.current = el;
-                setRefVisible(!!el);
-              }}
-              className=" btn--pickUp"
-              onClick={() => {
-                onClickPickUpBtn();
-              }}
-              type="button"
-            >
-              Hämta ut
-            </Button>
-            <button
-              type="button"
-              className="removeReservation"
-              onClick={() => {
-                onClickRemoveResBtn();
-              }}
-            >
-              Ta bort reservation
-            </button>
-          </>
-        )}
-
-        {item.status === "available" &&
-          (item.giver === user.sub || user.isAdmin) && (
+        {isRecycleType &&
+          status === "reserved" &&
+          item.reservedBySub === user.sub && (
             <>
               <Button
-                className=" btn--edit"
-                onClick={() => setEditItem(true)}
+                size="xl"
+                marginBottom={12}
+                marginLeft={24}
+                marginRight={24}
+                color="primaryLight"
+                ref={(el: any) => {
+                  buttonOutOfScreen.current = el;
+                  setRefVisible(!!el);
+                }}
+                onClick={() => {
+                  togglePickUpModal();
+                }}
                 type="button"
               >
-                <MdEdit />
-                Ändra
+                Hämta ut
               </Button>
-              {item.giver === user.sub && (
-                <span>Den här annonsen har du lagt upp.</span>
-              )}
+              <Button
+                size="lg"
+                marginBottom={12}
+                marginLeft={24}
+                marginRight={24}
+                transparent
+                type="button"
+                onClick={() => {
+                  onClickRemoveResBtn();
+                }}
+              >
+                Ta bort reservation
+              </Button>
             </>
           )}
 
-        {item.status === "pickedUp" && item.reservedBySub === user.sub && (
-          <>
+        {isBorrowType && status === "available" && (
+          <Button
+            shadow
+            size="xl"
+            marginBottom={24}
+            marginLeft={24}
+            marginRight={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={toggleReservationModal}
+            type="button"
+          >
+            Jag vill låna!
+          </Button>
+        )}
+
+        {isBorrowType && status === "pickUpAllowed" && (
+          <Button
+            shadow
+            size="xl"
+            color="primaryLight"
+            marginLeft={24}
+            marginRight={24}
+            marginBottom={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={togglePickUpModal}
+            type="button"
+          >
+            <MdCameraAlt />
+            Hämta lånad pryl
+          </Button>
+        )}
+
+        {isBorrowType && status === "pickedUp" && (
+          <Button
+            shadow
+            size="xl"
+            color="primaryLight"
+            marginLeft={24}
+            marginRight={24}
+            marginBottom={24}
+            ref={(el: any) => {
+              buttonOutOfScreen.current = el;
+              setRefVisible(!!el);
+            }}
+            onClick={toggleReturnModal}
+            type="button"
+          >
+            <MdCameraAlt />
+            Lämna tillbaka
+          </Button>
+        )}
+
+        {status === "pickedUp" &&
+          isRecycleType &&
+          item.reservedBySub === user.sub && (
             <Button
-              className=" btn--regive"
+              size="xl"
+              marginBottom={24}
+              marginLeft={24}
+              marginRight={24}
               onClick={() => {
                 setRegive(true);
               }}
@@ -696,171 +669,64 @@ const ItemDetails: FC<ParamTypes> = () => {
             >
               Annonsera igen
             </Button>
-          </>
-        )}
+          )}
+
+        {(status === "available" || isBorrowType) &&
+          (item.giver === user.sub || user.isAdmin) && (
+            <>
+              <EditButton
+                size="xl"
+                color="primaryLighter"
+                marginBottom={8}
+                marginLeft={24}
+                marginRight={24}
+                onClick={() => setEditItem(true)}
+                type="button"
+              >
+                <MdEdit />
+                Ändra
+              </EditButton>
+
+              <Button
+                color="darkest"
+                size="sm"
+                transparent
+                marginBottom={16}
+                onClick={() => handleDeleteAdvert(item.id)}
+              >
+                Ta bort annons
+              </Button>
+
+              {item.giver === user.sub && (
+                <span>Den här annonsen har du lagt upp.</span>
+              )}
+            </>
+          )}
+
+        {isBorrowType &&
+          (status === "reserved" ||
+            status === "pickUpAllowed" ||
+            status === "pickedUp") && (
+            <ReservationSection>
+              {(status === "reserved" || status === "pickUpAllowed") && (
+                <SubTitle>Reserverad av dig</SubTitle>
+              )}
+              {status === "pickedUp" && <SubTitle>Uthämtad av dig</SubTitle>}
+              <p>
+                {convertToSwedishDate(activeReservation?.dateStart ?? "")} -{" "}
+                {convertToSwedishDate(activeReservation?.dateEnd ?? "")}
+              </p>
+            </ReservationSection>
+          )}
       </TopSection>
 
       <MainSection>
-        <div>
-          <h4 className="dark">Beskrivning</h4>
-          <p className="description">{item.description}</p>
-        </div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <h4>Höjd</h4>
-              </td>
-              <td>
-                {item.height} <span>cm</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Bredd</h4>
-              </td>
-              <td>
-                {item.width} <span>cm</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Djup</h4>
-              </td>
-              <td>
-                {item.length} <span>cm</span>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <h4>Färg</h4>
-              </td>
-              <td>{item.color}</td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Material</h4>
-              </td>
-              {item.material ? (
-                mapingObject(item.material, "material")
-              ) : (
-                <td> </td>
-              )}
-            </tr>
-            <tr>
-              <td>
-                <h4>Skick</h4>
-              </td>
-              <td>
-                {item.condition
-                  ? translate(item.condition, "condition")
-                  : item.condition}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h4>Användningsområde</h4>
-              </td>
-              {item.areaOfUse ? (
-                mapingObject(item.areaOfUse, "areaOfUse")
-              ) : (
-                <td> </td>
-              )}
-            </tr>
-            <tr>
-              <td>
-                <h4>Klimatpåverkan</h4>
-              </td>
-              <td>
-                {item.climateImpact}{" "}
-                <span>
-                  kg CO<sub>2</sub>e
-                </span>
-              </td>
-            </tr>
-
-            {item.purchasePrice !== "" && (
-              <tr>
-                <td>
-                  <h4>Inköpspris</h4>
-                </td>
-                <td>
-                  {item.purchasePrice} <span>kr</span>
-                </td>
-              </tr>
-            )}
-
-            {item.status === "available" && (
-              <tr>
-                <td>
-                  <h4>Har varit tillgänglig i</h4>
-                </td>
-                <td>
-                  {showDays(item.createdAt)} <span>dagar</span>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <CardGroups>
-          <h4 className="dark">Här finns prylen</h4>
-
-          <div className="card mapCard">
-            <div className="cardHeader">
-              {item && item.location && (
-                <Map mapTypeControl={false} location={item.location} />
-              )}
-
-              {!item.location && (
-                <Loader
-                  type="ThreeDots"
-                  color="#9db0c6"
-                  height={50}
-                  width={50}
-                />
-              )}
-            </div>
-            <div className="cardBody">
-              <h5>ADRESS</h5>
-              <p>{item.department}</p>
-              <p>{item.location}</p>
-              <Button className=" btn--adress" type="button">
-                Hitta hit
-                <MdPlace />
-              </Button>
-            </div>
-          </div>
-          <h4 className="dark">Kontaktperson</h4>
-
-          <div className="card contactCard">
-            <div className="contactPersonDiv">
-              <div className="circle">
-                <MdPerson />
-              </div>
-              <div>
-                <h4 className="dark">{item.contactPerson}</h4>
-                <h5 className="company">{item.company}</h5>
-              </div>
-            </div>
-            {item.phoneNumber && (
-              <div className="contactInfo">
-                <MdPhone />
-                <a href={telHref}>{item.phoneNumber}</a>
-              </div>
-            )}
-
-            <div className="contactInfo">
-              <FiAtSign />
-              <a href={mailtoHref}>{item.email}</a>
-            </div>
-          </div>
-        </CardGroups>
+        {renderSection(item.advertType, "content", status)}
       </MainSection>
 
-      <Line />
-
-      <QRCode id={id} />
+      <BottomSection>
+        {renderSection(item.advertType, "bottom", status)}
+      </BottomSection>
     </>
   );
 
@@ -882,6 +748,10 @@ const ItemDetails: FC<ParamTypes> = () => {
           />
         ) : showCarousel ? (
           <CarouselComp setShowCarousel={setShowCarousel} image={image} />
+        ) : item && Object.keys(item).length === 0 ? (
+          <LoaderWrapper>
+            <Loader type="Rings" color="#50811b" height={80} width={80} />
+          </LoaderWrapper>
         ) : (
           allDetails
         )}

@@ -1,9 +1,11 @@
 import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
-import React, { FC, useState, Suspense } from "react";
+import React, { FC, Suspense } from "react";
 import { Route } from "react-router-dom";
 import styled from "styled-components";
+import { ToastContainer } from "react-toastify";
 import HbgLogo from "../pics/HBG_logo_sm.png";
 import BG from "../pics/onboarding_bg_x2.png";
+import "react-toastify/dist/ReactToastify.min.css";
 
 const About = React.lazy(() => import("../pages/About"));
 const AddItem = React.lazy(() => import("../pages/AddItem"));
@@ -34,7 +36,6 @@ const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 65px;
     padding-top: 150px;
   }
 `;
@@ -95,10 +96,6 @@ const Separator = styled.div`
 `;
 
 const AppRouter: FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [alreadyAQRCode, setAlreadyAQRCode] = useState(false);
-  const [qrCamera, setQrCamera] = useState({ delay: 500, result: "" });
-
   return (
     <AmplifyAuthenticator>
       <Suspense fallback={<div>Loading...</div>}>
@@ -119,34 +116,24 @@ const AppRouter: FC = () => {
           <Header isHidden={false} />
           <Route exact path="/" component={StartScreen} />
           <Route exact path="/onboarding" component={Onboarding} />
-          <Route
-            exact
-            path="/app"
-            component={() => (
-              <Home
-                modalOpen={modalOpen}
-                setModalOpen={setModalOpen}
-                setAlreadyAQRCode={setAlreadyAQRCode}
-                qrCamera={qrCamera}
-                setQrCamera={setQrCamera}
-              />
-            )}
-          />
-          <Route
-            path="/add"
-            component={() => (
-              <AddItem
-                alreadyAQRCode={alreadyAQRCode}
-                qrCamera={qrCamera}
-                setQrCamera={setQrCamera}
-              />
-            )}
-          />
+          <Route exact path="/app" component={() => <Home />} />
+          <Route path="/add" component={() => <AddItem />} />
           <Route path="/haffat" component={Haffat} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/item/:id" component={ItemDetails} />
           <Route path="/about" component={About} />
-          <MenuBar setQrCamera={setQrCamera} qrCamera={qrCamera} />
+          <MenuBar />
+          <ToastContainer
+            position="top-center"
+            autoClose={6000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </AppContainer>
       </Suspense>
     </AmplifyAuthenticator>

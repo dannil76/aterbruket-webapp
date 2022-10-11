@@ -5,20 +5,31 @@ import { useLocation, Link, useHistory } from "react-router-dom";
 import { MdArrowBack, MdClose } from "react-icons/md";
 import { FiShare } from "react-icons/fi";
 import { useReactPWAInstall } from "react-pwa-install";
+import HeaderText from "./HeaderText";
 
 interface MyProps {
   isHidden: boolean;
+  isScrollTop?: boolean;
 }
 
-const HeaderDiv = styled.header`
+const HeaderDiv = styled.header<MyProps>`
   width: ${(props) => `${props.theme.headerTheme.width}vw`};
   flex-direction: ${(props) => props.theme.headerTheme.flexDirection};
   align-items: ${(props) => props.theme.headerTheme.alignItems};
   justify-content: ${(props) => props.theme.headerTheme.justifyContent};
   padding: ${(props) =>
     `${props.theme.headerTheme.padding[0]}px ${props.theme.headerTheme.padding[1]}px ${props.theme.headerTheme.padding[2]}px ${props.theme.headerTheme.padding[3]}px`};
-  background-color: ${(props) => props.theme.headerTheme.backgroundColor};
-  display: ${(props: MyProps) => (props.isHidden ? "none" : "flex")};
+
+  background-color: ${(props) => props.theme.appTheme.primaryColor};
+
+  ${(props) =>
+    props.isScrollTop === false &&
+    `
+    background-color: ${props.theme.headerTheme.backgroundColor};
+    box-shadow: 0px 1px 0px rgba(86, 86, 86, 0.16);
+  `}
+
+  display: ${(props) => (props.isHidden ? "none" : "flex")};
   position: fixed;
   z-index: 10;
   transition: all 0.2s;
@@ -96,7 +107,7 @@ const Header: FC<MyProps> = () => {
     setVisible(
       (prevScrollPos > currentScrollPos &&
         prevScrollPos - currentScrollPos > 300) ||
-        currentScrollPos < 100
+        currentScrollPos < 80
     );
 
     // set state to new scroll position
@@ -136,6 +147,41 @@ const Header: FC<MyProps> = () => {
     history.goBack();
   };
 
+  const getHeaderText = (titleSelector: string) => {
+    let titleText: string;
+    let subtitleText = "";
+
+    switch (titleSelector) {
+      case "app":
+        titleText = "Haffa";
+        subtitleText = "Delning och återbruk i Helsingborgs stad";
+        break;
+      case "profile":
+        titleText = "Kontaktuppgifter";
+        break;
+      case "haffat":
+        titleText = "Haffat!";
+        break;
+      case "add":
+        titleText = "Gör en annons!";
+        break;
+      case "about":
+        titleText = "Om Haffa!";
+        break;
+      default:
+        titleText = "Haffa";
+        break;
+    }
+
+    return (
+      <HeaderText
+        titel={titleText}
+        subTitle={subtitleText}
+        minimizeHeader={visible}
+      />
+    );
+  };
+
   return (
     <>
       {path.includes("item") ? (
@@ -143,6 +189,7 @@ const Header: FC<MyProps> = () => {
       ) : (
         <HeaderDiv
           isHidden={false}
+          isScrollTop={visible}
           style={{
             height: visible ? "auto" : "65px",
             alignItems: visible ? "flex-start" : "center",
@@ -161,9 +208,7 @@ const Header: FC<MyProps> = () => {
             </InstallButton>
           )}
 
-          {
-          subPath === "myadverts" ||
-          subPath === "statics" ? (
+          {subPath === "myadverts" || subPath === "statics" ? (
             <MenuLink to="/profile">
               <MdArrowBack className="icon" />
             </MenuLink>
@@ -177,27 +222,7 @@ const Header: FC<MyProps> = () => {
               <MdClose />
             </button>
           )}
-          <h2
-            style={{
-              transform: visible ? "none" : "scale(0.5)",
-              marginBottom: visible ? "revert" : "12px",
-              width: visible ? "unset" : "max-content",
-            }}
-          >
-            {path === "profile"
-              ? "Kontaktuppgifter"
-              : subPath === "myadverts"
-              ? "Dina grejer som kan Haffas!"
-              : subPath === "statics"
-              ? "Haffa statistik"
-              : path === "haffat"
-              ? "Grejer du Haffat!"
-              : path === "add"
-              ? "Gör en annons!"
-              : path === "about"
-              ? "Om Haffa!"
-              : "Haffa en möbel!"}
-          </h2>
+          {getHeaderText(path)}
         </HeaderDiv>
       )}
     </>

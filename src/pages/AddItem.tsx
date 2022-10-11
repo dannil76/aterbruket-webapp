@@ -1,14 +1,13 @@
-/* eslint-disable no-console */
-import React, { FC, useContext, useEffect, useState, Suspense } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import useForm from "../hooks/useForm";
 import { createAdvert } from "../graphql/mutations";
-import { fieldsForm as fields } from "../utils/formUtils";
+import fields from "../static/formFields";
 import UserContext from "../contexts/UserContext";
+import { administrations } from "../static/advertMeta";
 
-const OpenCamera = React.lazy(() => import("../components/OpenCamera"));
 const Form = React.lazy(() => import("../components/Form"));
 
 const ItemImg = styled.img`
@@ -17,40 +16,25 @@ const ItemImg = styled.img`
   margin: 0;
 `;
 
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
-
-interface Props {
-  alreadyAQRCode: boolean;
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
-}
-
-const AddItem: FC<Props> = ({
-  alreadyAQRCode,
-  qrCamera,
-  setQrCamera,
-}: Props) => {
+const AddItem: FC = () => {
   const { user } = useContext(UserContext);
+  const company = administrations.find(
+    (administration) => user.company === administration.title
+  );
   const {
     values,
     handleInputChange,
     handleSubmit,
     handleCheckboxChange,
+    handleDateRangeChange,
+    handleSetValue,
     redirect,
-    result,
     file,
     fileUploading,
   } = useForm(
     {
       title: "",
+      advertType: "recycle",
       status: "available",
       aterbruketId: "",
       category: "",
@@ -59,7 +43,7 @@ const AddItem: FC<Props> = ({
       width: "",
       length: "",
       color: "",
-      condition: "",
+      condition: undefined,
       areaOfUse: { indoors: false, outside: false },
       material: {
         metal: false,
@@ -68,9 +52,8 @@ const AddItem: FC<Props> = ({
         wood: false,
       },
       description: "",
-      company: user.company ? user.company : "",
+      company: company ? company.key : "",
       department: user.department ? user.department : "",
-      location: user.address ? user.address : "",
       instructions: "",
       contactPerson: user.name ? user.name : "",
       email: user.email ? user.email : "",
@@ -80,6 +63,22 @@ const AddItem: FC<Props> = ({
       version: 0,
       revisions: 0,
       purchasePrice: "",
+      missingItemsInformation: "",
+      pickUpInformation: "",
+      pickUpInstructions: "",
+      returnInformation: "",
+      accessories: [],
+      borrowDifficultyLevel: "",
+      accessRestriction: "none",
+      accessRestrictionSelection: {},
+      advertBorrowCalendar: {
+        allowedDateStart: null,
+        allowedDateEnd: null,
+        calendarEvents: [],
+      },
+      address: user.address ? user.address : "",
+      postalCode: user.postalCode ? user.postalCode : "",
+      city: "Helsingborg",
     },
     createAdvert
   );
@@ -94,33 +93,27 @@ const AddItem: FC<Props> = ({
   if (redirect && !fileUploading) {
     return <Redirect to={`/item/${redirect}`} />;
   }
-  if (qrCamera.result.length > 2) {
-    return <Redirect to={`/item/${qrCamera.result}`} />;
-  }
+
   return (
     <main style={{ marginBottom: "0px" }}>
-      <Suspense fallback={<div>Loading...</div>}>
-        {!fileUploading && file && <ItemImg src={imageURL} />}
+      {!fileUploading && file && <ItemImg src={imageURL} />}
 
-        {!fileUploading && !alreadyAQRCode && (
-          <Form
-            values={values}
-            fields={fields}
-            mutation={createAdvert}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-            handleCheckboxChange={handleCheckboxChange}
-          />
-        )}
+      {!fileUploading && (
+        <Form
+          values={values}
+          fields={fields}
+          mutation={createAdvert}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          handleCheckboxChange={handleCheckboxChange}
+          handleDateRangeChange={handleDateRangeChange}
+          handleSetValue={handleSetValue}
+        />
+      )}
 
-        {!fileUploading && alreadyAQRCode && (
-          <OpenCamera qrCamera={qrCamera} setQrCamera={setQrCamera} />
-        )}
-
-        {fileUploading && (
-          <Loader type="ThreeDots" color="#9db0c6" height={200} width={200} />
-        )}
-      </Suspense>
+      {fileUploading && (
+        <Loader type="ThreeDots" color="#9db0c6" height={200} width={200} />
+      )}
     </main>
   );
 };

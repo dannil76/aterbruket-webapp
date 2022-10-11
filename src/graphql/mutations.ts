@@ -11,7 +11,6 @@ export const createAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -48,6 +47,45 @@ export const createAdvert = /* GraphQL */ `
       purchasePrice
       company
       aterbruketId
+      advertType
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
+      pickUpInstructions
+      accessories
+      borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+          returnDateTime
+        }
+      }
+      accessRestriction
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
+      address
+      city
+      postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -62,7 +100,6 @@ export const updateAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -99,6 +136,45 @@ export const updateAdvert = /* GraphQL */ `
       purchasePrice
       company
       aterbruketId
+      advertType
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
+      pickUpInstructions
+      accessories
+      borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+          returnDateTime
+        }
+      }
+      accessRestriction
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
+      address
+      city
+      postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }
@@ -113,7 +189,6 @@ export const deleteAdvert = /* GraphQL */ `
       id
       title
       description
-      location
       height
       width
       length
@@ -150,6 +225,45 @@ export const deleteAdvert = /* GraphQL */ `
       purchasePrice
       company
       aterbruketId
+      advertType
+      missingItemsInformation
+      pickUpInformation
+      returnInformation
+      pickUpInstructions
+      accessories
+      borrowDifficultyLevel
+      advertBorrowCalendar {
+        allowedDateStart
+        allowedDateEnd
+        calendarEvents {
+          borrowedBySub
+          status
+          dateStart
+          dateEnd
+          returnDateTime
+        }
+      }
+      accessRestriction
+      accessRestrictionSelection {
+        arbetsmarknadsforvaltningen
+        fastighetsforvaltningen
+        kulturforvaltningen
+        miljoforvaltningen
+        skolOchFritidsforvaltningen
+        socialforvaltningen
+        stadsbyggnadsforvaltningen
+        stadsledningsforvaltningen
+        vardOchOmsorgsforvaltningen
+      }
+      address
+      city
+      postalCode
+      missingAccessories {
+        reportedBy
+        reportedDate
+        accessories
+        lastReturnedBy
+      }
       createdAt
       updatedAt
     }

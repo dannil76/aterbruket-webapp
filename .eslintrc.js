@@ -29,6 +29,9 @@ module.exports = {
     project: "./tsconfig.json",
   },
   rules: {
+    "import/prefer-default-export": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/no-array-index-key": "off",
     "react/prop-types": 0,
     "linebreak-style": "off",
     "prettier/prettier": [

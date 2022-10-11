@@ -5,13 +5,14 @@ import { MdHome, MdCloud, MdPerson, MdHelp } from "react-icons/md";
 
 const MenuDiv = styled.div`
   width: 100vw;
-  height: 8vh;
+  height: 80px;
   background-color: ${(props) => props.theme.colors.offWhite};
   position: fixed;
   bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.06);
 
   .link {
     display: flex;
@@ -31,22 +32,8 @@ const MenuDiv = styled.div`
     }
   }
 `;
-interface IQrCamera {
-  delay: number;
-  result: string;
-}
 
-type Props = {
-  qrCamera: IQrCamera;
-  setQrCamera: React.Dispatch<
-    React.SetStateAction<{
-      delay: number;
-      result: string;
-    }>
-  >;
-};
-
-const MenuBar: FC<Props> = ({ setQrCamera, qrCamera }: Props) => {
+const MenuBar: FC = () => {
   return (
     <MenuDiv>
       <NavLink
@@ -54,9 +41,7 @@ const MenuBar: FC<Props> = ({ setQrCamera, qrCamera }: Props) => {
         activeStyle={{
           color: "#80B14A",
         }}
-        to="/app"
-        onClick={() => setQrCamera({ ...qrCamera, result: "" })}
-      >
+        to="/app">
         <MdHome className="icon" />
         Hem
       </NavLink>

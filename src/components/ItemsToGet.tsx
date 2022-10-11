@@ -2,15 +2,26 @@ import API, { GraphQLResult } from "@aws-amplify/api";
 import { graphqlOperation } from "aws-amplify";
 import React, {
   FC,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
   useState,
-  Suspense,
 } from "react";
 import { ListAdvertsQuery } from "../API";
 import UserContext from "../contexts/UserContext";
 import { listAdverts } from "../graphql/queries";
+import { ICalendarDataEvent } from "../interfaces/IDateRange";
+import { IAdvert } from "../interfaces/IAdvert";
+
+interface IListAdvertsFilter {
+  not?: { status: { eq: string } };
+  and: (
+    | { reservedBySub: { eq: string | undefined } }
+    | { version: { eq: number } }
+    | { advertType: { eq: string } }
+  )[];
+}
 
 const AdvertContainer = React.lazy(() => import("./AdvertContainer"));
 const Pagination = React.lazy(() => import("./Pagination"));
@@ -40,59 +51,125 @@ const ItemsToGet: FC = () => {
     }
   };
 
-  const fetchReservedAdverts = useCallback(async () => {
-    const result = (await API.graphql(
+  const fetchListAdverts = async (
+    listAdvertsFilter: IListAdvertsFilter
+  ): Promise<GraphQLResult<ListAdvertsQuery>> => {
+    return (await API.graphql(
       graphqlOperation(listAdverts, {
-        filter: {
-          and: [{ reservedBySub: { eq: user.sub } }, { version: { eq: 0 } }],
-          not: { status: { eq: "available" } },
-        },
+        filter: listAdvertsFilter,
       })
     )) as GraphQLResult<ListAdvertsQuery>;
-    const advertItem: any = result.data?.listAdverts?.items;
-    if (advertItem.length > 0) {
-      setPaginationOption({
-        ...paginationOption,
-        totalPages: Math.ceil(
-          advertItem.length / paginationOption.amountToShow
-        ),
-        itemLength: advertItem.length,
-      });
-      setRenderItems(advertItem.slice(0, paginationOption.amountToShow));
+  };
+
+  const storeFetchResult = (itemsToStore: [IAdvert]) => {
+    setReservedItems((currentReservedItems: [IAdvert]) => [
+      ...currentReservedItems,
+      ...itemsToStore,
+    ]);
+  };
+
+  const filterBorrowedItems = (
+    advertBorrowedItems: any,
+    filterUserSub: undefined | string,
+    statusFilter: string[]
+  ) => {
+    if (typeof filterUserSub === "undefined") {
+      return [];
     }
-    setReservedItems(advertItem);
+
+    return advertBorrowedItems.filter((borrowedItem: IAdvert) => {
+      const foundElem = borrowedItem?.advertBorrowCalendar?.calendarEvents.find(
+        (event: ICalendarDataEvent) => {
+          return (
+            event.borrowedBySub === filterUserSub &&
+            statusFilter.includes(event.status)
+          );
+        }
+      );
+
+      return foundElem && borrowedItem;
+    });
+  };
+
+  const fetchAllReservations = useCallback(async () => {
+    const borrowedAdsFilter = {
+      and: [{ advertType: { eq: "borrow" } }, { version: { eq: 0 } }],
+    };
+    const reservedAdsFilter = {
+      and: [{ reservedBySub: { eq: user.sub } }, { version: { eq: 0 } }],
+      not: { status: { eq: "available" } },
+    };
+
+    const borrowedAds = await fetchListAdverts(borrowedAdsFilter);
+    const borrowedAdsItems: any = borrowedAds.data?.listAdverts?.items;
+    const foundResult = filterBorrowedItems(borrowedAdsItems, user.sub, [
+      "reserved",
+      "pickedUp",
+    ]);
+    storeFetchResult(foundResult);
+
+    const reservedAds = await fetchListAdverts(reservedAdsFilter);
+    const reservedAdsItems: any = reservedAds.data?.listAdverts?.items;
+    storeFetchResult(reservedAdsItems);
   }, [user.sub]);
 
   useEffect(() => {
     if (user.sub) {
-      fetchReservedAdverts();
+      fetchAllReservations();
     }
-  }, [fetchReservedAdverts, user]);
+  }, [user.sub]);
 
-  const haffatItems = renderItems.filter((renderItem: any) => {
-    return renderItem.status === "reserved";
-  });
+  useEffect(() => {
+    const totalReservedItems = reservedItems.length;
+    setPaginationOption({
+      ...paginationOption,
+      totalPages: Math.ceil(totalReservedItems / paginationOption.amountToShow),
+      itemLength: totalReservedItems,
+    });
 
-  const pickedUpItems = renderItems.filter((renderItem: any) => {
-    return renderItem.status === "pickedUp";
-  });
+    setRenderItems(reservedItems.slice(0, paginationOption.amountToShow));
+  }, [reservedItems]);
+
+  const listReservedItems = () => {
+    const haffaItems = renderItems.filter((renderItem: IAdvert) => {
+      return renderItem.status === "reserved";
+    });
+
+    const borrowItems = filterBorrowedItems(renderItems, user.sub, [
+      "reserved",
+    ]);
+
+    return [...haffaItems, ...borrowItems];
+  };
+
+  const listPickedUpItems = () => {
+    const haffaItems = renderItems.filter((renderItem: IAdvert) => {
+      return renderItem.status === "pickedUp";
+    });
+
+    const borrowItems = filterBorrowedItems(renderItems, user.sub, [
+      "pickedUp",
+    ]);
+
+    return [...haffaItems, ...borrowItems];
+  };
 
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
         <AdvertContainer
-          filteredSweValues={[]}
+          activeFilterOptions={[]}
           searchValue={false}
-          items={haffatItems}
+          items={listReservedItems()}
           itemsFrom="haffat"
           activeSorting={{ first: "", second: "", sortTitle: "", secText: "" }}
-          fetchReservedAdverts={fetchReservedAdverts}
+          fetchReservedAdverts={fetchAllReservations}
         />
 
         <AdvertContainer
-          filteredSweValues={[]}
+          activeFilterOptions={[]}
           searchValue={false}
-          items={pickedUpItems}
+          items={listPickedUpItems()}
           itemsFrom="pickedUp"
           activeSorting={{ first: "", second: "", sortTitle: "", secText: "" }}
         />

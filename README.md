@@ -21,7 +21,7 @@ Service for recycling office furniture.
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Run app](#run-app)
-- [Deploy](#deploy)
+  - [Deploy](#deploy)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -44,43 +44,21 @@ To get a local copy up and running follow these simple steps.
 ```
 npm install -g @aws-amplify/cli
 ```
-* AWS account
-
-Follow our [documentation](https://github.com/helsingborg-stad/dev-guide) to setup an AWS account and configure AWS vault.
 
 
 ### Installation
 
-1. Create a new directory
-```
-mkdir <folder-name>
-```
-2. Navigate to directory
-```
-cd <folder-name>
-```
-3. Set session token with your AWS profile
-```
-aws-vault exec <aws-profile>
-```
-4. Initialize Amplify project
-```
-amplify init --app https://github.com/helsingborg-stad/aterbruket-webapp.git
-```
-5. Pull existing backend
-```
-amplify pull --appId <app-id>
-```
-6. Install dependencies
-```
-npm install
-```
+1. Clone repo
+2. Install dependencies `$ npm install`
+3. Initialize Amplify project `$ amplify init`
 
 ### Run app
 
 ```
 npm run start
 ```
+### Deploy
+Push to __develop__ or __prod__ branches to automatically trigger a new build.
 
 ## Contributing
 

@@ -42,7 +42,8 @@ interface DefaultTheme {
     primaryDark: string;
     opacityPrimaryLight: string;
     secondaryDark: string;
-    lightGray: string;
+    grayLight: string;
+    grayLighter: string;
     offWhite: string;
     white: string;
     darkest: string;
@@ -98,7 +99,8 @@ const theme: DefaultTheme = {
     primaryDark: "#205400",
     opacityPrimaryLight: "#7fb04a1a", // This color dos not exist in figma
     secondaryDark: "#6F9725",
-    lightGray: "#f5f5f5",
+    grayLighter: "#f5f5f5",
+    grayLight: "#EEEEEE",
     offWhite: "#F8F8F8",
     white: "#ffffff",
     dark: "#707070",

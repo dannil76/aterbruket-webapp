@@ -6,7 +6,7 @@ import { API } from "aws-amplify";
 import styled from "styled-components";
 import { listAdverts } from "../graphql/queries";
 import { ListAdvertsQuery } from "../API";
-import { fieldsForm } from "../utils/formUtils";
+import { getAllCategories } from "../utils/handleCategories";
 import UserContext from "../contexts/UserContext";
 import CardStatics from "./CardStatics";
 import filterStatus from "../hooks/filterStatus";
@@ -32,7 +32,7 @@ const SelectWrapper = styled.div`
     height: 50px;
     padding: 12px 12px 12px 24px;
     color: ${(props) => props.theme.colors.darker};
-    background-color: ${(props) => props.theme.colors.lightGray};
+    background-color: ${(props) => props.theme.colors.grayLighter};
     ::placeholder {
       font-style: italic;
     }
@@ -74,7 +74,7 @@ const GroupDiv = styled.div`
   .group {
     display: flex;
     flex-direction: row;
-    
+
   }
 
   .amount {
@@ -87,24 +87,24 @@ const GroupDiv = styled.div`
   .iconContainer {
     display: flex;
     flex-direction: column;
-    
+
     color: ${(props) => props.theme.colors.secondaryDark};
   }
 `;
 
 const Statics: FC = () => {
   const ATERBRUKETADRESS = "Larmvägen 33";
-  const [allItems, setAllItems] = useState() as any;
+  const [allItems, setAllItems] = useState([]) as any;
   const [allItemsOverTime, setAllItemsOverTime] = useState() as any;
   const [statusGroupOverTime, setStatusGroupOverTime] = useState([]) as any;
   const [statusGroup, setStatusGroup] = useState([]) as any;
-  const [Categorys, setCategorys] = useState() as any;
   const { user } = useContext(UserContext);
   const [selectDepartment, setSelectDepartment] = useState([
     { title: "Alla förvaltningar", filterOn: "all" },
     { title: "Återbruket", filterOn: ATERBRUKETADRESS },
   ]);
   const [selected, setSelected] = useState("all");
+  const categories = getAllCategories();
 
   const fetchItems = async () => {
     const result = (await API.graphql(
@@ -112,7 +112,7 @@ const Statics: FC = () => {
     )) as GraphQLResult<ListAdvertsQuery>;
     const advertItems = result.data?.listAdverts?.items;
     setAllItems(advertItems);
-    const res = filterStatus(advertItems, Categorys);
+    const res = filterStatus(advertItems, categories);
     setStatusGroup(res);
   };
 
@@ -121,7 +121,7 @@ const Statics: FC = () => {
       graphqlOperation(listAdverts)
     )) as GraphQLResult<ListAdvertsQuery>;
     const advertItems = result.data?.listAdverts?.items;
-    const res = filterStatus(advertItems, Categorys);
+    const res = filterStatus(advertItems, categories);
     setAllItemsOverTime(advertItems);
 
     setStatusGroupOverTime(res);
@@ -130,18 +130,6 @@ const Statics: FC = () => {
   useEffect(() => {
     fetchItemsOverTime();
     fetchItems();
-    const found = fieldsForm.find((element) => {
-      return element.name === "category";
-    });
-
-    // eslint-disable-next-line prefer-const
-    let saveAllCategorys = {} as any;
-
-    if (found && found.eng) {
-      found.eng.map((cat: string) => {
-        saveAllCategorys[cat] = 0;
-      });
-    }
 
     if (user.sub) {
       setSelectDepartment([
@@ -149,9 +137,6 @@ const Statics: FC = () => {
         { title: "Min statistik", filterOn: user.sub },
       ]);
     }
-    setCategorys(saveAllCategorys);
-
-    return () => {};
   }, []);
 
   const filterItems = (filterOn: string) => {
@@ -160,7 +145,7 @@ const Statics: FC = () => {
       filteredItems = allItems;
     } else if (filterOn === ATERBRUKETADRESS) {
       filteredItems = allItems.filter((item: any) => {
-        return item.location.includes(filterOn);
+        return item.address.includes(filterOn);
       });
     } else {
       filteredItems = allItems.filter((item: any) => {
@@ -168,7 +153,7 @@ const Statics: FC = () => {
       });
     }
 
-    const res = filterStatus(filteredItems, Categorys);
+    const res = filterStatus(filteredItems, categories);
     setStatusGroup(res);
   };
 
@@ -178,7 +163,7 @@ const Statics: FC = () => {
       filteredItems = allItems;
     } else if (filterOn === ATERBRUKETADRESS) {
       filteredItems = allItemsOverTime.filter((item: any) => {
-        return item.location.includes(filterOn);
+        return item.address.includes(filterOn);
       });
     } else {
       filteredItems = allItemsOverTime.filter((item: any) => {
@@ -186,7 +171,7 @@ const Statics: FC = () => {
       });
     }
 
-    const res = filterStatus(filteredItems, Categorys);
+    const res = filterStatus(filteredItems, categories);
     setStatusGroupOverTime(res);
   };
 

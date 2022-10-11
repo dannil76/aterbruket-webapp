@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import Carousel from "styled-components-carousel";
+import { Modal } from "../components/Modal";
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -44,14 +45,7 @@ type Props = {
 const CarouselComp: FC<Props> = ({ setShowCarousel, image }: Props) => {
   return (
     <CarouselWrapper>
-      <button
-        className="closeBtn"
-        type="button"
-        onClick={() => setShowCarousel(false)}
-      >
-        X
-      </button>
-
+      <Modal.CloseButton onClick={() => setShowCarousel(false)} />
       <Carousel
         center
         infinite={false}
