@@ -65,7 +65,9 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "format": "prettier --write src/**/*.ts{,x}",
-        "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
+        "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
+        "amplify:emailnotification": "npx tsc --version && cd amplify/backend/function/emailnotification/src && tsc",
+        "debug:emailnotification": "NODE_OPTIONS='' npx amplify mock function emailnotification"
     },
     "eslintConfig": {
         "extends": "react-app"
