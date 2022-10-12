@@ -13,7 +13,8 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react"
+        "jsx": "react",
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "build", "node_modules/@types/react-router/index.d.ts"],
 }

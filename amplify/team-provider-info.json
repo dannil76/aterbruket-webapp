@@ -19,11 +19,12 @@
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+          "s3Key": "amplify-builds/migrateADUser-46735166452b72432b30-build.zip",
+          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD"
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-714b4e4b356c46555a36-build.zip",
+          "s3Key": "amplify-builds/emailnotification-4332504b594b42304130-build.zip",
           "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",

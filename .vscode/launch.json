@@ -13,6 +13,16 @@
                 "NODE_ENV": "development"
             },
             "nodeVersionHint": 14
+        },
+        {
+            "command": "npm run debug:migrateADUser",
+            "name": "debug migrateADUser",
+            "request": "launch",
+            "type": "node-terminal",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "nodeVersionHint": 14
         }
     ]
 }
