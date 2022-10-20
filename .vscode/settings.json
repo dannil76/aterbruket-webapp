@@ -8,5 +8,10 @@
     "amplify/backend/amplify-meta.json": true,
     "amplify/backend/awscloudformation": true,
     "amplify/backend/function/**/*.js": true
-  }
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["typescript"],
+  "editor.tabSize": 4
 }

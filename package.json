@@ -72,6 +72,7 @@
         ]
     },
     "devDependencies": {
+        "@aws-sdk/types": "^3.190.0",
         "@types/body-scroll-lock": "^3.1.0",
         "@types/file-saver": "^2.0.1",
         "@types/googlemaps": "^3.40.1",

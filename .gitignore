@@ -68,4 +68,5 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 
+# Some bug where auth isn't rebuilding in pipeline. This causes amplify build pipeline to fail.. TODO to fix
 !amplify/backend/auth/aterbruketwebapp75287c9a/build

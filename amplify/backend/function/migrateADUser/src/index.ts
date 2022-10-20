@@ -23,9 +23,11 @@ exports.handler = async function MigrateUser(event: Event): Promise<Event> {
         `User ${event.userName} does not exist in User Pool. Attempt migration.`,
     );
 
+    const newUser = userName.toLowerCase();
+
     try {
-        const userInfo = await getHelsingborgUser(userName, password);
-        await createCognitoUser(userName, password, userInfo);
+        const userInfo = await getHelsingborgUser(newUser, password);
+        await createCognitoUser(newUser, password, userInfo);
 
         event.response.messageAction = 'SUPPRESS';
         event.response.finalUserStatus = 'CONFIRMED';

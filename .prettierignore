@@ -1,6 +1,7 @@
 .ts
 /build
 /dist
-/node_modules
+node_modules
 team-provider-info.json
 *cloudformation-template.json
+*.d.ts
