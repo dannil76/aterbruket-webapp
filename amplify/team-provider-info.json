@@ -26,13 +26,49 @@
                 "emailnotification": {
                     "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
                     "s3Key": "amplify-builds/emailnotification-4332504b594b42304130-build.zip",
-                    "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
+                    "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com/",
                     "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
-                    "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",
-                    "sesSenderEmail": "hbgworkshbg@gmail.com",
-                    "sesBorrowRecipientEmail": "hbgworkshbg@gmail.com"
+                    "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
+                    "sesSenderEmail": "aterbruket.amf@helsingborg.se",
+                    "sesBorrowRecipientEmail": "aterbruket.amf@helsingborg.se"
                 }
             }
         }
-    }
+    },
+    "prod": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-aterbruketwebapp-prod-143009-authRole",
+            "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+            "UnauthRoleName": "amplify-aterbruketwebapp-prod-143009-unauthRole",
+            "StackName": "amplify-aterbruketwebapp-prod-143009",
+            "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-prod-143009/70732660-6d62-11ec-a537-06f5bfefc589",
+            "AmplifyAppId": "d21bj89y0jdxx1"
+        },
+        "categories": {
+            "function": {
+                "migrateADUser": {
+                    "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+                    "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip",
+                    "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
+                    "cognitoUserPoolClientId": "15rojv7pkqvagkakpm70ku7dlh"
+                },
+                "emailnotification": {
+                    "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+                    "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
+                    "sesSenderEmail": "aterbruket.amf@helsingborg.se",
+                    "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
+                    "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com",
+                    "cognitoUserPoolId": "eu-west-1_ukriyEPzq",
+                    "sesBorrowRecipientEmail": "aterbruket.amf@helsingborg.se"
+                }
+            },
+            "auth": {
+                "aterbruketwebapp75287c9a": {},
+                "userPoolGroups": {}
+            }
+        }
+    },
 }
