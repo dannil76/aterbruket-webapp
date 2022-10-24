@@ -23,12 +23,6 @@
         },
         "s3Key": {
             "Type": "String"
-        },
-        "cognitoUserPoolId": {
-            "Type": "String"
-        },
-        "cognitoUserPoolClientId": {
-            "Type": "String"
         }
     },
     "Conditions": {
@@ -75,12 +69,6 @@
                         },
                         "REGION": {
                             "Ref": "AWS::Region"
-                        },
-                        "COGNITO_USER_POOL_ID": {
-                            "Ref": "cognitoUserPoolId"
-                        },
-                        "COGNITO_USER_POOL_CLIENT_ID": {
-                            "Ref": "cognitoUserPoolClientId"
                         }
                     }
                 },

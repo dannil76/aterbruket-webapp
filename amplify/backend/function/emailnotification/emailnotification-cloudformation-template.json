@@ -1,302 +1,272 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.5\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
-  "Parameters": {
-    "CloudWatchRule": {
-      "Type": "String",
-      "Default": "NONE",
-      "Description": " Schedule Expression"
-    },
-    "deploymentBucketName": {
-      "Type": "String"
-    },
-    "env": {
-      "Type": "String"
-    },
-    "s3Key": {
-      "Type": "String"
-    },
-    "apiaterbruketwebappGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apiaterbruketwebappGraphQLAPIIdOutput"
-    },
-    "apiaterbruketwebappGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apiaterbruketwebappGraphQLAPIEndpointOutput"
-    },
-    "sesSenderEmail": {
-      "Type": "String"
-    },
-    "sesAppUrl": {
-      "Type": "String"
-    },
-    "cognitoUserPoolId": {
-      "Type": "String"
-    },
-    "sesRecycleRecipientEmail": {
-      "Type": "String"
-    },
-    "sesBorrowRecipientEmail": {
-      "Type": "String"
-    }
-  },
-  "Conditions": {
-    "ShouldNotCreateEnvResources": {
-      "Fn::Equals": [
-        {
-          "Ref": "env"
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.5\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+    "Parameters": {
+        "CloudWatchRule": {
+            "Type": "String",
+            "Default": "NONE",
+            "Description": " Schedule Expression"
         },
-        "NONE"
-      ]
-    }
-  },
-  "Resources": {
-    "LambdaFunction": {
-      "Type": "AWS::Lambda::Function",
-      "Metadata": {
-        "aws:asset:path": "./src",
-        "aws:asset:property": "Code"
-      },
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+        "deploymentBucketName": {
+            "Type": "String"
         },
-        "Handler": "index.handler",
-        "FunctionName": {
-          "Fn::If": [
-            "ShouldNotCreateEnvResources",
-            "emailnotification",
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "emailnotification",
-                  "-",
-                  {
-                    "Ref": "env"
-                  }
-                ]
-              ]
-            }
-          ]
+        "env": {
+            "Type": "String"
         },
-        "Environment": {
-          "Variables": {
-            "ENV": {
-              "Ref": "env"
-            },
-            "REGION": {
-              "Ref": "AWS::Region"
-            },
-            "SES_SENDER_EMAIL": {
-              "Ref": "sesSenderEmail"
-            },
-            "SES_APP_URL": {
-              "Ref": "sesAppUrl"
-            },
-            "COGNITO_USER_POOL_ID": {
-              "Ref": "cognitoUserPoolId"
-            },
-            "SES_RECYCLE_RECIPIENT_EMAIL": {
-              "Ref": "sesRecycleRecipientEmail"
-            },
-            "SES_BORROW_RECIPIENT_EMAIL": {
-              "Ref": "sesBorrowRecipientEmail"
-            }
-          }
+        "s3Key": {
+            "Type": "String"
         },
-        "Role": {
-          "Fn::GetAtt": [
-            "LambdaExecutionRole",
-            "Arn"
-          ]
+        "apiaterbruketwebappGraphQLAPIIdOutput": {
+            "Type": "String",
+            "Default": "apiaterbruketwebappGraphQLAPIIdOutput"
         },
-        "Runtime": "nodejs14.x",
-        "Layers": [],
-        "Timeout": 25
-      }
-    },
-    "LambdaExecutionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "RoleName": {
-          "Fn::If": [
-            "ShouldNotCreateEnvResources",
-            "aterbruketwebappLambdaRoleb724549b",
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "aterbruketwebappLambdaRoleb724549b",
-                  "-",
-                  {
-                    "Ref": "env"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
+        "apiaterbruketwebappGraphQLAPIEndpointOutput": {
+            "Type": "String",
+            "Default": "apiaterbruketwebappGraphQLAPIEndpointOutput"
         }
-      }
     },
-    "lambdaexecutionpolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Resource": {
-                "Fn::Sub": [
-                  "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
-                  {
-                    "region": {
-                      "Ref": "AWS::Region"
+    "Conditions": {
+        "ShouldNotCreateEnvResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "env"
+                },
+                "NONE"
+            ]
+        }
+    },
+    "Resources": {
+        "LambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Metadata": {
+                "aws:asset:path": "./src",
+                "aws:asset:property": "Code"
+            },
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "deploymentBucketName"
                     },
-                    "account": {
-                      "Ref": "AWS::AccountId"
-                    },
-                    "lambda": {
-                      "Ref": "LambdaFunction"
+                    "S3Key": {
+                        "Ref": "s3Key"
                     }
-                  }
-                ]
-              }
-            },
-            {
-              "Action": [
-                "ses:SendEmail"
-              ],
-              "Effect": "Allow",
-              "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/ideutvecklingochinnovation@gmail.com"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "cognito-idp:ListUsers"
-              ],
-              "Resource": "*"
+                },
+                "Handler": "index.handler",
+                "FunctionName": {
+                    "Fn::If": [
+                        "ShouldNotCreateEnvResources",
+                        "emailnotification",
+                        {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    "emailnotification",
+                                    "-",
+                                    {
+                                        "Ref": "env"
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                },
+                "Environment": {
+                    "Variables": {
+                        "ENV": {
+                            "Ref": "env"
+                        },
+                        "REGION": {
+                            "Ref": "AWS::Region"
+                        }
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaExecutionRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "nodejs14.x",
+                "Layers": [],
+                "Timeout": 25
             }
-          ]
-        }
-      }
-    },
-    "LambdaTriggerPolicyAdvert": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy-Advert",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:ListStreams"
-              ],
-              "Resource": {
-                "Fn::ImportValue": {
-                  "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
+        },
+        "LambdaExecutionRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": {
+                    "Fn::If": [
+                        "ShouldNotCreateEnvResources",
+                        "aterbruketwebappLambdaRoleb724549b",
+                        {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    "aterbruketwebappLambdaRoleb724549b",
+                                    "-",
+                                    {
+                                        "Ref": "env"
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
                 }
-              }
             }
-          ]
+        },
+        "lambdaexecutionpolicy": {
+            "DependsOn": [
+                "LambdaExecutionRole"
+            ],
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "lambda-execution-policy",
+                "Roles": [
+                    {
+                        "Ref": "LambdaExecutionRole"
+                    }
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Resource": {
+                                "Fn::Sub": [
+                                    "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+                                    {
+                                        "region": {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        "account": {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        "lambda": {
+                                            "Ref": "LambdaFunction"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "Action": [
+                                "ses:SendEmail"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/ideutvecklingochinnovation@gmail.com"
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "cognito-idp:ListUsers"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                }
+            }
+        },
+        "LambdaTriggerPolicyAdvert": {
+            "DependsOn": [
+                "LambdaExecutionRole"
+            ],
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "amplify-lambda-execution-policy-Advert",
+                "Roles": [
+                    {
+                        "Ref": "LambdaExecutionRole"
+                    }
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:DescribeStream",
+                                "dynamodb:GetRecords",
+                                "dynamodb:GetShardIterator",
+                                "dynamodb:ListStreams"
+                            ],
+                            "Resource": {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "LambdaEventSourceMappingAdvert": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [
+                "LambdaTriggerPolicyAdvert",
+                "LambdaExecutionRole"
+            ],
+            "Properties": {
+                "BatchSize": 100,
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::ImportValue": {
+                        "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
+                    }
+                },
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction",
+                        "Arn"
+                    ]
+                },
+                "StartingPosition": "LATEST"
+            }
         }
-      }
     },
-    "LambdaEventSourceMappingAdvert": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "DependsOn": [
-        "LambdaTriggerPolicyAdvert",
-        "LambdaExecutionRole"
-      ],
-      "Properties": {
-        "BatchSize": 100,
-        "Enabled": true,
-        "EventSourceArn": {
-          "Fn::ImportValue": {
-            "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
-          }
+    "Outputs": {
+        "Name": {
+            "Value": {
+                "Ref": "LambdaFunction"
+            }
         },
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "LambdaFunction",
-            "Arn"
-          ]
+        "Arn": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "LambdaFunction",
+                    "Arn"
+                ]
+            }
         },
-        "StartingPosition": "LATEST"
-      }
+        "Region": {
+            "Value": {
+                "Ref": "AWS::Region"
+            }
+        },
+        "LambdaExecutionRole": {
+            "Value": {
+                "Ref": "LambdaExecutionRole"
+            }
+        }
     }
-  },
-  "Outputs": {
-    "Name": {
-      "Value": {
-        "Ref": "LambdaFunction"
-      }
-    },
-    "Arn": {
-      "Value": {
-        "Fn::GetAtt": [
-          "LambdaFunction",
-          "Arn"
-        ]
-      }
-    },
-    "Region": {
-      "Value": {
-        "Ref": "AWS::Region"
-      }
-    },
-    "LambdaExecutionRole": {
-      "Value": {
-        "Ref": "LambdaExecutionRole"
-      }
-    }
-  }
 }
