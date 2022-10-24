@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# Amplify functions javascript files
+amplify/backend/function/**/*.js
+
 # production
 /build
 
@@ -44,18 +47,26 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#amplify
+#amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
+amplify/logs
 amplify/mock-data
 amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
+amplify/backend/.temp
 build/
 dist/
 node_modules/
 aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
+amplifyconfiguration.dart
 amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
+.secret-*
+**.sample
+#amplify-do-not-edit-end
+
+# Some bug where auth isn't rebuilding in pipeline. This causes amplify build pipeline to fail.. TODO to fix
+!amplify/backend/auth/aterbruketwebapp75287c9a/build

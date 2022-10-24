@@ -1,5 +1,12 @@
-module.exports = (args) => {
-    const { title, contactPerson, missingAccessories, reportedByUser, lastReturnedByUser } = args;
+import { HaffaUser } from '../models/haffaUser';
+
+export default function getMissingAccessoriesBody(
+    title: string,
+    contactPerson: string,
+    missingAccessories: string,
+    reportedByUser: HaffaUser,
+    lastReturnedByUser: HaffaUser,
+): string {
     return `
   <html>
   <body>
@@ -18,4 +25,4 @@ module.exports = (args) => {
   </body>
   </html>
   `;
-};
+}

@@ -1,5 +1,16 @@
 {
-  "key1": "value1",
-  "key2": "value2",
-  "key3": "value3"
+    "userName": "atla1000@helsingborg.se",
+    "triggerSource": "UserMigration_Authentication",
+    "request": {
+        "password": "xxxx",
+        "validationData": {},
+        "clientMetadata": {}
+    },
+    "response": {
+        "userAttributes": {},
+        "finalUserStatus": "",
+        "messageAction": "",
+        "desiredDeliveryMediums": [],
+        "forceAliasCreation": false
+    }
 }

@@ -1,162 +1,38 @@
 {
-  "ehszilbox": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-ehszilbox-151015-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-ehszilbox-151015-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-ehszilbox-151015-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-ehszilbox-151015-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-ehszilbox-151015-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-ehszilbox-151015",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-ehszilbox-151015/8ece8930-619e-11ec-b9a9-0251bf2fe58f",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-ehszilbox-151015-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
+    "release": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-aterbruketwebapp-release-103017-authRole",
+            "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+            "UnauthRoleName": "amplify-aterbruketwebapp-release-103017-unauthRole",
+            "StackName": "amplify-aterbruketwebapp-release-103017",
+            "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-release-103017/6c465920-7453-11ec-82a5-0aaa2eb05b4d",
+            "AmplifyAppId": "d21bj89y0jdxx1"
         },
-        "emailnotification": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-ehszilbox-151015-deployment",
-          "s3Key": "amplify-builds/emailnotification-4761327865377a4c6847-build.zip",
-          "sesSenderEmail": "foob@bar.com",
-          "sesRecipientEmail": "foob@bar.com",
-          "sesAppUrl": "http://localhost:3000",
-          "cognitoUserPoolId": "eu-west-1_fo0b4r"
+        "categories": {
+            "auth": {
+                "aterbruketwebapp75287c9a": {},
+                "userPoolGroups": {}
+            },
+            "function": {
+                "migrateADUser": {
+                    "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+                    "s3Key": "amplify-builds/migrateADUser-4465563776334e576169-build.zip",
+                    "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
+                    "cognitoUserPoolClientId": "15rojv7pkqvagkakpm70ku7dlh"
+                },
+                "emailnotification": {
+                    "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+                    "s3Key": "amplify-builds/emailnotification-4332504b594b42304130-build.zip",
+                    "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com/",
+                    "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
+                    "sesRecycleRecipientEmail": "hbgworkshbg@gmail.com",
+                    "sesSenderEmail": "hbgworkshbg@gmail.com",
+                    "sesBorrowRecipientEmail": "hbgworkshbg@gmail.com"
+                }
+            }
         }
-      },
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      }
     }
-  },
-  "dev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-dev-224145-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-dev-224145-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-dev-224145-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-dev-224145-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-dev-224145-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-dev-224145",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-dev-224145/30a23310-074b-11eb-bbf3-0ae0d664c880",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      },
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-dev-224145-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        }
-      }
-    }
-  },
-  "jhbox": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-jhbox-135848-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-jhbox-135848-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-jhbox-135848-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-jhbox-135848-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-jhbox-135848",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-jhbox-135848/e4db7530-6c94-11ec-8586-021d904836c3",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        },
-        "emailnotification": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-jhbox-135848-deployment",
-          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
-          "sesSenderEmail": "foob@bar.com",
-          "sesAppUrl": "http://localhost:3000",
-          "cognitoUserPoolId": "eu-west-1_fo0b4r",
-          "sesRecycleRecipientEmail": "foo@bar.se",
-          "sesBorrowRecipientEmail": "bor@row.se"
-        }
-      },
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      }
-    }
-  },
-  "prod": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-prod-143009-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-prod-143009-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-prod-143009-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-prod-143009",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-prod-143009/70732660-6d62-11ec-a537-06f5bfefc589",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        },
-        "emailnotification": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
-          "sesSenderEmail": "foob@bar.com",
-          "sesRecycleRecipientEmail": "foob@bar.com",
-          "sesAppUrl": "https://prod.d21bj89y0jdxx1.amplifyapp.com",
-          "cognitoUserPoolId": "eu-west-1_ukriyEPzq",
-          "sesBorrowRecipientEmail": "foob@bar.com"
-        }
-      },
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      }
-    }
-  },
-  "release": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-aterbruketwebapp-release-103017-authRole",
-      "UnauthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::165945531802:role/amplify-aterbruketwebapp-release-103017-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-      "UnauthRoleName": "amplify-aterbruketwebapp-release-103017-unauthRole",
-      "StackName": "amplify-aterbruketwebapp-release-103017",
-      "StackId": "arn:aws:cloudformation:eu-west-1:165945531802:stack/amplify-aterbruketwebapp-release-103017/6c465920-7453-11ec-82a5-0aaa2eb05b4d",
-      "AmplifyAppId": "d21bj89y0jdxx1"
-    },
-    "categories": {
-      "function": {
-        "migrateADUser": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/migrateADUser-56764c6d657948776f63-build.zip"
-        },
-        "emailnotification": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-334376666a6963325573-build.zip",
-          "sesSenderEmail": "foob@bar.com",
-          "sesRecycleRecipientEmail": "foob@bar.com",
-          "sesAppUrl": "https://release.d21bj89y0jdxx1.amplifyapp.com",
-          "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
-          "sesBorrowRecipientEmail": "foob@bar.com"
-        }
-      },
-      "auth": {
-        "aterbruketwebapp75287c9a": {},
-        "userPoolGroups": {}
-      }
-    }
-  }
 }
