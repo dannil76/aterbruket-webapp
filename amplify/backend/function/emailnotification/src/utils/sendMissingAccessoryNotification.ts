@@ -18,24 +18,46 @@ const config = new Config();
 export async function sendMissingAccessoryNotification(
     newItem: BorrowInfo,
 ): Promise<boolean> {
-    logDebug(`Start sendMissingAccessoryNotification.`);
+    logDebug(
+        `[sendMissingAccessoryNotification] Start sendMissingAccessoryNotification.`,
+    );
     const missing = getList<ModelRecord<MissingAccessory>>(
         newItem?.missingAccessories,
     );
-    const latestReport = missing.reduce((prev, curr) => {
-        const previous = getModel(prev);
-        const current = getModel(prev);
-        const previousReportedDate = getDate(previous?.reportedDate);
-        const currentReportedDate = getDate(current?.reportedDate);
-        return previousReportedDate > currentReportedDate ? prev : curr;
+    const sortedList = missing.sort((prev, curr) => {
+        const previous = getModel(prev, 'previous record');
+        const current = getModel(curr, 'current record');
+        const previousReportedDate = getDate(
+            previous?.reportedDate,
+            'reportedDate',
+        );
+        const currentReportedDate = getDate(
+            current?.reportedDate,
+            'reportedDate',
+        );
+        return previousReportedDate.getTime() - currentReportedDate.getTime();
     });
 
-    const latest = getModel(latestReport);
-    const reportedBy = getString(latest?.reportedBy);
-    const lastReturnedBy = getString(latest?.lastReturnedBy);
-    const accessories = getList<StringRecord>(latest?.accessories);
+    const dates = sortedList.map((report) =>
+        getDate(
+            getModel(report, 'report')?.reportedDate,
+            'reportedDate',
+        ).toJSON(),
+    );
+
+    logDebug(`[sendMissingAccessoryNotification] sortorder: ${dates.join()}`);
+
+    const latestReport = sortedList[0];
+
+    const latest = getModel(latestReport, 'latestReport');
+    const reportedBy = getString(latest?.reportedBy, 'reportedBy');
+    const lastReturnedBy = getString(latest?.lastReturnedBy, 'lastReturnedBy');
+    const accessories = getList<StringRecord>(
+        latest?.accessories,
+        'accessories',
+    );
     const missingAccessories = accessories
-        .map((accessory) => getString(accessory))
+        .map((accessory) => getString(accessory, 'accessory'))
         .join(', ');
 
     const [reportedByUser, lastReturnedByUser] = await Promise.all([
@@ -44,15 +66,19 @@ export async function sendMissingAccessoryNotification(
     ]);
 
     const body = getMissingAccessoriesBody(
-        getString(newItem.title),
-        getString(newItem.contactPerson),
+        getString(newItem.title, 'title'),
+        getString(newItem.contactPerson, 'contactPerson'),
         missingAccessories,
         reportedByUser,
         lastReturnedByUser,
     );
 
     const toAddress = getString(newItem?.email);
-    logDebug(`Send email to ${toAddress}.`);
+    logDebug(
+        `[sendMissingAccessoryNotification] Send email 
+        from ${config.senderDefaultEmail} 
+        to ${toAddress}.`,
+    );
 
     try {
         await SES.sendEmail({
@@ -70,12 +96,16 @@ export async function sendMissingAccessoryNotification(
     } catch (error) {
         const typedError = error as Error;
         if (typedError) {
-            logException(`Send e-mail failed with ${typedError.message}`);
+            logException(
+                `[sendMissingAccessoryNotification] Send e-mail 
+                to ${toAddress} 
+                failed with ${typedError.message}`,
+            );
         }
 
         return false;
     }
 
-    logDebug(`Email sent. Return true.`);
+    logDebug(`[sendMissingAccessoryNotification] Email sent to ${toAddress}`);
     return true;
 }

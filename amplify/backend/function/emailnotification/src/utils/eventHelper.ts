@@ -8,18 +8,24 @@ import {
 } from '../models/awsEvent';
 import { logWarning } from './logHelper';
 
-export function getString(value: StringRecord | undefined): string {
+export function getString(
+    value: StringRecord | undefined,
+    propertyName = '',
+): string {
     if (!value) {
-        logWarning('missing string value');
+        logWarning(`Missing String value ${propertyName}`);
         return '';
     }
 
     return value.S;
 }
 
-export function getNumber(value: NumberRecord | undefined): number {
+export function getNumber(
+    value: NumberRecord | undefined,
+    propertyName = '',
+): number {
     if (!value) {
-        logWarning('missing number value');
+        logWarning(`Missing Number value ${propertyName}`);
         return -1;
     }
 
@@ -27,28 +33,44 @@ export function getNumber(value: NumberRecord | undefined): number {
     return Number.isNaN(parsed) ? -1 : parsed;
 }
 
-export function getDate(value: DateRecord | undefined): Date {
+export function getDate(
+    value: DateRecord | undefined,
+    propertyName = '',
+): Date {
     if (!value) {
-        logWarning('missing date value');
+        logWarning(`Missing Date value ${propertyName}`);
         return new Date(0); // TODO
     }
 
-    const parsed = Date.parse(value.S);
+    const dateValue = getString(value, propertyName);
 
-    return Number.isNaN(parsed) ? new Date(0) : new Date(parsed); // TODO
+    const parsed = Date.parse(dateValue);
+
+    if (Number.isNaN(parsed)) {
+        logWarning(`Could not parse ${propertyName} date value ${dateValue}`);
+        return new Date(0);
+    }
+    return new Date(parsed);
 }
 
-export function getList<T>(value: ListRecord<T> | undefined): T[] {
+export function getList<T>(
+    value: ListRecord<T> | undefined,
+    propertyName = '',
+): T[] {
     if (!value) {
-        logWarning('missing list value');
+        logWarning(`Missing List value ${propertyName}`);
         return [] as T[];
     }
 
     return value.L as T[];
 }
 
-export function getEnum<T>(value: EnumRecord<T> | undefined): T | undefined {
+export function getEnum<T>(
+    value: EnumRecord<T> | undefined,
+    propertyName = '',
+): T | undefined {
     if (!value) {
+        logWarning(`Missing Enum value ${propertyName}`);
         return undefined;
     }
 
@@ -57,9 +79,10 @@ export function getEnum<T>(value: EnumRecord<T> | undefined): T | undefined {
 
 export function getModel<T>(
     value: ModifiedRecord<T> | undefined,
+    propertyName = '',
 ): T | undefined {
     if (!value) {
-        logWarning('missing object value');
+        logWarning(`Missing Model value ${propertyName}`);
         return undefined;
     }
 

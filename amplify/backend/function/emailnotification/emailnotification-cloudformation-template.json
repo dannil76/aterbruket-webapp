@@ -207,6 +207,20 @@
                             "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/ideutvecklingochinnovation@gmail.com"
                         },
                         {
+                            "Action": [
+                                "ses:SendEmail"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/*@helsingborg.se",
+                            "Condition": {
+                                "StringLike": {
+                                    "ses:FromAddress": "*@helsingborg.se",
+                                    "ses:FeedbackAddress": "*@helsingborg.se",
+                                    "ses:Recipients": "*@helsingborg.se"
+                                }
+                            }
+                        },
+                        {
                             "Effect": "Allow",
                             "Action": [
                                 "cognito-idp:ListUsers"

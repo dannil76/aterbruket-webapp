@@ -9,7 +9,9 @@ export async function onModify(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem || !newItem) {
-        logWarning(`New or previous item is undefined. Return false.`);
+        logWarning(
+            `[recycleHelper] New or previous item is undefined. Return false.`,
+        );
         return false;
     }
 
@@ -31,11 +33,11 @@ export async function onDelete(
     previousItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!previousItem) {
-        logWarning(`Item is undefined. Return false.`);
+        logWarning(`[recycleHelper] Item is undefined. Return false.`);
         return false;
     }
 
-    logDebug(`Do nothing on delete.`);
+    logDebug(`[recycleHelper] Do nothing on delete.`);
     return true;
 }
 
@@ -43,7 +45,7 @@ export async function onInsert(
     newItem: BorrowInfo | undefined,
 ): Promise<boolean> {
     if (!newItem) {
-        logWarning(`Item is undefined. Return false.`);
+        logWarning(`[recycleHelper] Item is undefined. Return false.`);
         return false;
     }
 
