@@ -47,6 +47,8 @@ export const getAdvert = /* GraphQL */ `
       advertType
       missingItemsInformation
       pickUpInformation
+      lockerCodeInformation
+      lockerCode
       returnInformation
       pickUpInstructions
       accessories
@@ -148,6 +150,8 @@ export const listAdverts = /* GraphQL */ `
         advertType
         missingItemsInformation
         pickUpInformation
+        lockerCodeInformation
+        lockerCode
         returnInformation
         pickUpInstructions
         accessories

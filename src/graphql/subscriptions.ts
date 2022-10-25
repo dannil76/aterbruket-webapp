@@ -47,6 +47,8 @@ export const onCreateAdvert = /* GraphQL */ `
       advertType
       missingItemsInformation
       pickUpInformation
+      lockerCodeInformation
+      lockerCode
       returnInformation
       pickUpInstructions
       accessories
@@ -133,6 +135,8 @@ export const onUpdateAdvert = /* GraphQL */ `
       advertType
       missingItemsInformation
       pickUpInformation
+      lockerCodeInformation
+      lockerCode
       returnInformation
       pickUpInstructions
       accessories
@@ -219,6 +223,8 @@ export const onDeleteAdvert = /* GraphQL */ `
       advertType
       missingItemsInformation
       pickUpInformation
+      lockerCodeInformation
+      lockerCode
       returnInformation
       pickUpInstructions
       accessories

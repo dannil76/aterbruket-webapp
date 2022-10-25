@@ -27,12 +27,14 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   purchasePrice: String
   company: String
   aterbruketId: String
-  advertType: ItemAdvertType
+  advertType: ItemAdvertType!
   missingItemsInformation: String
   pickUpInformation: String
+  lockerCodeInformation: String
+  lockerCode: String
   returnInformation: String
   pickUpInstructions: String
-  accessories: [String]
+  accessories: [String!]!
   borrowDifficultyLevel: String
   advertBorrowCalendar: AdvertBorrowCalendar
   accessRestriction: String
@@ -46,7 +48,7 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
 type MissingAccessories {
   reportedBy: String!
   reportedDate: AWSDateTime!
-  accessories: [String]!
+  accessories: [String!]!
   lastReturnedBy: String!
 }
 
