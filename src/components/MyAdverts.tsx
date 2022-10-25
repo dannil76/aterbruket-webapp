@@ -1,83 +1,88 @@
-import API, { GraphQLResult } from "@aws-amplify/api";
-import { graphqlOperation } from "aws-amplify";
-import React, { FC, useContext, useEffect, useState, useCallback } from "react";
-import AdvertContainer from "./AdvertContainer";
-import { ListAdvertsQuery } from "../API";
-import { listAdverts } from "../graphql/queries";
-import UserContext from "../contexts/UserContext";
-import Pagination from "./Pagination";
+import API, { GraphQLResult } from '@aws-amplify/api';
+import { graphqlOperation } from 'aws-amplify';
+import React, { FC, useContext, useEffect, useState, useCallback } from 'react';
+import AdvertContainer from './AdvertContainer';
+import { ListAdvertsQuery } from '../graphql/models';
+import { listAdverts } from '../graphql/queries';
+import UserContext from '../contexts/UserContext';
+import Pagination from './Pagination';
 
 const MyAdverts: FC = () => {
-  const { user } = useContext(UserContext);
-  const [adverts, setAdverts] = useState([{}]) as any;
-  const [paginationOption, setPaginationOption] = useState({
-    activePage: 1,
-    totalPages: 1, // Will change after the fetch
-    amountToShow: 15,
-    itemLength: 14, // Will change after the fetch
-  });
-  const [renderItems, setRenderItems] = useState([]) as any;
-
-  const handlePages = (updatePage: number) => {
-    setPaginationOption({
-      ...paginationOption,
-      activePage: updatePage,
+    const { user } = useContext(UserContext);
+    const [adverts, setAdverts] = useState([{}]) as any;
+    const [paginationOption, setPaginationOption] = useState({
+        activePage: 1,
+        totalPages: 1, // Will change after the fetch
+        amountToShow: 15,
+        itemLength: 14, // Will change after the fetch
     });
+    const [renderItems, setRenderItems] = useState([]) as any;
 
-    if (paginationOption.activePage !== updatePage) {
-      const start = (updatePage - 1) * paginationOption.amountToShow;
-      const end = start + paginationOption.amountToShow;
+    const handlePages = (updatePage: number) => {
+        setPaginationOption({
+            ...paginationOption,
+            activePage: updatePage,
+        });
 
-      setRenderItems(adverts.slice(start, end));
-    }
-  };
+        if (paginationOption.activePage !== updatePage) {
+            const start = (updatePage - 1) * paginationOption.amountToShow;
+            const end = start + paginationOption.amountToShow;
 
-  const fetchCreatedAdverts = useCallback(async () => {
-    const result = (await API.graphql(
-      graphqlOperation(listAdverts, {
-        filter: {
-          and: [{ giver: { eq: user.sub } }, { version: { eq: 0 } }],
-          not: { status: { eq: "pickedUp" } },
-        },
-      })
-    )) as GraphQLResult<ListAdvertsQuery>;
+            setRenderItems(adverts.slice(start, end));
+        }
+    };
 
-    const advertItem: any = result.data?.listAdverts?.items;
-    if (advertItem.length > 0) {
-      setPaginationOption({
-        ...paginationOption,
-        totalPages: Math.ceil(
-          advertItem.length / paginationOption.amountToShow
-        ),
-        itemLength: advertItem.length,
-      });
-      setRenderItems(advertItem.slice(0, paginationOption.amountToShow));
-    }
-    setAdverts(advertItem);
-  }, [user.sub]);
+    const fetchCreatedAdverts = useCallback(async () => {
+        const result = (await API.graphql(
+            graphqlOperation(listAdverts, {
+                filter: {
+                    and: [{ giver: { eq: user.sub } }, { version: { eq: 0 } }],
+                    not: { status: { eq: 'pickedUp' } },
+                },
+            }),
+        )) as GraphQLResult<ListAdvertsQuery>;
 
-  useEffect(() => {
-    if (user.sub) {
-      fetchCreatedAdverts();
-    }
-  }, [user]);
-  return (
-    <>
-      <AdvertContainer
-        activeFilterOptions={[]}
-        items={renderItems}
-        searchValue={false}
-        itemsFrom="myAdds"
-        activeSorting={{ first: "", second: "", sortTitle: "", secText: "" }}
-      />
-      {renderItems.length > 0 && (
-        <Pagination
-          paginationOption={paginationOption}
-          handlePagination={handlePages}
-        />
-      )}
-    </>
-  );
+        const advertItem: any = result.data?.listAdverts?.items;
+        if (advertItem.length > 0) {
+            setPaginationOption({
+                ...paginationOption,
+                totalPages: Math.ceil(
+                    advertItem.length / paginationOption.amountToShow,
+                ),
+                itemLength: advertItem.length,
+            });
+            setRenderItems(advertItem.slice(0, paginationOption.amountToShow));
+        }
+        setAdverts(advertItem);
+    }, [user.sub]);
+
+    useEffect(() => {
+        if (user.sub) {
+            fetchCreatedAdverts();
+        }
+    }, [user]);
+    return (
+        <>
+            <AdvertContainer
+                activeFilterOptions={[]}
+                items={renderItems}
+                searchValue={false}
+                itemsFrom="myAdds"
+                activeSorting={{
+                    first: '',
+                    second: '',
+                    sortTitle: '',
+                    secText: '',
+                }}
+            />
+            {renderItems.length > 0 && (
+                <Pagination
+                    paginationOption={paginationOption}
+                    handlePagination={handlePages}
+                />
+            )}
+        </>
+    );
 };
 
 export default MyAdverts;

@@ -18,26 +18,30 @@ export default async function sendNewAdvertNotification(
         return false;
     }
 
-    const email = getString(item.email);
+    const email = getString(item.email, 'email');
     const body = createNewAdvertBody(
-        getString(item.id),
-        getString(item.contactPerson),
-        getString(item.department),
-        getString(item.address),
-        getString(item.postalCode),
-        getString(item.phoneNumber),
+        getString(item.id, 'id'),
+        getString(item.contactPerson, 'contactPerson'),
+        getString(item.department, 'department'),
+        getString(item.address, 'address'),
+        getString(item.postalCode, 'postalCode'),
+        getString(item.phoneNumber, 'phoneNumber'),
         email,
         config.appUrl,
-        getString(item.city),
+        getString(item.city, 'city'),
     );
 
-    logDebug(`Send e-mail to ${email}`);
+    logDebug(
+        `[sendNewAdvertNotification] Send e-mail 
+        from '${config.senderDefaultEmail}' 
+        to '${config.recycleEmail.split(',')}'`,
+    );
     try {
         await SES.sendEmail({
             Destination: {
                 ToAddresses: config.recycleEmail.split(','),
             },
-            Source: email,
+            Source: config.senderDefaultEmail,
             Message: {
                 Subject: { Data: 'Här är en QR-kod från Haffa-appen!' },
                 Body: {
@@ -48,11 +52,15 @@ export default async function sendNewAdvertNotification(
     } catch (error) {
         const typedError = error as Error;
         if (typedError) {
-            logException(`Send e-mail failed with ${typedError.message}`);
+            logException(
+                `[sendNewAdvertNotification] Send e-mail failed with ${typedError.message}`,
+            );
         }
         return false;
     }
 
-    logDebug(`Email has been sent.`);
+    logDebug(
+        `[sendNewAdvertNotification] Email has been sent to ${config.senderDefaultEmail}`,
+    );
     return true;
 }
