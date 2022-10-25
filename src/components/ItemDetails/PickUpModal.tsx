@@ -84,36 +84,6 @@ const PickUpModal: React.FC<Props> = ({
     }, [isQrResultValid, handleFinish, advert]);
 
     const borrowSteps = [
-        advert.lockerCode && (
-            <>
-                <Styled.LockerModal>
-                    <Styled.Content>
-                        <Styled.Subtitle>Låna</Styled.Subtitle>
-                        <Styled.Header>{advert.title}</Styled.Header>
-                        {advert.lockerCodeInformation && (
-                            <Styled.Text>
-                                {advert.lockerCodeInformation}
-                            </Styled.Text>
-                        )}
-                        <Styled.LockerInstructions>
-                            <h3>Kod till skåp</h3>
-                            <Styled.Code>{advert.lockerCode}</Styled.Code>
-                        </Styled.LockerInstructions>
-                    </Styled.Content>
-                    <Button
-                        block
-                        size="xl"
-                        type="button"
-                        marginTop={24}
-                        onClick={() => {
-                            nextStep();
-                        }}
-                    >
-                        Okej, skåp är öppet
-                    </Button>
-                </Styled.LockerModal>
-            </>
-        ),
         <>
             <Styled.CameraContainer>
                 <QrCamera setResult={setQrResult} />
@@ -273,6 +243,39 @@ const PickUpModal: React.FC<Props> = ({
             </Modal.Content>
         </>,
     ];
+
+    if (advert.lockerCode) {
+        borrowSteps.unshift(
+            <>
+                <Styled.LockerModal>
+                    <Styled.Content>
+                        <Styled.Subtitle>Låna</Styled.Subtitle>
+                        <Styled.Header>{advert.title}</Styled.Header>
+                        {advert.lockerCodeInformation && (
+                            <Styled.Text>
+                                {advert.lockerCodeInformation}
+                            </Styled.Text>
+                        )}
+                        <Styled.LockerInstructions>
+                            <h3>Kod till skåp</h3>
+                            <Styled.Code>{advert.lockerCode}</Styled.Code>
+                        </Styled.LockerInstructions>
+                    </Styled.Content>
+                    <Button
+                        block
+                        size="xl"
+                        type="button"
+                        marginTop={24}
+                        onClick={() => {
+                            nextStep();
+                        }}
+                    >
+                        Okej, skåp är öppet
+                    </Button>
+                </Styled.LockerModal>
+            </>,
+        );
+    }
 
     interface IAdvertByType {
         [key: string]: React.ReactNode[];

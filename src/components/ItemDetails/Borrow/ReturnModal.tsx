@@ -62,32 +62,6 @@ const ReturnModal: React.FC<Props> = ({
     }, [isQrResultValid]);
 
     const steps = [
-        advert.lockerCode && (
-            <>
-                <Styled.LockerModal>
-                    <Styled.Content>
-                        <Styled.Subtitle>Lämna tillbaka</Styled.Subtitle>
-                        <Styled.Header>{advert.title}</Styled.Header>
-                        <Styled.Text>{advert.returnInformation}</Styled.Text>
-                        <Styled.LockerInstructions>
-                            <h3>Kod till skåp</h3>
-                            <Styled.Code>{advert.lockerCode}</Styled.Code>
-                        </Styled.LockerInstructions>
-                    </Styled.Content>
-                    <Button
-                        block
-                        size="xl"
-                        type="button"
-                        marginTop={24}
-                        onClick={() => {
-                            nextStep();
-                        }}
-                    >
-                        Okej
-                    </Button>
-                </Styled.LockerModal>
-            </>
-        ),
         <>
             <Styled.CameraContainer>
                 <QrCamera setResult={setQrResult} />
@@ -156,6 +130,35 @@ const ReturnModal: React.FC<Props> = ({
             </Modal.Content>
         </>,
     ];
+
+    if (advert.lockerCode) {
+        steps.unshift(
+            <>
+                <Styled.LockerModal>
+                    <Styled.Content>
+                        <Styled.Subtitle>Lämna tillbaka</Styled.Subtitle>
+                        <Styled.Header>{advert.title}</Styled.Header>
+                        <Styled.Text>{advert.returnInformation}</Styled.Text>
+                        <Styled.LockerInstructions>
+                            <h3>Kod till skåp</h3>
+                            <Styled.Code>{advert.lockerCode}</Styled.Code>
+                        </Styled.LockerInstructions>
+                    </Styled.Content>
+                    <Button
+                        block
+                        size="xl"
+                        type="button"
+                        marginTop={24}
+                        onClick={() => {
+                            nextStep();
+                        }}
+                    >
+                        Okej
+                    </Button>
+                </Styled.LockerModal>
+            </>,
+        );
+    }
 
     return (
         <Modal isVisible={isVisible}>
