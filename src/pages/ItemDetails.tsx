@@ -51,8 +51,12 @@ import {
 import { getCategoryByKey } from '../utils/handleCategories';
 
 const CarouselComp = React.lazy(() => import('../components/CarouselComp'));
-const EditItemForm = React.lazy(() => import('../components/EditItemForm'));
-const RegiveForm = React.lazy(() => import('../components/RegiveForm'));
+const EditItemForm = React.lazy(
+    () => import('../components/Forms/EditItemForm'),
+);
+const RegiveItemForm = React.lazy(
+    () => import('../components/Forms/RegiveItemForm'),
+);
 
 const Separator = styled.div`
     width: 100%;
@@ -785,10 +789,11 @@ const ItemDetails: FC<ParamTypes> = () => {
                         image={image}
                     />
                 ) : regive ? (
-                    <RegiveForm
+                    <RegiveItemForm
                         setRegive={setRegive}
                         item={item}
                         closeEditformAndFetchItem={closeEditformAndFetchItem}
+                        image={image}
                     />
                 ) : showCarousel ? (
                     <CarouselComp
