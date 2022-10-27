@@ -51,8 +51,11 @@
         "eject": "react-scripts eject",
         "format": "prettier --write src/**/*.ts{,x}",
         "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
+        "test:addUserToGroup": "cd amplify/backend/function/addUserToGroup/src && npm ci && npm run test && cd -",
+        "test:migrateADUser": "cd amplify/backend/function/migrateADUser/src && npm ci && npm run test && cd -",
         "amplify:emailnotification": "cd amplify/backend/function/emailnotification/src && npm install && npm run tsc && cd -",
-        "amplify:migrateADUser": "cd amplify/backend/function/migrateADUser/src && npm install && npm run tsc && cd -",
+        "amplify:migrateADUser": "cd amplify/backend/function/migrateADUser/src && npm install && npm run build && cd -",
+        "amplify:addUserToGroup": "cd amplify/backend/function/addUserToGroup/src && npm install && npm run build && cd -",
         "debug:emailnotification": "NODE_OPTIONS='' amplify mock function emailnotification",
         "debug:migrateADUser": "NODE_OPTIONS='' amplify mock function migrateADUser"
     },

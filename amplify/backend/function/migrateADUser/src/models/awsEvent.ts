@@ -7,9 +7,15 @@ export interface EventRequest {
     password: string;
 }
 
+export interface EventUserAttributes {
+    email: string;
+    email_verified: string;
+}
+
 export interface EventResponse {
     messageAction: string;
     finalUserStatus: string;
+    userAttributes: EventUserAttributes;
 }
 
 export interface Event {

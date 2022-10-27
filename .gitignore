@@ -32,6 +32,7 @@ yarn-error.log*
 
 # testing
 /coverage
+**/coverage
 
 # production
 /build
