@@ -1,26 +1,29 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useState, useEffect } from 'react';
 import Loader from 'react-loader-spinner';
-import Form from './Form';
-import useForm from '../hooks/useForm';
-import { updateAdvert } from '../graphql/mutations';
-import fields from '../static/formFields';
-import { Modal } from './Modal';
-import { AdvertImage } from './ItemDetails/Common';
-import { Advert } from '../graphql/models';
+import Form from './FormLayout/FormLayout';
+import useForm from '../../hooks/useForm';
+import { updateAdvert } from '../../graphql/mutations';
+import UserContext from '../../contexts/UserContext';
+import { IAdvert } from '../../interfaces/IAdvert';
+import { Modal } from '../Modal';
+import { AdvertImage } from '../ItemDetails/Common';
+import { recycleFormFields } from './formFields';
 
 interface Props {
-    item: Advert;
-    setEditItem: React.Dispatch<React.SetStateAction<boolean>>;
+    item: IAdvert;
+    setRegive: React.Dispatch<React.SetStateAction<boolean>>;
     closeEditformAndFetchItem: () => void;
     image: string;
 }
 
-const EditItemForm: FC<Props> = ({
-    setEditItem,
+const RegiveItemForm: FC<Props> = ({
+    setRegive,
     item,
     closeEditformAndFetchItem,
     image,
 }: Props) => {
+    const { user } = useContext(UserContext);
+
     const {
         values,
         handleInputChange,
@@ -37,7 +40,7 @@ const EditItemForm: FC<Props> = ({
             title: item.title,
             advertType: item.advertType,
             aterbruketId: item.aterbruketId ? item.aterbruketId : '',
-            status: item.status,
+            status: 'available',
             category: item.category,
             quantity: item.quantity,
             height: item.height,
@@ -56,30 +59,27 @@ const EditItemForm: FC<Props> = ({
                 outside: item?.areaOfUse?.[0]?.outside,
             },
             description: item.description,
-            company: item.company,
-
-            department: item.department,
-            address: item.address,
-            postalCode: item.postalCode,
+            company: user.company ? user.company : '',
+            department: user.department ? user.department : '',
+            address: user.address ? user.address : '',
+            postalCode: user.postalCode ? user.postalCode : '',
             city: item.city,
-            contactPerson: item.contactPerson,
-            email: item.email,
-            phoneNumber: item.phoneNumber,
+            contactPerson: user.name ? user.name : '',
+            email: user.email ? user.email : '',
+            phoneNumber: item.phoneNumber ? item.phoneNumber : '',
             climateImpact: item.climateImpact,
             version: 0,
-            revisions: item.revisions ? item.revisions + 1 : 0,
-            purchasePrice: item.purchasePrice,
+            revisions: item.revisions + 1,
+            purchasePrice: item.purchasePrice ? item.purchasePrice : '',
+            giver: user.sub,
             missingItemsInformation: item.missingItemsInformation ?? '',
             pickUpInformation: item.pickUpInformation ?? '',
             pickUpInstructions: item.pickUpInstructions ?? '',
-            lockerCodeInformation: item.lockerCodeInformation ?? '',
-            lockerCode: item.lockerCode ?? '',
             returnInformation: item.returnInformation ?? '',
             accessories: item.accessories ?? [],
             borrowDifficultyLevel: item.borrowDifficultyLevel,
             accessRestriction: item.accessRestriction,
             accessRestrictionSelection: item.accessRestrictionSelection,
-            advertBorrowCalendar: item?.advertBorrowCalendar,
         },
         updateAdvert,
     );
@@ -95,6 +95,7 @@ const EditItemForm: FC<Props> = ({
     if (redirect && !fileUploading) {
         closeEditformAndFetchItem();
     }
+
     return (
         <>
             {fileUploading && (
@@ -108,16 +109,16 @@ const EditItemForm: FC<Props> = ({
 
             {!fileUploading && (
                 <>
-                    <Modal.CloseButton onClick={() => setEditItem(false)} />
+                    <Modal.CloseButton onClick={() => setRegive(false)} />
                     <AdvertImage src={imageURL} alt={values.title} />
                     <Form
                         values={values}
-                        fields={fields}
+                        fields={recycleFormFields(true)}
                         mutation={updateAdvert}
                         handleInputChange={handleInputChange}
                         handleSubmit={handleSubmit}
-                        handleDateRangeChange={handleDateRangeChange}
                         handleCheckboxChange={handleCheckboxChange}
+                        handleDateRangeChange={handleDateRangeChange}
                         handleSetValue={handleSetValue}
                     />
                 </>
@@ -126,4 +127,4 @@ const EditItemForm: FC<Props> = ({
     );
 };
 
-export default EditItemForm;
+export default RegiveItemForm;

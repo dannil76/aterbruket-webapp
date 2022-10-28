@@ -1,15 +1,15 @@
 /* eslint-disable no-param-reassign */
 import * as AWS from 'aws-sdk';
+import getUser from './services/helsingborgApi';
+import mapCognitoUser from './utils/mapCognitoUser';
 import { Event, EventType } from './models/awsEvent';
-import { createCognitoUser } from './services/cognitoService';
 import { logDebug, logException } from './utils/logHelper';
-import { getHelsingborgUser } from './services/helsingborgApi';
 import Config from './config';
 
 const config = new Config();
 AWS.config.update({ region: config.region });
 
-exports.handler = async function MigrateUser(event: Event): Promise<Event> {
+export async function handler(event: Event): Promise<Event> {
     logDebug('Event recieved');
     const { userName } = event;
     const { password } = event.request;
@@ -26,12 +26,22 @@ exports.handler = async function MigrateUser(event: Event): Promise<Event> {
     const newUser = userName.toLowerCase();
 
     try {
-        const userInfo = await getHelsingborgUser(newUser, password);
-        await createCognitoUser(newUser, password, userInfo);
+        logDebug(`Try to get user ${newUser} from Helsingborg Api`);
+        const users = await getUser(newUser, password);
 
+        if (!users || users.length === 0 || !users[0].displayname) {
+            logDebug(
+                `Username: ${newUser} could not be retrieved from Helsingborg Api`,
+            );
+
+            return event;
+        }
+
+        logDebug(`Retrieved ${newUser} from Helsingborg AD.`);
+        const cognitoUser = mapCognitoUser(newUser, users[0]);
+        event.response.userAttributes = cognitoUser;
         event.response.messageAction = 'SUPPRESS';
         event.response.finalUserStatus = 'CONFIRMED';
-
         return event;
     } catch (err) {
         const typedError = err as Error;
@@ -41,6 +51,6 @@ exports.handler = async function MigrateUser(event: Event): Promise<Event> {
             );
         }
 
-        return event;
+        throw err;
     }
-};
+}

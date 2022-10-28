@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.5\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"10.0.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -14,29 +14,6 @@
       "Type": "String"
     },
     "s3Key": {
-      "Type": "String"
-    },
-    "apiaterbruketwebappGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apiaterbruketwebappGraphQLAPIIdOutput"
-    },
-    "apiaterbruketwebappGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apiaterbruketwebappGraphQLAPIEndpointOutput"
-    },
-    "sesSenderEmail": {
-      "Type": "String"
-    },
-    "sesAppUrl": {
-      "Type": "String"
-    },
-    "cognitoUserPoolId": {
-      "Type": "String"
-    },
-    "sesRecycleRecipientEmail": {
-      "Type": "String"
-    },
-    "sesBorrowRecipientEmail": {
       "Type": "String"
     }
   },
@@ -70,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "emailnotification",
+            "addUserToGroup",
             {
               "Fn::Join": [
                 "",
                 [
-                  "emailnotification",
+                  "addUserToGroup",
                   "-",
                   {
                     "Ref": "env"
@@ -92,21 +69,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "SES_SENDER_EMAIL": {
-              "Ref": "sesSenderEmail"
-            },
-            "SES_APP_URL": {
-              "Ref": "sesAppUrl"
-            },
-            "COGNITO_USER_POOL_ID": {
-              "Ref": "cognitoUserPoolId"
-            },
-            "SES_RECYCLE_RECIPIENT_EMAIL": {
-              "Ref": "sesRecycleRecipientEmail"
-            },
-            "SES_BORROW_RECIPIENT_EMAIL": {
-              "Ref": "sesBorrowRecipientEmail"
             }
           }
         },
@@ -116,7 +78,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs16.x",
         "Layers": [],
         "Timeout": 25
       }
@@ -127,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "aterbruketwebappLambdaRoleb724549b",
+            "aterbruketwebappLambdaRolec89b296d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "aterbruketwebappLambdaRoleb724549b",
+                  "aterbruketwebappLambdaRolec89b296d",
                   "-",
                   {
                     "Ref": "env"
@@ -200,91 +162,64 @@
               }
             },
             {
-              "Action": [
-                "ses:SendEmail"
-              ],
-              "Effect": "Allow",
-              "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/ideutvecklingochinnovation@gmail.com"
-            },
-            {
-              "Action": [
-                "ses:SendEmail"
-              ],
-              "Effect": "Allow",
-              "Resource": "arn:aws:ses:eu-west-1:165945531802:identity/*@helsingborg.se",
-              "Condition": {
-                "StringLike": {
-                  "ses:FromAddress": "*@helsingborg.se",
-                  "ses:FeedbackAddress": "*@helsingborg.se",
-                  "ses:Recipients": "*@helsingborg.se"
-                }
-              }
-            },
-            {
               "Effect": "Allow",
               "Action": [
-                "cognito-idp:ListUsers"
-              ],
-              "Resource": "*"
-            }
-          ]
-        }
-      }
-    },
-    "LambdaTriggerPolicyAdvert": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy-Advert",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:ListStreams"
+                "cognito-idp:AdminAddUserToGroup"
               ],
               "Resource": {
-                "Fn::ImportValue": {
-                  "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
-                }
+                "Fn::Sub": [
+                  "arn:aws:cognito-idp:${region}:${account}:userpool/${region}*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminUpdateUserAttributes"
+              ],
+              "Resource": {
+                "Fn::Sub": [
+                  "arn:aws:cognito-idp:${region}:${account}:userpool/${region}*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminListGroupsForUser"
+              ],
+              "Resource": {
+                "Fn::Sub": [
+                  "arn:aws:cognito-idp:${region}:${account}:userpool/${region}*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    }
+                  }
+                ]
               }
             }
           ]
         }
-      }
-    },
-    "LambdaEventSourceMappingAdvert": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "DependsOn": [
-        "LambdaTriggerPolicyAdvert",
-        "LambdaExecutionRole"
-      ],
-      "Properties": {
-        "BatchSize": 100,
-        "Enabled": true,
-        "EventSourceArn": {
-          "Fn::ImportValue": {
-            "Fn::Sub": "${apiaterbruketwebappGraphQLAPIIdOutput}:GetAtt:AdvertTable:StreamArn"
-          }
-        },
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "LambdaFunction",
-            "Arn"
-          ]
-        },
-        "StartingPosition": "LATEST"
       }
     }
   },

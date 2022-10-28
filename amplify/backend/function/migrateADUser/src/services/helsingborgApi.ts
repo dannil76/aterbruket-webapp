@@ -42,10 +42,10 @@ function responseHandler<T>(
     });
 }
 
-export async function getHelsingborgUser(
+export default async function getUser(
     userName: string,
     password: string,
-): Promise<HelsingborgUser> {
+): Promise<HelsingborgUser[]> {
     const options = {
         host: config.helsingborgUrl,
         path: `${config.helsingborgUserRoute}/${userName}`,
@@ -57,31 +57,15 @@ export async function getHelsingborgUser(
         password,
     };
 
-    try {
-        logDebug(`Try to get user ${userName} from Helsingborg Api`);
-        const users = await new Promise<HelsingborgUser[]>(function sendRequest(
-            resolve,
-            reject,
-        ) {
-            const req = https.request(options, (res: IncomingMessage) =>
-                responseHandler<HelsingborgUser[]>(res, resolve, reject),
-            );
+    return new Promise<HelsingborgUser[]>(function sendRequest(
+        resolve,
+        reject,
+    ) {
+        const req = https.request(options, (res: IncomingMessage) =>
+            responseHandler<HelsingborgUser[]>(res, resolve, reject),
+        );
 
-            req.write(JSON.stringify(body));
-            req.end();
-        });
-
-        if (!users || users.length === 0 || !users[0].displayname) {
-            throw new Error('User was not found or password is incorrect');
-        }
-
-        return users[0];
-    } catch (err) {
-        const typedError = err as Error;
-        if (typedError) {
-            logException(err.message);
-        }
-
-        throw err;
-    }
+        req.write(JSON.stringify(body));
+        req.end();
+    });
 }

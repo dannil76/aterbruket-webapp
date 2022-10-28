@@ -1,4 +1,4 @@
-import { logWarning } from 'utils/logHelper';
+import { logWarning } from './utils/logHelper';
 
 export default class Config {
     private clientIdValue: string;
