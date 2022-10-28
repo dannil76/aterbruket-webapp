@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES2017",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "skipLibCheck": true,
@@ -16,5 +16,5 @@
         "jsx": "react",
     },
     "include": ["src"],
-    "exclude": ["node_modules", "dist", "build", "node_modules/@types/react-router/index.d.ts"],
+    "exclude": ["node_modules", "dist", "build", "node_modules/@types/react-router/index.d.ts", "public/service-worker.js"],
 }
