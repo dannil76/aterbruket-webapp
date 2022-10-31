@@ -59,10 +59,10 @@ export function getList<T>(
 ): T[] {
     if (!value) {
         logWarning(`Missing List value ${propertyName}`);
-        return [] as T[];
+        return [];
     }
 
-    return value.L as T[];
+    return value.L ?? [];
 }
 
 export function getEnum<T>(

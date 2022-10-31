@@ -1,5 +1,5 @@
-import { Advert } from 'models/haffaAdvert';
-import { logDebug, logWarning } from './logHelper';
+import { Advert } from '../models/haffaAdvert';
+import { logDebug, logWarning } from '../utils/logHelper';
 import { sendMissingAccessoryNotification } from '../emails/missingAccessoryEmail';
 import newAdvertEmail from '../emails/newAdvertEmail';
 

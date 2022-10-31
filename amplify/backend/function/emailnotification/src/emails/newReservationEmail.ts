@@ -1,29 +1,34 @@
 import * as AWS from 'aws-sdk';
 import { Advert } from 'models/haffaAdvert';
-import { AwsUser } from '../utils/awsUser';
+import getReservedByUser from 'utils/getReservedByUser';
 import template from '../templates/newReservationTemplate';
 import Config from '../config';
 import { logDebug, logException } from '../utils/logHelper';
 
 const SES = new AWS.SES();
-const awsUser = new AwsUser();
 const config = new Config();
 
 export default async function sendReservationEmail(
     newItem: Advert,
 ): Promise<boolean> {
     logDebug(`[sendReservationEmail] Start sendReservationEmail.`);
-    const reservationUser = await awsUser.getUserBySub(
-        config.userPoolId,
-        newItem.reservedBySub,
-    );
+
+    const haffaUser = await getReservedByUser(newItem.reservedBySub);
+
+    if (!haffaUser) {
+        logDebug(
+            `[sendReservationEmail] can't send e-mail missing reserved by user`,
+        );
+
+        return false;
+    }
 
     const { title, contactPerson, id, department, email, phoneNumber } =
         newItem;
     const body = template(
         title,
         contactPerson,
-        reservationUser.name,
+        haffaUser.name,
         `${config.appUrl}/item/${id}`,
         department,
         email,
@@ -31,9 +36,9 @@ export default async function sendReservationEmail(
         config.senderDefaultEmail,
     );
 
-    const toAddress = reservationUser.email;
+    const toAddress = haffaUser.email;
     logDebug(
-        `[sendMissingAccessoryNotification] Send email 
+        `[sendReservationEmail] Send email 
         from ${config.senderDefaultEmail} 
         to ${toAddress}.`,
     );
