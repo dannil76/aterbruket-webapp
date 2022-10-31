@@ -1,13 +1,10 @@
+import { AdvertType } from './advertType';
+
 export enum EventType {
     MODIFY = 'MODIFY',
     INSERT = 'INSERT',
     DELETE = 'DELETE',
     REMOVE = 'REMOVE',
-}
-
-export enum AdvertType {
-    BORROW = 'borrow',
-    RECYCLE = 'recycle',
 }
 
 export interface NumberRecord {
@@ -50,7 +47,7 @@ export interface MissingAccessory {
     M: MissingAccessory;
 }
 
-export interface BorrowInfo {
+export interface Advert {
     id: StringRecord;
     title: StringRecord;
     advertType: EnumRecord<AdvertType>;
@@ -62,13 +59,14 @@ export interface BorrowInfo {
     phoneNumber: StringRecord;
     city: StringRecord;
     missingAccessories: ListRecord<ModelRecord<MissingAccessory>>;
+    reservedBySub: StringRecord;
     version: NumberRecord;
 }
 
 export interface DynamoDBEvent {
     Keys: KeysRecord;
-    NewImage: BorrowInfo | undefined;
-    OldImage: BorrowInfo | undefined;
+    NewImage: Advert | undefined;
+    OldImage: Advert | undefined;
     SequenceNumber: string;
     SizeBytes: number;
     StreamViewType: string;

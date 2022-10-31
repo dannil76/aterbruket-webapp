@@ -15,5 +15,6 @@ export default function mapCognitoUser(
         'custom:newUser': 'true',
         address: user.streetaddress,
         preferred_username: userName,
+        name: user.displayname,
     };
 }

@@ -1,15 +1,14 @@
 import * as AWS from 'aws-sdk';
+import { Advert } from 'models/haffaAdvert';
 import Config from '../config';
-import { BorrowInfo } from '../models/awsEvent';
-import createNewAdvertBody from '../templates/createNewAdvertBody';
-import { getString } from './eventHelper';
-import { logDebug, logException, logWarning } from './logHelper';
+import template from '../templates/newAdvertTemplate';
+import { logDebug, logException, logWarning } from '../utils/logHelper';
 
 const SES = new AWS.SES();
 const config = new Config();
 
 export default async function sendNewAdvertNotification(
-    item: BorrowInfo,
+    item: Advert,
 ): Promise<boolean> {
     if (!config.recycleEmail || !config.appUrl || !item) {
         logWarning(
@@ -18,17 +17,27 @@ export default async function sendNewAdvertNotification(
         return false;
     }
 
-    const email = getString(item.email, 'email');
-    const body = createNewAdvertBody(
-        getString(item.id, 'id'),
-        getString(item.contactPerson, 'contactPerson'),
-        getString(item.department, 'department'),
-        getString(item.address, 'address'),
-        getString(item.postalCode, 'postalCode'),
-        getString(item.phoneNumber, 'phoneNumber'),
+    const {
+        email,
+        id,
+        contactPerson,
+        department,
+        address,
+        postalCode,
+        phoneNumber,
+        city,
+    } = item;
+
+    const emailBody = template(
+        id,
+        contactPerson,
+        department,
+        address,
+        postalCode,
+        phoneNumber,
         email,
         config.appUrl,
-        getString(item.city, 'city'),
+        city,
     );
 
     logDebug(
@@ -45,7 +54,7 @@ export default async function sendNewAdvertNotification(
             Message: {
                 Subject: { Data: 'Här är en QR-kod från Haffa-appen!' },
                 Body: {
-                    Html: { Data: body },
+                    Html: { Data: emailBody },
                 },
             },
         }).promise();
