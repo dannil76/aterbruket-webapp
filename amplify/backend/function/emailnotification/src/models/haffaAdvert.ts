@@ -1,3 +1,4 @@
+import { AdvertStatus } from './advertStatus';
 import { AdvertType } from './advertType';
 
 export interface MissingAccessory {
@@ -19,6 +20,8 @@ export interface Advert {
     phoneNumber: string;
     city: string;
     missingAccessories: MissingAccessory[];
-    reservedBySub: string;
+    reservedBySub: string | undefined;
     version: number;
+    status: AdvertStatus;
+    updatedAt: Date;
 }

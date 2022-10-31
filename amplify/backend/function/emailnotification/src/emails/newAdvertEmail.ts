@@ -28,6 +28,16 @@ export default async function sendNewAdvertNotification(
         city,
     } = item;
 
+    if (!contactPerson) {
+        logDebug(
+            `[sendNewAdvertNotification] missing necessary information: ${JSON.stringify(
+                item,
+            )}`,
+        );
+
+        return false;
+    }
+
     const emailBody = template(
         id,
         contactPerson,

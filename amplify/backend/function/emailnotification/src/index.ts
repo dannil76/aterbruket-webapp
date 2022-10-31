@@ -1,7 +1,6 @@
-import { AdvertType } from 'models/advertType';
+import { AdvertType } from './models/advertType';
 import { Event, EventType, EventRecord } from './models/awsEvent';
-import * as borrow from './utils/borrowHelper';
-import * as recycle from './utils/recycleHelper';
+import { borrow, recycle } from './handlers';
 import { logDebug, logWarning } from './utils/logHelper';
 import mapEvent from './utils/mapEvent';
 

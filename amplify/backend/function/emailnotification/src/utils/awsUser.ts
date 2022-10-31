@@ -1,7 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { HaffaUser } from '../models/haffaUser';
 import { Hash } from '../models/hash';
-import { logDebug } from './logHelper';
 
 export class AwsUser {
     userPool: AWS.CognitoIdentityServiceProvider;
@@ -31,7 +30,6 @@ export class AwsUser {
             attributeHash[attribute.Name] = attribute.Value ?? '';
         });
 
-        logDebug(`Found user ${user.Username}`);
         return {
             username: user.Username,
             name: attributeHash.name,

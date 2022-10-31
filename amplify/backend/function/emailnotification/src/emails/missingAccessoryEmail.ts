@@ -1,12 +1,11 @@
 import * as AWS from 'aws-sdk';
 import { Advert } from 'models/haffaAdvert';
-import { AwsUser } from '../utils/awsUser';
+import getReservedByUser from 'utils/getReservedByUser';
 import template from '../templates/missingAccessoriesTemplate';
 import Config from '../config';
 import { logDebug, logException } from '../utils/logHelper';
 
 const SES = new AWS.SES();
-const awsUser = new AwsUser();
 const config = new Config();
 
 export async function sendMissingAccessoryNotification(
@@ -32,8 +31,8 @@ export async function sendMissingAccessoryNotification(
     const missingAccessories = accessories.join(', ');
 
     const [reportedByUser, lastReturnedByUser] = await Promise.all([
-        awsUser.getUserBySub(config.userPoolId, reportedBy),
-        awsUser.getUserBySub(config.userPoolId, lastReturnedBy),
+        getReservedByUser(reportedBy),
+        getReservedByUser(lastReturnedBy),
     ]);
 
     const emailBody = template(

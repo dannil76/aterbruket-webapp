@@ -1,3 +1,4 @@
+import { AdvertStatus } from './advertStatus';
 import { AdvertType } from './advertType';
 
 export enum EventType {
@@ -51,6 +52,7 @@ export interface Advert {
     id: StringRecord;
     title: StringRecord;
     advertType: EnumRecord<AdvertType>;
+    status: EnumRecord<AdvertStatus>;
     contactPerson: StringRecord;
     department: StringRecord;
     address: StringRecord;
@@ -61,6 +63,7 @@ export interface Advert {
     missingAccessories: ListRecord<ModelRecord<MissingAccessory>>;
     reservedBySub: StringRecord;
     version: NumberRecord;
+    updatedAt: DateRecord;
 }
 
 export interface DynamoDBEvent {
