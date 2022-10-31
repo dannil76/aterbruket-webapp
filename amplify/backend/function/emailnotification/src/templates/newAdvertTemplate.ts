@@ -1,4 +1,4 @@
-export default function createNewAdvertBody(
+export default function newAdvertTemplate(
     id: string,
     contactPerson: string,
     department: string,

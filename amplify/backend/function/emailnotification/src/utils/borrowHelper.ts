@@ -1,12 +1,11 @@
-import { MissingAccessory, ModelRecord, BorrowInfo } from '../models/awsEvent';
-import { getList } from './eventHelper';
+import { Advert } from 'models/haffaAdvert';
 import { logDebug, logWarning } from './logHelper';
-import { sendMissingAccessoryNotification } from './sendMissingAccessoryNotification';
-import sendNewAdvertNotification from './sendNewAdvertNotification';
+import { sendMissingAccessoryNotification } from '../emails/missingAccessoryEmail';
+import newAdvertEmail from '../emails/newAdvertEmail';
 
 export async function onModify(
-    previousItem: BorrowInfo | undefined,
-    newItem: BorrowInfo | undefined,
+    previousItem: Advert | undefined,
+    newItem: Advert | undefined,
 ): Promise<boolean> {
     if (!previousItem || !newItem) {
         logWarning(
@@ -15,12 +14,8 @@ export async function onModify(
         return false;
     }
 
-    const previousMissing = getList<ModelRecord<MissingAccessory>>(
-        previousItem.missingAccessories,
-    );
-    const newlyMissing = getList<ModelRecord<MissingAccessory>>(
-        newItem.missingAccessories,
-    );
+    const previousMissing = previousItem.missingAccessories;
+    const newlyMissing = newItem.missingAccessories;
 
     if (newlyMissing.length > previousMissing.length) {
         logDebug(
@@ -36,7 +31,7 @@ export async function onModify(
 }
 
 export async function onDelete(
-    previousItem: BorrowInfo | undefined,
+    previousItem: Advert | undefined,
 ): Promise<boolean> {
     if (!previousItem) {
         logWarning(`[borrowHelper] Item is undefined. Return false.`);
@@ -47,13 +42,11 @@ export async function onDelete(
     return true;
 }
 
-export async function onInsert(
-    newItem: BorrowInfo | undefined,
-): Promise<boolean> {
+export async function onInsert(newItem: Advert | undefined): Promise<boolean> {
     if (!newItem) {
         logWarning(`[borrowHelper] Item is undefined. Return false.`);
         return false;
     }
 
-    return sendNewAdvertNotification(newItem);
+    return newAdvertEmail(newItem);
 }

@@ -1,6 +1,6 @@
 import { HaffaUser } from '../models/haffaUser';
 
-export default function getMissingAccessoriesBody(
+export default function missingAccessoriesTemplate(
     title: string,
     contactPerson: string,
     missingAccessories: string,
