@@ -1,8 +1,5 @@
-import { logDebug } from './logHelper';
-
-export default function formatDate(date: Date): string {
+export default function formatDate(date: Date | undefined): string {
     if (!date) {
-        logDebug('[formatDate] date is null. Return empty string.');
         return '';
     }
 
@@ -17,6 +14,5 @@ export default function formatDate(date: Date): string {
     } as Intl.DateTimeFormatOptions;
 
     const dateString = date.toLocaleTimeString('sv-SE', dateOptions);
-    logDebug(`date format: ${dateString}`);
     return dateString;
 }

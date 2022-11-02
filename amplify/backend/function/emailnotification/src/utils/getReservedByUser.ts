@@ -1,10 +1,10 @@
-import { HaffaUser } from 'models/haffaUser';
-import { AwsUser } from './awsUser';
+import { HaffaUser } from '../models/haffaUser';
+import { CognitoService } from '../services';
 import Config from '../config';
-import { logDebug, logException } from './logHelper';
+import { logDebug, logException } from '.';
 
 const config = new Config();
-const awsUser = new AwsUser();
+const cognitoService = new CognitoService();
 
 export default async function getReservedByUser(
     subscriptionId: string,
@@ -16,7 +16,7 @@ export default async function getReservedByUser(
     }
 
     try {
-        const haffaUser = await awsUser.getUserBySub(
+        const haffaUser = await cognitoService.getUserBySub(
             config.userPoolId,
             subscriptionId,
         );

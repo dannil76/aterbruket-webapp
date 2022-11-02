@@ -6,30 +6,24 @@ import {
     logDebug,
     logException,
 } from '../utils';
-import { pickedUpEmailTemplate } from '../templates';
+import { returnedEmailTemplate } from '../templates';
 import Config from '../config';
 
 const emailService = new SES();
 const config = new Config();
 
-export default async function sendPickedUpEmail(
+export default async function sendReturnedEmail(
     newItem: Advert,
-    calendarEvent: AdvertBorrowCalendarEvent = undefined,
+    calendarEvent: AdvertBorrowCalendarEvent,
 ): Promise<boolean> {
-    logDebug(`[sendPickedUpEmail] Start sendPickedUpEmail.`);
-
-    // Borrowed items get user from event, recycle items get user directly from item
-    const reservedBySub = calendarEvent
-        ? calendarEvent.borrowedBySub
-        : newItem.reservedBySub;
-
+    logDebug(`[sendReturnedEmail] Start sendReturnedEmail.`);
     const { title, contactPerson, id, email, updatedAt } = newItem;
 
     try {
-        const haffaUser = await getReservedByUser(reservedBySub);
+        const haffaUser = await getReservedByUser(calendarEvent.borrowedBySub);
 
         const date = formatDate(updatedAt);
-        const body = pickedUpEmailTemplate(
+        const body = returnedEmailTemplate(
             title,
             contactPerson,
             haffaUser?.name,
@@ -40,7 +34,7 @@ export default async function sendPickedUpEmail(
         );
 
         logDebug(
-            `[sendPickedUpEmail] Send email 
+            `[sendReturnedEmail] Send email 
             from ${config.senderDefaultEmail} 
             to ${email}.`,
         );
@@ -52,7 +46,7 @@ export default async function sendPickedUpEmail(
                 },
                 Source: config.senderDefaultEmail,
                 Message: {
-                    Subject: { Data: `${title} är hämtad` },
+                    Subject: { Data: `${title} är återlämnad` },
                     Body: {
                         Html: { Data: body },
                     },
@@ -63,7 +57,7 @@ export default async function sendPickedUpEmail(
         const typedError = error as Error;
         if (typedError) {
             logException(
-                `[sendPickedUpEmail] Send e-mail 
+                `[sendReturnedEmail] Send e-mail 
                 to ${email} 
                 failed with ${typedError.message}`,
             );
@@ -72,6 +66,6 @@ export default async function sendPickedUpEmail(
         return false;
     }
 
-    logDebug(`[sendPickedUpEmail] Email sent to ${email}`);
+    logDebug(`[sendReturnedEmail] Email sent to ${email}`);
     return true;
 }

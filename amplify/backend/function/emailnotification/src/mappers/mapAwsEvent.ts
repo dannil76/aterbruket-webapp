@@ -1,10 +1,14 @@
 import {
+    Advert,
+    AdvertBorrowCalendar,
+    AdvertBorrowCalendarEvent,
+} from 'models/haffaAdvert';
+import {
     Advert as AwsAdvert,
     MissingAccessory,
     ModelRecord,
     StringRecord,
-} from 'models/awsEvent';
-import { Advert } from 'models/haffaAdvert';
+} from '../models/awsEvent';
 import {
     getDate,
     getEnum,
@@ -12,10 +16,10 @@ import {
     getModel,
     getNumber,
     getString,
-} from './eventHelper';
-import { logDebug } from './logHelper';
+} from './awsEventUtilities';
+import { logDebug } from '../utils';
 
-export default function mapEvent(
+export default function mapAwsEvent(
     event: AwsAdvert | undefined,
 ): Advert | undefined {
     if (!event) {
@@ -47,6 +51,56 @@ export default function mapEvent(
             };
         });
     }
+
+    let advertBorrowCalendar = undefined as AdvertBorrowCalendar;
+    if (event.advertBorrowCalendar) {
+        const calendar = getModel(
+            event.advertBorrowCalendar,
+            'advertBorrowCalendar',
+        );
+
+        advertBorrowCalendar = {
+            allowedDateStart: getDate(
+                calendar.allowedDateStart,
+                'allowedDateStart',
+                new Date(0),
+            ),
+            allowedDateEnd: getDate(
+                calendar.allowedDateEnd,
+                'allowedDateEnd',
+                ((d) => new Date(d.getFullYear() + 10))(new Date()),
+            ),
+            calendarEvents: getList(
+                calendar.calendarEvents,
+                'calendarEvents',
+            ).map((calendarEventModel) => {
+                const calendarEvent = getModel(
+                    calendarEventModel,
+                    'calendarEventModel',
+                );
+                const borrowedBySub = getString(
+                    calendarEvent.borrowedBySub,
+                    'borrowedBySub',
+                );
+                const dateStart = getDate(calendarEvent.dateStart, 'dateStart');
+                const dateEnd = getDate(calendarEvent.dateEnd, 'dateStart');
+                const returnDateTime = calendarEvent.returnDateTime
+                    ? getDate(calendarEvent.returnDateTime, 'returnDateTime')
+                    : null;
+
+                const status = getEnum(calendarEvent.status, 'borrowStatus');
+
+                return {
+                    borrowedBySub,
+                    dateStart,
+                    dateEnd,
+                    returnDateTime,
+                    status,
+                } as AdvertBorrowCalendarEvent;
+            }),
+        };
+    }
+
     return {
         id,
         address: getString(event.address, 'address'),
@@ -65,5 +119,6 @@ export default function mapEvent(
         status: getEnum(event.status, 'status'),
         updatedAt: getDate(event.updatedAt, 'updatedAt'),
         missingAccessories,
+        advertBorrowCalendar,
     } as Advert;
 }

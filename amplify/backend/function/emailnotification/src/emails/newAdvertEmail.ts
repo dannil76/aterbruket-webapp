@@ -1,10 +1,10 @@
-import * as AWS from 'aws-sdk';
-import { Advert } from 'models/haffaAdvert';
+import { SES } from 'aws-sdk';
+import { Advert } from '../models/haffaAdvert';
 import Config from '../config';
-import template from '../templates/newAdvertTemplate';
-import { logDebug, logException, logWarning } from '../utils/logHelper';
+import { newAdvertTemplate } from '../templates';
+import { logDebug, logException, logWarning } from '../utils';
 
-const SES = new AWS.SES();
+const emailService = new SES();
 const config = new Config();
 
 export default async function sendNewAdvertNotification(
@@ -38,7 +38,7 @@ export default async function sendNewAdvertNotification(
         return false;
     }
 
-    const emailBody = template(
+    const emailBody = newAdvertTemplate(
         id,
         contactPerson,
         department,
@@ -56,18 +56,20 @@ export default async function sendNewAdvertNotification(
         to '${config.recycleEmail.split(',')}'`,
     );
     try {
-        await SES.sendEmail({
-            Destination: {
-                ToAddresses: config.recycleEmail.split(','),
-            },
-            Source: config.senderDefaultEmail,
-            Message: {
-                Subject: { Data: 'Här är en QR-kod från Haffa-appen!' },
-                Body: {
-                    Html: { Data: emailBody },
+        await emailService
+            .sendEmail({
+                Destination: {
+                    ToAddresses: config.recycleEmail.split(','),
                 },
-            },
-        }).promise();
+                Source: config.senderDefaultEmail,
+                Message: {
+                    Subject: { Data: 'Här är en QR-kod från Haffa-appen!' },
+                    Body: {
+                        Html: { Data: emailBody },
+                    },
+                },
+            })
+            .promise();
     } catch (error) {
         const typedError = error as Error;
         if (typedError) {

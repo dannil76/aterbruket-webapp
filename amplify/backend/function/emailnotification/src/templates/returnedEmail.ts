@@ -1,4 +1,4 @@
-export default function pickedUpEmail(
+export default function returnedEmail(
     title: string,
     contactPerson: string,
     reservationPerson: string,
@@ -12,10 +12,10 @@ export default function pickedUpEmail(
   <body>
   <p>Hej ${contactPerson}!</p>
 
-  <p><a href="${link}">${title}</a> är hämtad.</p>
+  <p><a href="${link}">${title}</a> är återlämnad.</p>
 
   <p>
-    Uthämtat av: ${reservationPerson}<br>
+    Lämnad av: ${reservationPerson}<br>
     Datum: ${date}<br>
     Förvaltning: ${department}<br>
     Mejl: ${reservationEmail}<br>

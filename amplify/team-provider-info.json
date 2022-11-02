@@ -26,7 +26,7 @@
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
           "s3Key": "amplify-builds/emailnotification-6d6b6852772b72694333-build.zip",
-          "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com/",
+          "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",

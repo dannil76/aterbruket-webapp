@@ -6,12 +6,12 @@ import {
     NumberRecord,
     StringRecord,
 } from '../models/awsEvent';
-import { logWarning } from './logHelper';
+import { logWarning } from '../utils';
 
 export function getString(
     value: StringRecord | undefined,
     propertyName = '',
-): string {
+): string | undefined {
     if (!value) {
         logWarning(`Missing String value ${propertyName}`);
         return '';
@@ -36,14 +36,18 @@ export function getNumber(
 export function getDate(
     value: DateRecord | undefined,
     propertyName = '',
-): Date {
-    if (!value) {
+    defaultValue = undefined as Date,
+): Date | undefined {
+    if (!value && !defaultValue) {
         logWarning(`Missing Date value ${propertyName}`);
-        return new Date(0); // TODO
+        return defaultValue;
     }
 
     const dateValue = getString(value, propertyName);
 
+    if (!dateValue) {
+        return defaultValue;
+    }
     const parsed = Date.parse(dateValue);
 
     if (Number.isNaN(parsed)) {
