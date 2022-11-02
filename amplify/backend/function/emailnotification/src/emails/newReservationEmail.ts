@@ -1,19 +1,23 @@
-import * as AWS from 'aws-sdk';
-import { Advert } from 'models/haffaAdvert';
-import getReservedByUser from 'utils/getReservedByUser';
-import template from '../templates/newReservationTemplate';
+import { SES } from 'aws-sdk';
+import { Advert, AdvertBorrowCalendarEvent } from '../models/haffaAdvert';
+import { getReservedByUser, logDebug, logException } from '../utils';
+import { newReservationTemplate } from '../templates';
 import Config from '../config';
-import { logDebug, logException } from '../utils/logHelper';
 
-const SES = new AWS.SES();
+const emailService = new SES();
 const config = new Config();
 
 export default async function sendReservationEmail(
     newItem: Advert,
+    calendarEvent: AdvertBorrowCalendarEvent = undefined,
 ): Promise<boolean> {
     logDebug(`[sendReservationEmail] Start sendReservationEmail.`);
 
-    const haffaUser = await getReservedByUser(newItem.reservedBySub);
+    // Borrowed items get user from event, recycle items get user directly from item
+    const reservedBySub = calendarEvent
+        ? calendarEvent.borrowedBySub
+        : newItem.reservedBySub;
+    const haffaUser = await getReservedByUser(reservedBySub);
 
     if (!haffaUser) {
         logDebug(
@@ -25,7 +29,7 @@ export default async function sendReservationEmail(
 
     const { title, contactPerson, id, department, email, phoneNumber } =
         newItem;
-    const body = template(
+    const body = newReservationTemplate(
         title,
         contactPerson,
         haffaUser.name,
@@ -44,18 +48,20 @@ export default async function sendReservationEmail(
     );
 
     try {
-        await SES.sendEmail({
-            Destination: {
-                ToAddresses: [toAddress],
-            },
-            Source: config.senderDefaultEmail,
-            Message: {
-                Subject: { Data: `Du har reserverat "${title}"` },
-                Body: {
-                    Html: { Data: body },
+        await emailService
+            .sendEmail({
+                Destination: {
+                    ToAddresses: [toAddress],
                 },
-            },
-        }).promise();
+                Source: config.senderDefaultEmail,
+                Message: {
+                    Subject: { Data: `Du har reserverat "${title}"` },
+                    Body: {
+                        Html: { Data: body },
+                    },
+                },
+            })
+            .promise();
     } catch (error) {
         const typedError = error as Error;
         if (typedError) {

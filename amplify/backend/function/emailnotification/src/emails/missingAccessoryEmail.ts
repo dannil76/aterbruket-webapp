@@ -1,14 +1,13 @@
-import * as AWS from 'aws-sdk';
-import { Advert } from 'models/haffaAdvert';
-import getReservedByUser from 'utils/getReservedByUser';
-import template from '../templates/missingAccessoriesTemplate';
+import { SES } from 'aws-sdk';
+import { getReservedByUser, logDebug, logException } from '../utils';
+import { Advert } from '../models/haffaAdvert';
+import { missingAccessoriesTemplate } from '../templates';
 import Config from '../config';
-import { logDebug, logException } from '../utils/logHelper';
 
-const SES = new AWS.SES();
+const emailService = new SES();
 const config = new Config();
 
-export async function sendMissingAccessoryNotification(
+export default async function sendMissingAccessoryNotification(
     newItem: Advert,
 ): Promise<boolean> {
     logDebug(
@@ -35,7 +34,7 @@ export async function sendMissingAccessoryNotification(
         getReservedByUser(lastReturnedBy),
     ]);
 
-    const emailBody = template(
+    const emailBody = missingAccessoriesTemplate(
         newItem.title,
         newItem.contactPerson,
         missingAccessories,
@@ -51,18 +50,22 @@ export async function sendMissingAccessoryNotification(
     );
 
     try {
-        await SES.sendEmail({
-            Destination: {
-                ToAddresses: [toAddress],
-            },
-            Source: config.senderDefaultEmail,
-            Message: {
-                Subject: { Data: 'Notis från Haffa - ett tillbehör saknas!' },
-                Body: {
-                    Html: { Data: emailBody },
+        await emailService
+            .sendEmail({
+                Destination: {
+                    ToAddresses: [toAddress],
                 },
-            },
-        }).promise();
+                Source: config.senderDefaultEmail,
+                Message: {
+                    Subject: {
+                        Data: 'Notis från Haffa - ett tillbehör saknas!',
+                    },
+                    Body: {
+                        Html: { Data: emailBody },
+                    },
+                },
+            })
+            .promise();
     } catch (error) {
         const typedError = error as Error;
         if (typedError) {

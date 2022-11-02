@@ -13,7 +13,15 @@
     "source.fixAll.eslint": true
   },
   "eslint.validate": ["typescript"],
-  "editor.tabSize": 4,
+  "[javascript]": {
+      "editor.tabSize": 4
+  },
+  "[typescript]": {
+      "editor.tabSize": 4
+  },
+  "[json]": {
+      "editor.tabSize": 2
+  },
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false
 }

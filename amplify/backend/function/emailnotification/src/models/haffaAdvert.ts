@@ -1,11 +1,24 @@
-import { AdvertStatus } from './advertStatus';
-import { AdvertType } from './advertType';
+import { AdvertStatus, BorrowStatus, AdvertType } from './enums';
 
 export interface MissingAccessory {
     reportedBy: string;
     reportedDate: Date;
     accessories: string[];
     lastReturnedBy: string;
+}
+
+export interface AdvertBorrowCalendarEvent {
+    borrowedBySub: string;
+    dateEnd: Date;
+    dateStart: Date;
+    returnDateTime: Date | null;
+    status: BorrowStatus;
+}
+
+export interface AdvertBorrowCalendar {
+    allowedDateEnd: Date;
+    allowedDateStart: Date;
+    calendarEvents: AdvertBorrowCalendarEvent[];
 }
 
 export interface Advert {
@@ -21,6 +34,7 @@ export interface Advert {
     city: string;
     missingAccessories: MissingAccessory[];
     reservedBySub: string | undefined;
+    advertBorrowCalendar: AdvertBorrowCalendar | undefined;
     version: number;
     status: AdvertStatus;
     updatedAt: Date;

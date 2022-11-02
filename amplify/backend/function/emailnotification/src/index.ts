@@ -1,16 +1,16 @@
-import { AdvertType } from './models/advertType';
-import { Event, EventType, EventRecord } from './models/awsEvent';
+import { AdvertType, EventType } from './models/enums';
+import { Event, EventRecord } from './models/awsEvent';
 import { borrow, recycle } from './handlers';
-import { logDebug, logWarning } from './utils/logHelper';
-import mapEvent from './utils/mapEvent';
+import { logDebug, logWarning } from './utils';
+import { mapAwsEvent } from './mappers';
 
 exports.handler = async function NotifyByEmail(event: Event): Promise<string> {
     logDebug('emailnotification started');
     const operations = event.Records.map((record: EventRecord) => {
         logDebug(`read event ${record.eventName}`);
         const streamRecord = record.dynamodb;
-        const previousItem = mapEvent(streamRecord.OldImage);
-        const newItem = mapEvent(streamRecord.NewImage);
+        const previousItem = mapAwsEvent(streamRecord.OldImage);
+        const newItem = mapAwsEvent(streamRecord.NewImage);
         const advertType = newItem?.advertType ?? previousItem?.advertType;
         logDebug(`event type: ${advertType}`);
         if (advertType === AdvertType.BORROW) {

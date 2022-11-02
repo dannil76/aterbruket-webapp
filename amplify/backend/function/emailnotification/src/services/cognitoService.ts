@@ -1,12 +1,12 @@
-import * as AWS from 'aws-sdk';
+import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import { HaffaUser } from '../models/haffaUser';
 import { Hash } from '../models/hash';
 
-export class AwsUser {
-    userPool: AWS.CognitoIdentityServiceProvider;
+export default class CognitoService {
+    userPool: CognitoIdentityServiceProvider;
 
     constructor() {
-        this.userPool = new AWS.CognitoIdentityServiceProvider({
+        this.userPool = new CognitoIdentityServiceProvider({
             apiVersion: '2016-04-18',
         });
     }

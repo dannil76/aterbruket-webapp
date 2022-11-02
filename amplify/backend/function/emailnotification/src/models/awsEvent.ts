@@ -1,23 +1,15 @@
-import { AdvertStatus } from './advertStatus';
-import { AdvertType } from './advertType';
-
-export enum EventType {
-    MODIFY = 'MODIFY',
-    INSERT = 'INSERT',
-    DELETE = 'DELETE',
-    REMOVE = 'REMOVE',
-}
+import { AdvertStatus, BorrowStatus, EventType, AdvertType } from './enums';
 
 export interface NumberRecord {
     N: string;
 }
 
 export interface StringRecord {
-    S: string;
+    S: string | undefined;
 }
 
 export interface DateRecord {
-    S: string;
+    S: string | undefined;
 }
 
 export interface EnumRecord<T> {
@@ -48,6 +40,20 @@ export interface MissingAccessory {
     M: MissingAccessory;
 }
 
+export interface AdvertBorrowCalendarEvent {
+    borrowedBySub: StringRecord;
+    dateEnd: DateRecord;
+    dateStart: DateRecord;
+    returnDateTime: DateRecord;
+    status: EnumRecord<BorrowStatus>;
+}
+
+export interface AdvertBorrowCalendar {
+    allowedDateEnd: DateRecord | null;
+    allowedDateStart: DateRecord | null;
+    calendarEvents: ListRecord<ModelRecord<AdvertBorrowCalendarEvent>>;
+}
+
 export interface Advert {
     id: StringRecord;
     title: StringRecord;
@@ -61,6 +67,7 @@ export interface Advert {
     phoneNumber: StringRecord;
     city: StringRecord;
     missingAccessories: ListRecord<ModelRecord<MissingAccessory>>;
+    advertBorrowCalendar: ModelRecord<AdvertBorrowCalendar>;
     reservedBySub: StringRecord;
     version: NumberRecord;
     updatedAt: DateRecord;
