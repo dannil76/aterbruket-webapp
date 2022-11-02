@@ -50,6 +50,7 @@ export const getAdvert = /* GraphQL */ `
       lockerCodeInformation
       lockerCode
       returnInformation
+      returnDate
       pickUpInstructions
       accessories
       borrowDifficultyLevel
@@ -153,6 +154,7 @@ export const listAdverts = /* GraphQL */ `
         lockerCodeInformation
         lockerCode
         returnInformation
+        returnDate
         pickUpInstructions
         accessories
         borrowDifficultyLevel

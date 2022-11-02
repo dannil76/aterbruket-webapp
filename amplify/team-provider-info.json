@@ -19,13 +19,13 @@
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/migrateADUser-53546a3972356131616b-build.zip",
+          "s3Key": "amplify-builds/migrateADUser-78724868644f7a4f465a-build.zip",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "cognitoUserPoolClientId": "15rojv7pkqvagkakpm70ku7dlh"
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-6d6b6852772b72694333-build.zip",
+          "s3Key": "amplify-builds/emailnotification-693563306e2b6b2f4942-build.zip",
           "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
@@ -35,6 +35,10 @@
         "addUserToGroup": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
           "s3Key": "amplify-builds/addUserToGroup-453233414257444d2f67-build.zip"
+        },
+        "scheduledNotifications": {
+          "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
+          "s3Key": "amplify-builds/scheduledNotifications-634576507178324d4731-build.zip"
         }
       }
     }

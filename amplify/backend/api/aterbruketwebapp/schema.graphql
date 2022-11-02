@@ -33,6 +33,7 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   lockerCodeInformation: String
   lockerCode: String
   returnInformation: String
+  returnDate: String
   pickUpInstructions: String
   accessories: [String!]!
   borrowDifficultyLevel: String
