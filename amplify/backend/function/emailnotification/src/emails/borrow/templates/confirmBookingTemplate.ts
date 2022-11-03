@@ -1,4 +1,4 @@
-export default function newReservationTemplate(
+export default function confirmNewReservationEmail(
     title: string,
     contactPerson: string,
     reservationPerson: string,
@@ -6,21 +6,21 @@ export default function newReservationTemplate(
     department: string,
     contactEmail: string,
     phone: string,
-    senderEmail: string,
+    fromDate: string,
+    toDate: string,
 ): string {
     return `
   <html>
   <body>
   <p>Hej ${reservationPerson}!</p>
 
-  <p>Du har reserverat <a href="${link}">${title}</a> i Haffa.</p>
+  <p>Du har bokat <a href="${link}">${title}</a> i Haffa mellan ${fromDate} - ${toDate} </p>
   <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson. </p>
-  <p>${contactPerson}</p>
-  <p>${department}</p>
-  <p>Mejl: ${contactEmail}</p>
-  <p>Telefon: ${phone}</p>
-  </br>
-  <p>Finns din pryl på Återbruket har du 14 dagar på dig att hämta den innan din reservation släpps.</p>
+  <p>
+  Utlånas av: ${contactPerson}<br>
+  Förvaltning: ${department}<br>
+  Mejl: ${contactEmail}<br>
+  Telefon: ${phone}</p>
   </br>
   <p>Gör så här när du ska hämta prylen: </p>
   <ul>
@@ -31,10 +31,6 @@ export default function newReservationTemplate(
   <li>Bekräfta uthämtning</li>
   <li>Grattis! Ta med din pryl &#127881;</li>
 </ul>
-<p>Behöver du ett släp för att flytta prylen - hör av dig till <a href = "mailto:${senderEmail}?subject = Återbruk reservation&body = Hej Återbruket">
-Återbruket
-</a></p>
-
   <p>
     Mvh<br>
     Haffa-teamet genom<br>

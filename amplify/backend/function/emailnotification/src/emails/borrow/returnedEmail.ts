@@ -1,13 +1,15 @@
 import { SES } from 'aws-sdk';
-import { Advert, AdvertBorrowCalendarEvent } from '../models/haffaAdvert';
+import { Advert, AdvertBorrowCalendarEvent } from '../../models/haffaAdvert';
 import {
     formatDate,
+    getHaffaFirstName,
+    getHaffaFullName,
     getReservedByUser,
     logDebug,
     logException,
-} from '../utils';
-import { returnedEmailTemplate } from '../templates';
-import Config from '../config';
+} from '../../utils';
+import { returnedTemplate } from './templates';
+import Config from '../../config';
 
 const emailService = new SES();
 const config = new Config();
@@ -17,19 +19,20 @@ export default async function sendReturnedEmail(
     calendarEvent: AdvertBorrowCalendarEvent,
 ): Promise<boolean> {
     logDebug(`[sendReturnedEmail] Start sendReturnedEmail.`);
-    const { title, contactPerson, id, email, updatedAt } = newItem;
+    const { title, contactPerson, id, email } = newItem;
 
     try {
         const haffaUser = await getReservedByUser(calendarEvent.borrowedBySub);
-
-        const date = formatDate(updatedAt);
-        const body = returnedEmailTemplate(
+        const firstName = getHaffaFirstName(haffaUser);
+        const body = returnedTemplate(
             title,
-            contactPerson,
-            haffaUser?.name,
+            getHaffaFirstName(contactPerson),
+            firstName,
+            getHaffaFullName(haffaUser),
             `${config.appUrl}/item/${id}`,
-            haffaUser ? haffaUser['custom:department'] : undefined,
-            date,
+            haffaUser ? haffaUser['custom:department'] ?? '' : '',
+            formatDate(calendarEvent.dateStart),
+            formatDate(calendarEvent.dateEnd),
             haffaUser?.email,
         );
 
@@ -46,7 +49,9 @@ export default async function sendReturnedEmail(
                 },
                 Source: config.senderDefaultEmail,
                 Message: {
-                    Subject: { Data: `${title} är återlämnad` },
+                    Subject: {
+                        Data: `${firstName} har lämnat tillbaka ${title}`,
+                    },
                     Body: {
                         Html: { Data: body },
                     },

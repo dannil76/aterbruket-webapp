@@ -1,8 +1,13 @@
 import { SES } from 'aws-sdk';
-import { getReservedByUser, logDebug, logException } from '../utils';
-import { Advert } from '../models/haffaAdvert';
-import { missingAccessoriesTemplate } from '../templates';
-import Config from '../config';
+import {
+    getHaffaFullName,
+    getReservedByUser,
+    logDebug,
+    logException,
+} from '../../utils';
+import { Advert } from '../../models/haffaAdvert';
+import { missingAccessoriesTemplate } from './templates';
+import Config from '../../config';
 
 const emailService = new SES();
 const config = new Config();
@@ -33,13 +38,15 @@ export default async function sendMissingAccessoryNotification(
         getReservedByUser(reportedBy),
         getReservedByUser(lastReturnedBy),
     ]);
-
     const emailBody = missingAccessoriesTemplate(
         newItem.title,
         newItem.contactPerson,
         missingAccessories,
-        reportedByUser,
-        lastReturnedByUser,
+        reportedByUser.username,
+        getHaffaFullName(reportedByUser),
+        lastReturnedByUser.username,
+        getHaffaFullName(lastReturnedByUser),
+        lastReturnedByUser.email,
     );
 
     const toAddress = newItem.email;
