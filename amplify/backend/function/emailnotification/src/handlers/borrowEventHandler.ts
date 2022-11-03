@@ -2,11 +2,12 @@ import { getAdvertCalendarChange, logDebug, logWarning } from '../utils';
 import { AdvertStatus, BorrowStatus } from '../models/enums';
 import { Advert } from '../models/haffaAdvert';
 import {
-    missingAccessoryEmail,
-    pickedUpEmail,
-    returnedEmail,
     newAdvertEmail,
-    newReservationEmail,
+    borrowedEmail,
+    missingAccessoryEmail,
+    newBookingEmail,
+    returnedEmail,
+    confirmNewBookingEmail,
 } from '../emails';
 
 /**
@@ -45,11 +46,12 @@ export async function onModify(
     );
 
     if (calendarChange && calendarChange.status === BorrowStatus.RESERVED) {
-        emails.push(newReservationEmail(newItem, calendarChange));
+        emails.push(newBookingEmail(newItem, calendarChange));
+        emails.push(confirmNewBookingEmail(newItem, calendarChange));
     }
 
     if (calendarChange && calendarChange.status === BorrowStatus.PICKEDUP) {
-        emails.push(pickedUpEmail(newItem, calendarChange));
+        emails.push(borrowedEmail(newItem, calendarChange));
     }
 
     if (calendarChange && calendarChange.status === BorrowStatus.RETURNED) {

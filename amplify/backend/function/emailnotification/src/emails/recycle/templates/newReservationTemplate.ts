@@ -1,4 +1,4 @@
-export default function returnedEmail(
+export default function notifyAboutNewReservationEmail(
     title: string,
     contactPerson: string,
     reservationPerson: string,
@@ -10,15 +10,13 @@ export default function returnedEmail(
     return `
   <html>
   <body>
-  <p>Hej ${contactPerson}!</p>
-
-  <p><a href="${link}">${title}</a> är återlämnad.</p>
-
-  <p>
-    Lämnad av: ${reservationPerson}<br>
-    Datum: ${date}<br>
-    Förvaltning: ${department}<br>
-    Mejl: ${reservationEmail}<br>
+  <p>Hej ${contactPerson}!<br>
+  <br>
+  <a href="${link}">${title}</a> har blivit reserverad.</p>
+  <p>Reserverad av ${reservationPerson}<br>
+  Datum: ${date} <br>
+  Förvaltning: ${department ?? ''} <br>
+  Mejl: ${reservationEmail} <br>
   </p>
   <p>
     Mvh<br>

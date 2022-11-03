@@ -1,8 +1,8 @@
 import { SES } from 'aws-sdk';
-import { Advert } from '../models/haffaAdvert';
-import Config from '../config';
-import { newAdvertTemplate } from '../templates';
-import { logDebug, logException, logWarning } from '../utils';
+import { Advert } from '../../models/haffaAdvert';
+import Config from '../../config';
+import { newAdvertTemplate } from './templates';
+import { logDebug, logException, logWarning } from '../../utils';
 
 const emailService = new SES();
 const config = new Config();

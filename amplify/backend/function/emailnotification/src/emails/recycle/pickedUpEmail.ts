@@ -1,40 +1,39 @@
 import { SES } from 'aws-sdk';
-import { Advert, AdvertBorrowCalendarEvent } from '../models/haffaAdvert';
+import { Advert } from '../../models/haffaAdvert';
 import {
-    formatDate,
+    formatDateTime,
+    getHaffaFirstName,
+    getHaffaFullName,
     getReservedByUser,
     logDebug,
     logException,
-} from '../utils';
-import { pickedUpEmailTemplate } from '../templates';
-import Config from '../config';
+} from '../../utils';
+import { pickedUpTemplate } from './templates';
+import Config from '../../config';
 
 const emailService = new SES();
 const config = new Config();
 
 export default async function sendPickedUpEmail(
     newItem: Advert,
-    calendarEvent: AdvertBorrowCalendarEvent = undefined,
 ): Promise<boolean> {
     logDebug(`[sendPickedUpEmail] Start sendPickedUpEmail.`);
 
     // Borrowed items get user from event, recycle items get user directly from item
-    const reservedBySub = calendarEvent
-        ? calendarEvent.borrowedBySub
-        : newItem.reservedBySub;
+    const { reservedBySub } = newItem;
 
     const { title, contactPerson, id, email, updatedAt } = newItem;
 
     try {
         const haffaUser = await getReservedByUser(reservedBySub);
 
-        const date = formatDate(updatedAt);
-        const body = pickedUpEmailTemplate(
+        const date = formatDateTime(updatedAt);
+        const body = pickedUpTemplate(
             title,
-            contactPerson,
-            haffaUser?.name,
+            getHaffaFirstName(contactPerson),
+            getHaffaFullName(haffaUser),
             `${config.appUrl}/item/${id}`,
-            haffaUser ? haffaUser['custom:department'] : undefined,
+            haffaUser ? haffaUser['custom:department'] ?? '' : '',
             date,
             haffaUser?.email,
         );

@@ -1,4 +1,4 @@
-export default function formatDate(date: Date | undefined): string {
+export function formatDateTime(date: Date | undefined): string {
     if (!date) {
         return '';
     }
@@ -14,5 +14,20 @@ export default function formatDate(date: Date | undefined): string {
     } as Intl.DateTimeFormatOptions;
 
     const dateString = date.toLocaleTimeString('sv-SE', dateOptions);
+    return dateString;
+}
+
+export function formatDate(date: Date | undefined): string {
+    if (!date) {
+        return '';
+    }
+
+    const dateOptions = {
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'Europe/Stockholm',
+    } as Intl.DateTimeFormatOptions;
+
+    const dateString = date.toLocaleDateString('sv-SE', dateOptions);
     return dateString;
 }

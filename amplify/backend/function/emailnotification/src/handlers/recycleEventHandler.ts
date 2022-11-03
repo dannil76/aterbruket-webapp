@@ -1,7 +1,12 @@
+import {
+    confirmNewReservationEmail,
+    notifyAboutNewReservationEmail,
+    newAdvertEmail,
+    pickedUpEmail,
+} from '../emails';
 import { AdvertStatus } from '../models/enums';
 import { Advert } from '../models/haffaAdvert';
 import { logDebug, logWarning } from '../utils/logHelper';
-import { newReservationEmail, newAdvertEmail, pickedUpEmail } from '../emails';
 
 /**
  * Handle modifications in the Haffa database.This is usually the modification of the current version 0 item.
@@ -32,7 +37,8 @@ export async function onModify(
         previousItem.status === AdvertStatus.AVAILABLE &&
         newItem.status === AdvertStatus.RESERVED
     ) {
-        emails.push(newReservationEmail(newItem));
+        emails.push(confirmNewReservationEmail(newItem));
+        emails.push(notifyAboutNewReservationEmail(newItem));
     }
 
     if (

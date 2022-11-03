@@ -285,6 +285,8 @@ const ItemDetails: FC<ParamTypes> = () => {
         );
 
         if (updatedEvent.updateSuccessful) {
+            item.status = newStatus === 'returned' ? 'available' : newStatus;
+            item.returnDate = updatedEvent.currentEvent?.dateEnd;
             const lastReturnedEvent = getLastReturnedCalendarEvent(
                 item.advertBorrowCalendar,
             );
