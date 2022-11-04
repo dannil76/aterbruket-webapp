@@ -6,6 +6,7 @@ const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     coverageDirectory: '../coverage/',
+    setupFiles: ['./.jest/setEnvVars.ts'],
 };
 
 export default config;

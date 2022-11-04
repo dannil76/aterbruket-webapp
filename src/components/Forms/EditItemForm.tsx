@@ -74,6 +74,8 @@ const EditItemForm: FC<Props> = ({
             lockerCodeInformation: item.lockerCodeInformation ?? '',
             lockerCode: item.lockerCode ?? '',
             returnInformation: item.returnInformation ?? '',
+            returnDate: item.returnDate ?? '',
+            reservationDate: item.reservationDate ?? '',
             accessories: item.accessories ?? [],
             borrowDifficultyLevel: item.borrowDifficultyLevel,
             accessRestriction: item.accessRestriction,

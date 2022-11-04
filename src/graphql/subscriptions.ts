@@ -51,6 +51,7 @@ export const onCreateAdvert = /* GraphQL */ `
       lockerCode
       returnInformation
       returnDate
+      reservationDate
       pickUpInstructions
       accessories
       borrowDifficultyLevel
@@ -140,6 +141,7 @@ export const onUpdateAdvert = /* GraphQL */ `
       lockerCode
       returnInformation
       returnDate
+      reservationDate
       pickUpInstructions
       accessories
       borrowDifficultyLevel
@@ -229,6 +231,7 @@ export const onDeleteAdvert = /* GraphQL */ `
       lockerCode
       returnInformation
       returnDate
+      reservationDate
       pickUpInstructions
       accessories
       borrowDifficultyLevel

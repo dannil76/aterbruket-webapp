@@ -1,0 +1,3 @@
+process.env.API_ATERBRUKETWEBAPP_GRAPHQLAPIIDOUTPUT = 'ABC';
+process.env.RESERVATION_DAYS_UNTIL_NOTIFICATIONS = '5';
+process.env.ENV = 'release';

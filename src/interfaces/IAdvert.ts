@@ -47,6 +47,8 @@ export interface IAdvert {
     pickUpInformation?: string;
     pickUpInstructions?: string;
     returnInformation?: string;
+    reservationDate: string;
+    returnDate: string;
     accessories?: string[];
     borrowDifficultyLevel?: string;
     accessRestriction?: string;

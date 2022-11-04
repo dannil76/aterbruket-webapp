@@ -1,4 +1,16 @@
 {
-  "permissions": {},
-  "lambdaLayers": []
+  "permissions": {
+    "api": {
+      "aterbruketwebapp": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "reservationDaysUntilNotifications",
+      "environmentVariableName": "RESERVATION_DAYS_UNTIL_NOTIFICATIONS"
+    }
+  ]
 }

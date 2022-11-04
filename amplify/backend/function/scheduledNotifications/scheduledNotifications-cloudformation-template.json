@@ -15,6 +15,17 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "apiaterbruketwebappGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apiaterbruketwebappGraphQLAPIIdOutput"
+    },
+    "apiaterbruketwebappGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apiaterbruketwebappGraphQLAPIEndpointOutput"
+    },
+    "reservationDaysUntilNotifications": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -69,6 +80,15 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "API_ATERBRUKETWEBAPP_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apiaterbruketwebappGraphQLAPIIdOutput"
+            },
+            "API_ATERBRUKETWEBAPP_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apiaterbruketwebappGraphQLAPIEndpointOutput"
+            },
+            "RESERVATION_DAYS_UNTIL_NOTIFICATIONS": {
+              "Ref": "reservationDaysUntilNotifications"
             }
           }
         },
@@ -200,6 +220,78 @@
           "Fn::GetAtt": [
             "CloudWatchEvent",
             "Arn"
+          ]
+        }
+      }
+    },
+    "LambdaDynamoDbPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "dynamo-db-read-items-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "VisualEditor0",
+              "Effect": "Allow",
+              "Action": "dynamodb:Query",
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:Get*",
+                "appsync:List*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apiaterbruketwebappGraphQLAPIIdOutput"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
           ]
         }
       }

@@ -1,11 +1,14 @@
-type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["administrator"]}]) {
+type Advert @model 
+@auth(rules: [{allow: private}, {allow: groups, groups: ["administrator"]}])
+{
   id: ID! @primaryKey(sortKeyFields: ["version"])
   title: String!
   description: String
   height: String
   width: String
   length: String
-  status: ItemStatus
+  status: ItemStatus 
+    @index(name: "byStatusAndReservationDate", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate"])
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition
@@ -34,6 +37,7 @@ type Advert @model @auth(rules: [{allow: private}, {allow: groups, groups: ["adm
   lockerCode: String
   returnInformation: String
   returnDate: String
+  reservationDate: String
   pickUpInstructions: String
   accessories: [String!]!
   borrowDifficultyLevel: String
