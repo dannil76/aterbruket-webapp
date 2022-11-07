@@ -43,14 +43,16 @@ describe('DynamoDB service', () => {
             ExpressionAttributeNames: {
                 '#S': 'status',
                 '#R': 'reservationDate',
+                '#V': 'version',
             },
             ExpressionAttributeValues: {
                 ':reservationDateValue': '2022-01-01',
                 ':statusValue': 'reserved',
+                ':version': 0,
             },
-            IndexName: 'byStatusAndReservationDate',
+            IndexName: 'byStatusAndReservationDateAndVersion',
             KeyConditionExpression:
-                '#S = :statusValue AND #R = :reservationDateValue',
+                '#S = :statusValue AND #R = :reservationDateValue AND #V = :version',
             ProjectionExpression: 'reservedBySub',
             TableName: 'Advert-ABC-release',
         };

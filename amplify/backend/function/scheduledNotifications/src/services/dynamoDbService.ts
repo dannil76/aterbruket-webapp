@@ -40,16 +40,18 @@ export default async function getReservations(): Promise<Advert[]> {
         const reservations = await client
             .query({
                 TableName: table,
-                IndexName: 'byStatusAndReservationDate',
+                IndexName: 'byStatusAndReservationDateAndVersion',
                 KeyConditionExpression:
-                    '#S = :statusValue AND #R = :reservationDateValue',
+                    '#S = :statusValue AND #R = :reservationDateValue AND #V = :version',
                 ExpressionAttributeNames: {
                     '#S': 'status',
                     '#R': 'reservationDate',
+                    '#V': 'version',
                 },
                 ExpressionAttributeValues: {
                     ':statusValue': 'reserved',
                     ':reservationDateValue': reservationDate,
+                    ':version': 0,
                 },
                 ProjectionExpression: 'reservedBySub',
             })

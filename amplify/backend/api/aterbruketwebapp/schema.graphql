@@ -8,7 +8,7 @@ type Advert @model
   width: String
   length: String
   status: ItemStatus 
-    @index(name: "byStatusAndReservationDate", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate"])
+    @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition
