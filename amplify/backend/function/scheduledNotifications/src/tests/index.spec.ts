@@ -1,5 +1,5 @@
 import { logDebug } from '../utils';
-import { getReservations } from '../services';
+import { pickUpReminderHandler } from '../handlers';
 import { Event } from '../models/awsEvent';
 import { handler } from '..';
 
@@ -10,31 +10,31 @@ jest.mock('../utils', () => {
     };
 });
 
-jest.mock('../services', () => {
+jest.mock('../handlers', () => {
     return {
-        getReservations: jest.fn(),
+        pickUpReminderHandler: jest.fn(),
     };
 });
 
-describe('Handle event', () => {
+describe('Scheduled notification', () => {
     let event: Event;
     const logDebugMock = logDebug as jest.Mock;
-    const getReservationsMock = getReservations as jest.Mock;
+    const pickUpReminderHandlerMock = pickUpReminderHandler as jest.Mock;
 
     beforeEach(() => {
         logDebugMock.mockReset();
-        getReservationsMock.mockReset();
+        pickUpReminderHandlerMock.mockReset();
         event = {
             triggerSource: 'user',
         } as Event;
     });
 
     it('handle event', async () => {
-        getReservationsMock.mockReturnValue(Promise.resolve([]));
+        pickUpReminderHandlerMock.mockReturnValue(Promise.resolve(true));
         await handler(event);
         expect(logDebug).toHaveBeenCalledWith(
             'Event recieved: {"triggerSource":"user"}',
         );
-        expect(logDebug).toHaveBeenCalledWith('found 0 items');
+        expect(pickUpReminderHandlerMock).toHaveBeenCalled();
     });
 });

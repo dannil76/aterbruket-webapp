@@ -8,7 +8,7 @@
     "build": "npm run test && npm prune --production",
     "tsc": "tsc",
     "lint": "eslint . --ext .ts",
-    "clean": "rimraf ./*.js ./utils/**/*.js ./tests/**/*.js ./models/**/*.js ./services/**/*.js",
+    "clean": "rimraf ./*.js ./utils/**/*.js ./tests/**/*.js ./models/**/*.js ./services/**/*.js ./handlers/**/*.js",
     "test": "npm run clean && npm run tsc && jest --coverage",
     "test:watch": "jest --watch"
   },

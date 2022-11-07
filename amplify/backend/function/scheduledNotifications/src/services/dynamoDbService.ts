@@ -1,40 +1,18 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { Advert } from '../models/advert';
-import {
-    logDebug,
-    logException,
-    getDateForReservationNotification,
-} from '../utils';
+import { logDebug, logException, dateToDayString } from '../utils';
+import { apiGraphqlOutput, environment } from '../config';
 
-function getDaysFromEnv() {
-    const days = process.env.RESERVATION_DAYS_UNTIL_NOTIFICATIONS;
-    const numberOfDays = Number.parseInt(days, 10);
-
-    return Number.isNaN(numberOfDays) ? 0 : numberOfDays;
-}
-
-function getReservationDay() {
-    const date = new Date();
-    date.setDate(date.getDate() - getDaysFromEnv());
-    return date;
-}
-
-export default async function getReservations(): Promise<Advert[]> {
-    const environment = process.env.ENV;
-    const apiGraphQLAPIIdOutput =
-        process.env.API_ATERBRUKETWEBAPP_GRAPHQLAPIIDOUTPUT;
-    const table = `Advert-${apiGraphQLAPIIdOutput}-${environment}`;
-
+export default async function getReservations(
+    reservationDate: Date,
+): Promise<Advert[]> {
+    const table = `Advert-${apiGraphqlOutput}-${environment}`;
+    const advertVersion = 0;
     logDebug(`table: ${table}`);
     const client = new DocumentClient();
-    const reservationDate =
-        getDateForReservationNotification().toLocaleDateString('sv-SE', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-        });
+    const reservationDateValue = dateToDayString(reservationDate);
 
-    logDebug(`try to find date: ${reservationDate}`);
+    logDebug(`try to find date: ${reservationDateValue}`);
 
     try {
         const reservations = await client
@@ -42,18 +20,17 @@ export default async function getReservations(): Promise<Advert[]> {
                 TableName: table,
                 IndexName: 'byStatusAndReservationDateAndVersion',
                 KeyConditionExpression:
-                    '#S = :statusValue AND #R = :reservationDateValue AND #V = :version',
+                    '#S = :statusValue AND #R = :reservationDateValue',
                 ExpressionAttributeNames: {
                     '#S': 'status',
-                    '#R': 'reservationDate',
-                    '#V': 'version',
+                    '#R': 'reservationDate#version',
                 },
                 ExpressionAttributeValues: {
                     ':statusValue': 'reserved',
-                    ':reservationDateValue': reservationDate,
-                    ':version': 0,
+                    ':reservationDateValue': `${reservationDateValue}#${advertVersion}`,
                 },
-                ProjectionExpression: 'reservedBySub',
+                ProjectionExpression:
+                    'reservedBySub, contactPerson, department, email, phoneNumber, title',
             })
             .promise();
 
@@ -63,6 +40,11 @@ export default async function getReservations(): Promise<Advert[]> {
                 id: item.id,
                 version: item.version,
                 reservedBySub: item.reservedBySub,
+                contactPerson: item.contactPerson,
+                department: item.department,
+                email: item.email,
+                phoneNumber: item.phoneNumber,
+                title: item.title,
             } as Advert;
         });
     } catch (error) {

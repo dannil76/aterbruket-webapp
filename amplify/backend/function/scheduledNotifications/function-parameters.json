@@ -4,6 +4,11 @@
       "aterbruketwebapp": [
         "read"
       ]
+    },
+    "auth": {
+      "aterbruketwebapp75287c9a": [
+        "read"
+      ]
     }
   },
   "lambdaLayers": [],
@@ -11,6 +16,18 @@
     {
       "cloudFormationParameterName": "reservationDaysUntilNotifications",
       "environmentVariableName": "RESERVATION_DAYS_UNTIL_NOTIFICATIONS"
+    },
+    {
+      "cloudFormationParameterName": "reservationDaysUntilCancellation",
+      "environmentVariableName": "RESERVATION_DAYS_UNTIL_CANCELLATION"
+    },
+    {
+      "cloudFormationParameterName": "sesSenderEmail",
+      "environmentVariableName": "SES_SENDER_EMAIL"
+    },
+    {
+      "cloudFormationParameterName": "sesAppUrl",
+      "environmentVariableName": "SES_APP_URL"
     }
   ]
 }

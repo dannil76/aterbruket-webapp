@@ -5,12 +5,17 @@
     REGION
 Amplify Params - DO NOT EDIT */
 
-import { getReservations } from './services';
+import { pickUpReminderHandler } from './handlers';
 import { Event } from './models';
 import { logDebug } from './utils';
 
 export async function handler(event: Event): Promise<void> {
     logDebug(`Event recieved: ${JSON.stringify(event)}`);
-    const reservations = await getReservations();
-    logDebug(`found ${reservations.length} items`);
+    const pickUpReminder = await pickUpReminderHandler();
+
+    if (!pickUpReminder) {
+        throw new Error(
+            '[Scheduled Notification] not all e-mails succeeded. Check logs for more info',
+        );
+    }
 }

@@ -65,6 +65,13 @@
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
           ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "aterbruketwebapp75287c9a",
+          "attributes": [
+            "UserPoolId"
+          ]
         }
       ]
     }

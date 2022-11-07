@@ -39,7 +39,10 @@
         "scheduledNotifications": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
           "s3Key": "amplify-builds/scheduledNotifications-30386e5a4c715a777757-build.zip",
-          "reservationDaysUntilNotifications": "12"
+          "reservationDaysUntilNotifications": "12",
+          "reservationDaysUntilCancellation": "14",
+          "sesSenderEmail": "aterbruket.amf@helsingborg.se",
+          "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com"
         }
       }
     }
