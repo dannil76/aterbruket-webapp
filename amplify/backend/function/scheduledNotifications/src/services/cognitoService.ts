@@ -30,6 +30,7 @@ export default class CognitoService {
 
         return {
             username: user.Username,
+            userId: sub,
             name: attributeHash.name,
             email: attributeHash.email,
             email_verified: attributeHash.email_verified,

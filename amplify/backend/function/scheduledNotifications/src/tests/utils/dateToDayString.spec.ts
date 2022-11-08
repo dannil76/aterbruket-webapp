@@ -1,4 +1,4 @@
-import { dateToDayString } from '../../utils';
+import dateToDayString from '../../utils/dateToDayString';
 
 describe('Date to day string', () => {
     it('format date', async () => {

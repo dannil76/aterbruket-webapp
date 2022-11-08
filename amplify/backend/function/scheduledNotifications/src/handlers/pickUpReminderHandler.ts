@@ -6,7 +6,7 @@ import {
     logException,
     subtractDays,
 } from '../utils';
-import { Advert } from '../models';
+import { Reservation } from '../models';
 import {
     userPoolId,
     appUrl,
@@ -16,7 +16,7 @@ import {
 } from '../config';
 import { pickUpReminderTemplate } from './templates';
 
-async function sendReminder(advert: Advert) {
+async function sendReminder(advert: Reservation) {
     try {
         const user = await CognitoService.getUserBySub(
             userPoolId,

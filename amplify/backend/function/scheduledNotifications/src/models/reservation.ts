@@ -1,4 +1,4 @@
-export interface Advert {
+export interface Reservation {
     id: string;
     version: string;
     reservedBySub: string;

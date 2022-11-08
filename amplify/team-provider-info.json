@@ -28,9 +28,9 @@
           "s3Key": "amplify-builds/emailnotification-4d704832357430743438-build.zip",
           "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
-          "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
+          "sesRecycleRecipientEmail": "Niclas.Ranlind@helsingborg.se",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",
-          "sesBorrowRecipientEmail": "aterbruket.amf@helsingborg.se"
+          "sesBorrowRecipientEmail": "Niclas.Ranlind@helsingborg.se"
         },
         "addUserToGroup": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
@@ -71,10 +71,10 @@
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
           "s3Key": "amplify-builds/emailnotification-6d6b6852772b72694333-build.zip",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",
-          "sesRecycleRecipientEmail": "aterbruket.amf@helsingborg.se",
+          "sesRecycleRecipientEmail": "Aterbruket.Haffa@helsingborg.se,Niclas.Ranlind@helsingborg.se,Tommy.Boije@helsingborg.se,Maria.Sjodin@helsingborg.se",
           "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_ukriyEPzq",
-          "sesBorrowRecipientEmail": "aterbruket.amf@helsingborg.se"
+          "sesBorrowRecipientEmail": "Aterbruket.Haffa@helsingborg.se,Niclas.Ranlind@helsingborg.se,Tommy.Boije@helsingborg.se,Maria.Sjodin@helsingborg.se"
         },
         "addUserToGroup": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
@@ -85,7 +85,7 @@
           "s3Key": "amplify-builds/scheduledNotifications-30386e5a4c715a777757-build.zip",
           "reservationDaysUntilNotifications": "12",
           "reservationDaysUntilCancellation": "14",
-          "sesSenderEmail": "aterbruket.amf@helsingborg.se",
+          "sesSenderEmail": "Aterbruket.Haffa@helsingborg.se",
           "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com"
         }
       },
