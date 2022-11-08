@@ -1,5 +1,5 @@
 import { HaffaUser } from '../../models/haffaUser';
-import { getHaffaFirstName } from '../../utils';
+import getHaffaFirstName from '../../utils/getHaffaFirstName';
 
 describe('Get string first name', () => {
     it('handle null', () => {

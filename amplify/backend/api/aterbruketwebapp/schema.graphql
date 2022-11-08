@@ -9,6 +9,7 @@ type Advert @model
   length: String
   status: ItemStatus 
     @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
+    @index(name: "byStatusAndReturnDate", queryField:"getByStatusAndReturnDate" sortKeyFields: ["returnDate"])
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition

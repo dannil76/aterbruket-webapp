@@ -1,4 +1,4 @@
-import { subtractDays } from '../../utils';
+import subtractDays from '../../utils/subtractDays';
 
 describe('Subtract days from current date', () => {
     it('positive days', async () => {
