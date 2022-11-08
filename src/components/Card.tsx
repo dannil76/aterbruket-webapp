@@ -145,14 +145,16 @@ const Card: FC<Props> = ({
     fetchReservedAdverts,
     itemsFrom,
 }: Props) => {
-    const [url, setURL] = useState(undefined) as any;
+    const [url, setURL] = useState('');
     const { user } = useContext(UserContext);
     const [itemUpdated, setItemUpdated] = useState(false);
     const [isPickUpModalVisible, togglePickUpModal] = useModal();
-
+    const historyItem = filteredItem;
     const fetchImage = (): void => {
-        Storage.get(imageKey).then((url: any) => {
-            setURL(url);
+        Storage.get(imageKey).then((imageUrl: unknown | string) => {
+            if (typeof imageUrl === 'string') {
+                setURL(imageUrl);
+            }
         });
     };
     useEffect(() => {
@@ -168,6 +170,12 @@ const Card: FC<Props> = ({
                     status: newStatus,
                     reservedBySub: user.sub,
                     reservedByName: user.name,
+                    returnDate: '',
+                    reservationDate: new Date().toLocaleDateString('sv-SE', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                    }),
                     version: 0,
                     revisions: !filteredItem.revisions
                         ? 0
@@ -178,12 +186,17 @@ const Card: FC<Props> = ({
 
         setItemUpdated(true);
 
-        delete filteredItem.createdAt;
-        delete filteredItem.updatedAt;
-        filteredItem.version = result.data.updateAdvert.revisions + 1;
+        delete historyItem.createdAt;
+        delete historyItem.updatedAt;
+        historyItem.version = result.data.updateAdvert.revisions + 1;
+
+        if (!filteredItem.reservationDate) {
+            historyItem.reservationDate = historyItem.reservationDate ?? 'N/A';
+            historyItem.returnDate = historyItem.returnDate ?? 'N/A';
+        }
 
         await API.graphql(
-            graphqlOperation(createAdvert, { input: filteredItem }),
+            graphqlOperation(createAdvert, { input: historyItem }),
         );
     };
 
@@ -193,7 +206,7 @@ const Card: FC<Props> = ({
             setItemUpdated(false);
         }
         return () => {};
-    }, [itemUpdated]);
+    }, [itemUpdated, fetchReservedAdverts]);
 
     const handlePickUp = () => {
         toast('Snyggt! Prylen är nu haffad!');

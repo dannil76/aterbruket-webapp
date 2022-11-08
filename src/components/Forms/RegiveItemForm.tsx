@@ -76,6 +76,8 @@ const RegiveItemForm: FC<Props> = ({
             pickUpInformation: item.pickUpInformation ?? '',
             pickUpInstructions: item.pickUpInstructions ?? '',
             returnInformation: item.returnInformation ?? '',
+            returnDate: item.returnDate ?? '',
+            reservationDate: item.reservationDate ?? '',
             accessories: item.accessories ?? [],
             borrowDifficultyLevel: item.borrowDifficultyLevel,
             accessRestriction: item.accessRestriction,

@@ -9,12 +9,13 @@ import HandleClimatImpact from './HandleClimatImpact';
 import { createAdvert } from '../graphql/mutations';
 import { IDateRange } from '../interfaces/IDateRange';
 
-const recreateInitial = async (mutation: any, values: any) => {
-    delete values.createdAt;
-    delete values.updatedAt;
-    values.version = values.revisions + 1;
-    values.status = 'pickedUp';
-    values.revisions -= 1;
+const recreateInitial = async (mutation: string, values: any) => {
+    const newPost = values;
+    delete newPost.createdAt;
+    delete newPost.updatedAt;
+    newPost.version = values.revisions + 1;
+    newPost.status = 'pickedUp';
+    newPost.revisions -= 1;
 
     await API.graphql(graphqlOperation(mutation, { input: values }));
 };

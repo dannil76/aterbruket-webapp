@@ -187,6 +187,12 @@ const ItemDetails: FC<ParamTypes> = () => {
                     status: newStatus,
                     reservedBySub: user.sub,
                     reservedByName: user.name,
+                    returnDate: '',
+                    reservationDate: new Date().toLocaleDateString('sv-SE', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                    }),
                     version: 0,
                     revisions: item.revisions + 1,
                 },
@@ -286,7 +292,8 @@ const ItemDetails: FC<ParamTypes> = () => {
 
         if (updatedEvent.updateSuccessful) {
             item.status = newStatus === 'returned' ? 'available' : newStatus;
-            item.returnDate = updatedEvent.currentEvent?.dateEnd;
+            item.returnDate = updatedEvent.currentEvent?.dateEnd ?? 'N/A';
+            item.reservationDate = item.reservationDate ?? 'N/A';
             const lastReturnedEvent = getLastReturnedCalendarEvent(
                 item.advertBorrowCalendar,
             );

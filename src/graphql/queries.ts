@@ -51,6 +51,7 @@ export const getAdvert = /* GraphQL */ `
       lockerCode
       returnInformation
       returnDate
+      reservationDate
       pickUpInstructions
       accessories
       borrowDifficultyLevel
@@ -155,6 +156,7 @@ export const listAdverts = /* GraphQL */ `
         lockerCode
         returnInformation
         returnDate
+        reservationDate
         pickUpInstructions
         accessories
         borrowDifficultyLevel
@@ -229,6 +231,113 @@ export const listPages = /* GraphQL */ `
         slug
         title
         content
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getByStatusAndReservationDate = /* GraphQL */ `
+  query GetByStatusAndReservationDate(
+    $status: ItemStatus!
+    $reservationDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAdvertFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getByStatusAndReservationDate(
+      status: $status
+      reservationDate: $reservationDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        height
+        width
+        length
+        status
+        category
+        material {
+          wood
+          plastic
+          metal
+          other
+        }
+        condition
+        color
+        areaOfUse {
+          indoors
+          outside
+        }
+        images {
+          src
+          alt
+        }
+        quantity
+        department
+        instructions
+        contactPerson
+        email
+        phoneNumber
+        giver
+        version
+        climateImpact
+        reservedBySub
+        reservedByName
+        revisions
+        purchasePrice
+        company
+        aterbruketId
+        advertType
+        missingItemsInformation
+        pickUpInformation
+        lockerCodeInformation
+        lockerCode
+        returnInformation
+        returnDate
+        reservationDate
+        pickUpInstructions
+        accessories
+        borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+            returnDateTime
+          }
+        }
+        accessRestriction
+        accessRestrictionSelection {
+          arbetsmarknadsforvaltningen
+          fastighetsforvaltningen
+          kulturforvaltningen
+          miljoforvaltningen
+          skolOchFritidsforvaltningen
+          socialforvaltningen
+          stadsbyggnadsforvaltningen
+          stadsledningsforvaltningen
+          vardOchOmsorgsforvaltningen
+        }
+        address
+        city
+        postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
         createdAt
         updatedAt
       }
