@@ -1,6 +1,6 @@
 export interface Reservation {
     id: string;
-    version: string;
+    version: number;
     reservedBySub: string;
     contactPerson: string;
     title: string;

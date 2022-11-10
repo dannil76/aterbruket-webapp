@@ -16,6 +16,11 @@
         "aterbruketwebapp75287c9a": {},
         "userPoolGroups": {}
       },
+      "api": {
+        "aterbruketwebapp": {
+          "OpenSearchInstanceType": "t3.small.elasticsearch"
+        }
+      },
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
@@ -60,6 +65,11 @@
       "AmplifyAppId": "d21bj89y0jdxx1"
     },
     "categories": {
+      "api": {
+        "aterbruketwebapp": {
+          "OpenSearchInstanceType": "t3.small.elasticsearch"
+        }
+      },
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",

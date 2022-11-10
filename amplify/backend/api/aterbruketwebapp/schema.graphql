@@ -1,4 +1,4 @@
-type Advert @model 
+type Advert @model @searchable
 @auth(rules: [{allow: private}, {allow: groups, groups: ["administrator"]}])
 {
   id: ID! @primaryKey(sortKeyFields: ["version"])
@@ -7,6 +7,8 @@ type Advert @model
   height: String
   width: String
   length: String
+  borrowStatus: BorrowStatus
+    @index(name: "byBorrowStatusAndReturnDate", queryField:"getByBorrowStatusAndReturnDate" sortKeyFields: ["returnDate"])
   status: ItemStatus 
     @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
     @index(name: "byStatusAndReturnDate", queryField:"getByStatusAndReturnDate" sortKeyFields: ["returnDate"])
@@ -43,6 +45,7 @@ type Advert @model
   accessories: [String!]!
   borrowDifficultyLevel: String
   advertBorrowCalendar: AdvertBorrowCalendar
+  advertPickUps: [AdvertPickUp]
   accessRestriction: String
   accessRestrictionSelection: Administration
   address: String
@@ -95,6 +98,11 @@ enum ItemStatus {
   pickedUp
 }
 
+enum BorrowStatus {
+  available
+  pickedUp
+}
+
 type ItemAMaterial {
   wood: Boolean
   plastic: Boolean
@@ -116,6 +124,12 @@ type ItemAreaOfUse {
 type ItemImages {
   src: String
   alt: String
+}
+
+type AdvertPickUp {
+  reservedBySub: String!
+  quantity: Int!
+  reservationDate: String!
 }
 
 type Page @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["administrator"]}]) {
