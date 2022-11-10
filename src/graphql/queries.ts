@@ -2,6 +2,134 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const searchAdverts = /* GraphQL */ `
+  query SearchAdverts(
+    $filter: SearchableAdvertFilterInput
+    $sort: [SearchableAdvertSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableAdvertAggregationInput]
+  ) {
+    searchAdverts(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        id
+        title
+        description
+        height
+        width
+        length
+        borrowStatus
+        status
+        category
+        material {
+          wood
+          plastic
+          metal
+          other
+        }
+        condition
+        color
+        areaOfUse {
+          indoors
+          outside
+        }
+        images {
+          src
+          alt
+        }
+        quantity
+        department
+        instructions
+        contactPerson
+        email
+        phoneNumber
+        giver
+        version
+        climateImpact
+        reservedBySub
+        reservedByName
+        revisions
+        purchasePrice
+        company
+        aterbruketId
+        advertType
+        missingItemsInformation
+        pickUpInformation
+        lockerCodeInformation
+        lockerCode
+        returnInformation
+        returnDate
+        reservationDate
+        pickUpInstructions
+        accessories
+        borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+            returnDateTime
+          }
+        }
+        advertPickUps {
+          reservedBySub
+          quantity
+          reservationDate
+        }
+        accessRestriction
+        accessRestrictionSelection {
+          arbetsmarknadsforvaltningen
+          fastighetsforvaltningen
+          kulturforvaltningen
+          miljoforvaltningen
+          skolOchFritidsforvaltningen
+          socialforvaltningen
+          stadsbyggnadsforvaltningen
+          stadsledningsforvaltningen
+          vardOchOmsorgsforvaltningen
+        }
+        address
+        city
+        postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 export const getAdvert = /* GraphQL */ `
   query GetAdvert($id: ID!, $version: Int!) {
     getAdvert(id: $id, version: $version) {
@@ -11,6 +139,7 @@ export const getAdvert = /* GraphQL */ `
       height
       width
       length
+      borrowStatus
       status
       category
       material {
@@ -66,6 +195,11 @@ export const getAdvert = /* GraphQL */ `
           returnDateTime
         }
       }
+      advertPickUps {
+        reservedBySub
+        quantity
+        reservationDate
+      }
       accessRestriction
       accessRestrictionSelection {
         arbetsmarknadsforvaltningen
@@ -116,6 +250,7 @@ export const listAdverts = /* GraphQL */ `
         height
         width
         length
+        borrowStatus
         status
         category
         material {
@@ -170,6 +305,11 @@ export const listAdverts = /* GraphQL */ `
             dateEnd
             returnDateTime
           }
+        }
+        advertPickUps {
+          reservedBySub
+          quantity
+          reservationDate
         }
         accessRestriction
         accessRestrictionSelection {
@@ -238,18 +378,18 @@ export const listPages = /* GraphQL */ `
     }
   }
 `;
-export const getByStatusAndReservationDate = /* GraphQL */ `
-  query GetByStatusAndReservationDate(
-    $status: ItemStatus!
-    $reservationDate: ModelStringKeyConditionInput
+export const getByBorrowStatusAndReturnDate = /* GraphQL */ `
+  query GetByBorrowStatusAndReturnDate(
+    $borrowStatus: BorrowStatus!
+    $returnDate: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAdvertFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    getByStatusAndReservationDate(
-      status: $status
-      reservationDate: $reservationDate
+    getByBorrowStatusAndReturnDate(
+      borrowStatus: $borrowStatus
+      returnDate: $returnDate
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -262,6 +402,7 @@ export const getByStatusAndReservationDate = /* GraphQL */ `
         height
         width
         length
+        borrowStatus
         status
         category
         material {
@@ -316,6 +457,237 @@ export const getByStatusAndReservationDate = /* GraphQL */ `
             dateEnd
             returnDateTime
           }
+        }
+        advertPickUps {
+          reservedBySub
+          quantity
+          reservationDate
+        }
+        accessRestriction
+        accessRestrictionSelection {
+          arbetsmarknadsforvaltningen
+          fastighetsforvaltningen
+          kulturforvaltningen
+          miljoforvaltningen
+          skolOchFritidsforvaltningen
+          socialforvaltningen
+          stadsbyggnadsforvaltningen
+          stadsledningsforvaltningen
+          vardOchOmsorgsforvaltningen
+        }
+        address
+        city
+        postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getByStatusAndReservationDate = /* GraphQL */ `
+  query GetByStatusAndReservationDate(
+    $status: ItemStatus!
+    $reservationDateVersion: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAdvertFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getByStatusAndReservationDate(
+      status: $status
+      reservationDateVersion: $reservationDateVersion
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        height
+        width
+        length
+        borrowStatus
+        status
+        category
+        material {
+          wood
+          plastic
+          metal
+          other
+        }
+        condition
+        color
+        areaOfUse {
+          indoors
+          outside
+        }
+        images {
+          src
+          alt
+        }
+        quantity
+        department
+        instructions
+        contactPerson
+        email
+        phoneNumber
+        giver
+        version
+        climateImpact
+        reservedBySub
+        reservedByName
+        revisions
+        purchasePrice
+        company
+        aterbruketId
+        advertType
+        missingItemsInformation
+        pickUpInformation
+        lockerCodeInformation
+        lockerCode
+        returnInformation
+        returnDate
+        reservationDate
+        pickUpInstructions
+        accessories
+        borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+            returnDateTime
+          }
+        }
+        advertPickUps {
+          reservedBySub
+          quantity
+          reservationDate
+        }
+        accessRestriction
+        accessRestrictionSelection {
+          arbetsmarknadsforvaltningen
+          fastighetsforvaltningen
+          kulturforvaltningen
+          miljoforvaltningen
+          skolOchFritidsforvaltningen
+          socialforvaltningen
+          stadsbyggnadsforvaltningen
+          stadsledningsforvaltningen
+          vardOchOmsorgsforvaltningen
+        }
+        address
+        city
+        postalCode
+        missingAccessories {
+          reportedBy
+          reportedDate
+          accessories
+          lastReturnedBy
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getByStatusAndReturnDate = /* GraphQL */ `
+  query GetByStatusAndReturnDate(
+    $status: ItemStatus!
+    $returnDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAdvertFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getByStatusAndReturnDate(
+      status: $status
+      returnDate: $returnDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        height
+        width
+        length
+        borrowStatus
+        status
+        category
+        material {
+          wood
+          plastic
+          metal
+          other
+        }
+        condition
+        color
+        areaOfUse {
+          indoors
+          outside
+        }
+        images {
+          src
+          alt
+        }
+        quantity
+        department
+        instructions
+        contactPerson
+        email
+        phoneNumber
+        giver
+        version
+        climateImpact
+        reservedBySub
+        reservedByName
+        revisions
+        purchasePrice
+        company
+        aterbruketId
+        advertType
+        missingItemsInformation
+        pickUpInformation
+        lockerCodeInformation
+        lockerCode
+        returnInformation
+        returnDate
+        reservationDate
+        pickUpInstructions
+        accessories
+        borrowDifficultyLevel
+        advertBorrowCalendar {
+          allowedDateStart
+          allowedDateEnd
+          calendarEvents {
+            borrowedBySub
+            status
+            dateStart
+            dateEnd
+            returnDateTime
+          }
+        }
+        advertPickUps {
+          reservedBySub
+          quantity
+          reservationDate
         }
         accessRestriction
         accessRestrictionSelection {
