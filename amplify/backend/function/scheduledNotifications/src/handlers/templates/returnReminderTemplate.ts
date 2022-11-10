@@ -23,7 +23,7 @@ export default function returnReminderTemplate(
     <p>
     <p>Gör så här när du ska lämna igen prylen <br>
     <ol type="1">
-    <li>Öppna Haffa ${title}</li>
+    <li>Öppna Haffa <a href="${url}/item/${id}">"${title}"</a></li>
     <li>Klicka på Lämna tillbaka</li>
     <li>Om prylen ska in i ett låst skåp visas koden</li>
     <li>Scanna QR-koden från etiketten på prylen</li>

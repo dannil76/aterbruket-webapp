@@ -26,7 +26,7 @@ export default function pickUpReminderTemplate(
     <p>Gör så här när du ska hämta prylen: <br>
     <ol type="1">
     <li>Öppna Haffa</li>
-    <li>Leta upp annonsen för prylen under Haffat – Saker att hämta ut</li>
+    <li>Leta upp annonsen för prylen under Haffat – <a href="${url}/item/${id}">Saker att hämta ut</a></li>
     <li>Klicka på Hämta ut</li>
     <li>Scanna QR-koden från etiketten på prylen</li>
     <li>Bekräfta uthämtning</li>

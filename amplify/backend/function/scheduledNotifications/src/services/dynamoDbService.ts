@@ -30,7 +30,7 @@ export async function getReservations(
                     ':reservationDateValue': `${reservationDateValue}#${advertVersion}`,
                 },
                 ProjectionExpression:
-                    'reservedBySub, contactPerson, department, email, phoneNumber, title',
+                    'id, reservedBySub, contactPerson, department, email, phoneNumber, title',
             })
             .promise();
 
@@ -78,7 +78,7 @@ export async function getBorrowedItems(returnDate: Date): Promise<Borrowed[]> {
                     ':returnDateValue': `${returnDateValue}`,
                 },
                 ProjectionExpression:
-                    'advertBorrowCalendar, contactPerson, department, email, phoneNumber, title',
+                    'id, advertBorrowCalendar, contactPerson, department, email, phoneNumber, title',
             })
             .promise();
 

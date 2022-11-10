@@ -19,7 +19,7 @@ export interface BorrowCalendar {
 
 export interface Borrowed {
     id: string;
-    version: string;
+    version: number;
     advertBorrowCalendar: BorrowCalendar;
     title: string;
     contactPerson: string;
