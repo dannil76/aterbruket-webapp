@@ -13,12 +13,16 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@aws-sdk/credential-provider-node": "^3.204.0",
+    "@opensearch-project/opensearch": "^2.1.0",
     "aws-lambda": "^1.0.7",
-    "aws-sdk": "^2.1247.0"
+    "aws-sdk": "^2.1247.0",
+    "aws4": "^1.11.0"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.201.0",
     "@types/aws-lambda": "^8.10.108",
+    "@types/aws4": "^1.11.2",
     "@types/jest": "^29.2.0",
     "@types/node": "^18.8.3",
     "@typescript-eslint/eslint-plugin": "^4.4.0",

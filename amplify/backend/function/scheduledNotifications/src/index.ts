@@ -1,10 +1,3 @@
-/* Amplify Params - DO NOT EDIT
-    API_ATERBRUKETWEBAPP_GRAPHQLAPIENDPOINTOUTPUT
-    API_ATERBRUKETWEBAPP_GRAPHQLAPIIDOUTPUT
-    ENV
-    REGION
-Amplify Params - DO NOT EDIT */
-
 import {
     pickUpReminderHandler,
     lateReturnHandler,

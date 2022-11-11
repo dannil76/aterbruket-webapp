@@ -187,7 +187,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                     status: newStatus,
                     reservedBySub: user.sub,
                     reservedByName: user.name,
-                    returnDate: '',
+                    returnDate: 'N/A',
                     reservationDate: new Date().toLocaleDateString('sv-SE', {
                         year: 'numeric',
                         month: 'numeric',
@@ -204,6 +204,8 @@ const ItemDetails: FC<ParamTypes> = () => {
         delete item.createdAt;
         delete item.updatedAt;
         item.version = result.data.updateAdvert.revisions + 1;
+        item.reservationDate = item.reservationDate ?? 'N/A';
+        item.returnDate = item.returnDate ?? 'N/A';
 
         await API.graphql(graphqlOperation(createAdvert, { input: item }));
     };

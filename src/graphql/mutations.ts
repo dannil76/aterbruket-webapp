@@ -14,6 +14,7 @@ export const createAdvert = /* GraphQL */ `
       height
       width
       length
+      borrowStatus
       status
       category
       material {
@@ -68,6 +69,11 @@ export const createAdvert = /* GraphQL */ `
           dateEnd
           returnDateTime
         }
+      }
+      advertPickUps {
+        reservedBySub
+        quantity
+        reservationDate
       }
       accessRestriction
       accessRestrictionSelection {
@@ -107,6 +113,7 @@ export const updateAdvert = /* GraphQL */ `
       height
       width
       length
+      borrowStatus
       status
       category
       material {
@@ -161,6 +168,11 @@ export const updateAdvert = /* GraphQL */ `
           dateEnd
           returnDateTime
         }
+      }
+      advertPickUps {
+        reservedBySub
+        quantity
+        reservationDate
       }
       accessRestriction
       accessRestrictionSelection {
@@ -200,6 +212,7 @@ export const deleteAdvert = /* GraphQL */ `
       height
       width
       length
+      borrowStatus
       status
       category
       material {
@@ -254,6 +267,11 @@ export const deleteAdvert = /* GraphQL */ `
           dateEnd
           returnDateTime
         }
+      }
+      advertPickUps {
+        reservedBySub
+        quantity
+        reservationDate
       }
       accessRestriction
       accessRestrictionSelection {
