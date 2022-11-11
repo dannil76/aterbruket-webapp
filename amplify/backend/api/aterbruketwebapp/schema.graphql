@@ -10,7 +10,6 @@ type Advert @model @searchable
   borrowStatus: BorrowStatus
   status: ItemStatus 
     @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
-    @index(name: "byStatusAndReturnDate", queryField:"getByStatusAndReturnDate" sortKeyFields: ["returnDate"])
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition
@@ -38,7 +37,6 @@ type Advert @model @searchable
   lockerCodeInformation: String
   lockerCode: String
   returnInformation: String
-  returnDate: String
   reservationDate: String
   pickUpInstructions: String
   accessories: [String!]!

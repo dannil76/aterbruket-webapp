@@ -34,6 +34,7 @@ export interface Advert {
     city: string;
     missingAccessories: MissingAccessory[];
     reservedBySub: string | undefined;
+    reservationDate: string;
     advertBorrowCalendar: AdvertBorrowCalendar | undefined;
     version: number;
     status: AdvertStatus;

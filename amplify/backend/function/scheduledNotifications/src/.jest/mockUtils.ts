@@ -9,5 +9,6 @@ jest.mock('../utils', () => {
         getHaffaFullName: jest.fn(),
         getReservedByUser: jest.fn(),
         subtractDays: jest.fn(),
+        sendEmailHelper: jest.fn(),
     };
 });

@@ -1,6 +1,6 @@
 import { lateReturnHandler } from '../../handlers';
 import { getBorrowedItems } from '../../services';
-import { logDebug } from '../../utils';
+import { logDebug, sendEmailHelper } from '../../utils';
 
 jest.mock('../../services', () => {
     return {
@@ -19,13 +19,16 @@ jest.mock('../../handlers/templates', () => {
 describe('Trigger return reminder', () => {
     const getBorrowedItemsMock = getBorrowedItems as jest.Mock;
     const logDebugMock = logDebug as jest.Mock;
+    const sendEmailHelperMock = sendEmailHelper as jest.Mock;
     beforeEach(() => {
         logDebugMock.mockReset();
         getBorrowedItemsMock.mockReset();
+        sendEmailHelperMock.mockReset();
     });
 
     it('start handler no responses', async () => {
         getBorrowedItemsMock.mockReturnValue(Promise.resolve([]));
+        sendEmailHelperMock.mockReturnValue(Promise.resolve(true));
         const actual = await lateReturnHandler();
         expect(actual).toBe(true);
         expect(logDebug).toHaveBeenCalledWith(

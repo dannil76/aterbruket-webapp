@@ -54,7 +54,6 @@ export const createAdvert = /* GraphQL */ `
       lockerCodeInformation
       lockerCode
       returnInformation
-      returnDate
       reservationDate
       pickUpInstructions
       accessories
@@ -153,7 +152,6 @@ export const updateAdvert = /* GraphQL */ `
       lockerCodeInformation
       lockerCode
       returnInformation
-      returnDate
       reservationDate
       pickUpInstructions
       accessories
@@ -252,7 +250,6 @@ export const deleteAdvert = /* GraphQL */ `
       lockerCodeInformation
       lockerCode
       returnInformation
-      returnDate
       reservationDate
       pickUpInstructions
       accessories

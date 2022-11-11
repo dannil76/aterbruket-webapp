@@ -66,7 +66,6 @@ export const searchAdverts = /* GraphQL */ `
         lockerCodeInformation
         lockerCode
         returnInformation
-        returnDate
         reservationDate
         pickUpInstructions
         accessories
@@ -179,7 +178,6 @@ export const getAdvert = /* GraphQL */ `
       lockerCodeInformation
       lockerCode
       returnInformation
-      returnDate
       reservationDate
       pickUpInstructions
       accessories
@@ -290,7 +288,6 @@ export const listAdverts = /* GraphQL */ `
         lockerCodeInformation
         lockerCode
         returnInformation
-        returnDate
         reservationDate
         pickUpInstructions
         accessories
@@ -442,120 +439,6 @@ export const getByStatusAndReservationDate = /* GraphQL */ `
         lockerCodeInformation
         lockerCode
         returnInformation
-        returnDate
-        reservationDate
-        pickUpInstructions
-        accessories
-        borrowDifficultyLevel
-        advertBorrowCalendar {
-          allowedDateStart
-          allowedDateEnd
-          calendarEvents {
-            borrowedBySub
-            status
-            dateStart
-            dateEnd
-            returnDateTime
-          }
-        }
-        advertPickUps {
-          reservedBySub
-          quantity
-          reservationDate
-        }
-        accessRestriction
-        accessRestrictionSelection {
-          arbetsmarknadsforvaltningen
-          fastighetsforvaltningen
-          kulturforvaltningen
-          miljoforvaltningen
-          skolOchFritidsforvaltningen
-          socialforvaltningen
-          stadsbyggnadsforvaltningen
-          stadsledningsforvaltningen
-          vardOchOmsorgsforvaltningen
-        }
-        address
-        city
-        postalCode
-        missingAccessories {
-          reportedBy
-          reportedDate
-          accessories
-          lastReturnedBy
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getByStatusAndReturnDate = /* GraphQL */ `
-  query GetByStatusAndReturnDate(
-    $status: ItemStatus!
-    $returnDate: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelAdvertFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    getByStatusAndReturnDate(
-      status: $status
-      returnDate: $returnDate
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        title
-        description
-        height
-        width
-        length
-        borrowStatus
-        status
-        category
-        material {
-          wood
-          plastic
-          metal
-          other
-        }
-        condition
-        color
-        areaOfUse {
-          indoors
-          outside
-        }
-        images {
-          src
-          alt
-        }
-        quantity
-        department
-        instructions
-        contactPerson
-        email
-        phoneNumber
-        giver
-        version
-        climateImpact
-        reservedBySub
-        reservedByName
-        revisions
-        purchasePrice
-        company
-        aterbruketId
-        advertType
-        missingItemsInformation
-        pickUpInformation
-        lockerCodeInformation
-        lockerCode
-        returnInformation
-        returnDate
         reservationDate
         pickUpInstructions
         accessories
