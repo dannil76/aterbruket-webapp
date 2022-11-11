@@ -170,7 +170,7 @@ const Card: FC<Props> = ({
                     status: newStatus,
                     reservedBySub: user.sub,
                     reservedByName: user.name,
-                    returnDate: '',
+                    returnDate: 'N/A',
                     reservationDate: new Date().toLocaleDateString('sv-SE', {
                         year: 'numeric',
                         month: 'numeric',

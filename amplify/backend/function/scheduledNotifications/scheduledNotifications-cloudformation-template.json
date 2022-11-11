@@ -39,6 +39,12 @@
     },
     "sesAppUrl": {
       "Type": "String"
+    },
+    "opensearchUrl": {
+      "Type": "String"
+    },
+    "borrowDaysBeforeReminder": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -114,6 +120,12 @@
             },
             "SES_APP_URL": {
               "Ref": "sesAppUrl"
+            },
+            "OPENSEARCH_URL": {
+              "Ref": "opensearchUrl"
+            },
+            "BORROW_DAYS_BEFORE_REMINDER": {
+              "Ref": "borrowDaysBeforeReminder"
             }
           }
         },
@@ -226,6 +238,20 @@
                   "ses:Recipients": "*@helsingborg.se"
                 }
               }
+            },
+            {
+              "Action": [
+                "es:ESHttpPost"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:es:eu-west-1:165945531802:domain/amplify-opense-9v8syau2vha5/*"
+            },
+            {
+              "Action": [
+                "es:ESHttpPost"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:es:eu-west-1:165945531802:domain/amplify-opense-lpguchggbxys/*"
             },
             {
               "Action": [

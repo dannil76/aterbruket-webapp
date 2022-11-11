@@ -8,7 +8,6 @@ type Advert @model @searchable
   width: String
   length: String
   borrowStatus: BorrowStatus
-    @index(name: "byBorrowStatusAndReturnDate", queryField:"getByBorrowStatusAndReturnDate" sortKeyFields: ["returnDate"])
   status: ItemStatus 
     @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
     @index(name: "byStatusAndReturnDate", queryField:"getByStatusAndReturnDate" sortKeyFields: ["returnDate"])

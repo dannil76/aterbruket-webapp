@@ -28,6 +28,14 @@
     {
       "cloudFormationParameterName": "sesAppUrl",
       "environmentVariableName": "SES_APP_URL"
+    },
+    {
+      "cloudFormationParameterName": "opensearchUrl",
+      "environmentVariableName": "OPENSEARCH_URL"
+    },
+    {
+      "cloudFormationParameterName": "borrowDaysBeforeReminder",
+      "environmentVariableName": "BORROW_DAYS_BEFORE_REMINDER"
     }
   ]
 }

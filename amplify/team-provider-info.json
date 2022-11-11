@@ -24,13 +24,13 @@
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/migrateADUser-6147702f757044446e58-build.zip",
+          "s3Key": "amplify-builds/migrateADUser-31346948323134427144-build.zip",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "cognitoUserPoolClientId": "15rojv7pkqvagkakpm70ku7dlh"
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-4d704832357430743438-build.zip",
+          "s3Key": "amplify-builds/emailnotification-45456856354d6f626c58-build.zip",
           "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "Niclas.Ranlind@helsingborg.se",
@@ -39,15 +39,17 @@
         },
         "addUserToGroup": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/addUserToGroup-6c643052466855785577-build.zip"
+          "s3Key": "amplify-builds/addUserToGroup-376169397959496e2b38-build.zip"
         },
         "scheduledNotifications": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/scheduledNotifications-30386e5a4c715a777757-build.zip",
+          "s3Key": "amplify-builds/scheduledNotifications-6d633739773437357041-build.zip",
           "reservationDaysUntilNotifications": "12",
           "reservationDaysUntilCancellation": "14",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",
-          "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com"
+          "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
+          "opensearchUrl": "https://search-amplify-opense-9v8syau2vha5-7lieox3uiy5e3kmf5k2mpjb4ae.eu-west-1.es.amazonaws.com/",
+          "borrowDaysBeforeReminder": "0"
         }
       }
     }
@@ -96,7 +98,9 @@
           "reservationDaysUntilNotifications": "12",
           "reservationDaysUntilCancellation": "14",
           "sesSenderEmail": "Aterbruket.Haffa@helsingborg.se",
-          "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com"
+          "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com",
+          "opensearchUrl": "https://search-amplify-opense-lpguchggbxys-mb7i7arpc2vjc6cm7isihq747y.eu-west-1.es.amazonaws.com/",
+          "borrowDaysBeforeReminder": "0"
         }
       },
       "auth": {

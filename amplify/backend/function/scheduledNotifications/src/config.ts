@@ -23,7 +23,14 @@ export const daysUntilPickUpReminder = parseNumber(
 export const daysUntilAutoCancellation = parseNumber(
     getEnvironmentVariable('RESERVATION_DAYS_UNTIL_CANCELLATION'),
 );
+export const daysBeforeReturnReminder = parseNumber(
+    getEnvironmentVariable('BORROW_DAYS_BEFORE_REMINDER'),
+);
 
 export const senderEmail = getEnvironmentVariable('SES_SENDER_EMAIL');
 
 export const appUrl = getEnvironmentVariable('SES_APP_URL');
+
+export const opensearchUrl = getEnvironmentVariable('OPENSEARCH_URL');
+
+export const region = getEnvironmentVariable('REGION');
