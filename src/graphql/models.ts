@@ -43,7 +43,7 @@ export type CreateAdvertInput = {
   accessories: Array< string >,
   borrowDifficultyLevel?: string | null,
   advertBorrowCalendar?: AdvertBorrowCalendarInput | null,
-  advertPickUps?: Array< AdvertPickUpInput | null > | null,
+  advertPickUps?: Array< AdvertPickUpInput > | null,
   accessRestriction?: string | null,
   accessRestrictionSelection?: AdministrationInput | null,
   address?: string | null,
@@ -113,6 +113,7 @@ export type AdvertPickUpInput = {
   reservedBySub: string,
   quantity: number,
   reservationDate: string,
+  pickedUp?: boolean | null,
 };
 
 export type AdministrationInput = {
@@ -292,7 +293,7 @@ export type Advert = {
   accessories: Array< string >,
   borrowDifficultyLevel?: string | null,
   advertBorrowCalendar?: AdvertBorrowCalendar | null,
-  advertPickUps?:  Array<AdvertPickUp | null > | null,
+  advertPickUps?:  Array<AdvertPickUp > | null,
   accessRestriction?: string | null,
   accessRestrictionSelection?: Administration | null,
   address?: string | null,
@@ -344,6 +345,7 @@ export type AdvertPickUp = {
   reservedBySub: string,
   quantity: number,
   reservationDate: string,
+  pickedUp?: boolean | null,
 };
 
 export type Administration = {
@@ -408,7 +410,7 @@ export type UpdateAdvertInput = {
   accessories?: Array< string > | null,
   borrowDifficultyLevel?: string | null,
   advertBorrowCalendar?: AdvertBorrowCalendarInput | null,
-  advertPickUps?: Array< AdvertPickUpInput | null > | null,
+  advertPickUps?: Array< AdvertPickUpInput > | null,
   accessRestriction?: string | null,
   accessRestrictionSelection?: AdministrationInput | null,
   address?: string | null,
@@ -796,21 +798,6 @@ export type ModelPageConnection = {
   nextToken?: string | null,
 };
 
-export type ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyConditionInput = {
-  eq?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-  le?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-  lt?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-  ge?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-  gt?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-  between?: Array< ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null > | null,
-  beginsWith?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput | null,
-};
-
-export type ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyInput = {
-  reservationDate?: string | null,
-  version?: number | null,
-};
-
 export type CreateAdvertMutationVariables = {
   input: CreateAdvertInput,
   condition?: ModelAdvertConditionInput | null,
@@ -890,7 +877,8 @@ export type CreateAdvertMutation = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -998,7 +986,8 @@ export type UpdateAdvertMutation = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -1106,7 +1095,8 @@ export type DeleteAdvertMutation = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -1271,7 +1261,8 @@ export type SearchAdvertsQuery = {
         reservedBySub: string,
         quantity: number,
         reservationDate: string,
-      } | null > | null,
+        pickedUp?: boolean | null,
+      } > | null,
       accessRestriction?: string | null,
       accessRestrictionSelection?:  {
         __typename: "Administration",
@@ -1398,7 +1389,8 @@ export type GetAdvertQuery = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -1512,7 +1504,8 @@ export type ListAdvertsQuery = {
         reservedBySub: string,
         quantity: number,
         reservationDate: string,
-      } | null > | null,
+        pickedUp?: boolean | null,
+      } > | null,
       accessRestriction?: string | null,
       accessRestrictionSelection?:  {
         __typename: "Administration",
@@ -1576,122 +1569,6 @@ export type ListPagesQuery = {
       slug: string,
       title: string,
       content?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetByStatusAndReservationDateQueryVariables = {
-  status: ItemStatus,
-  reservationDateVersion?: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelAdvertFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type GetByStatusAndReservationDateQuery = {
-  getByStatusAndReservationDate?:  {
-    __typename: "ModelAdvertConnection",
-    items:  Array< {
-      __typename: "Advert",
-      id: string,
-      title: string,
-      description?: string | null,
-      height?: string | null,
-      width?: string | null,
-      length?: string | null,
-      borrowStatus?: BorrowStatus | null,
-      status?: ItemStatus | null,
-      category?: string | null,
-      material?:  Array< {
-        __typename: "ItemAMaterial",
-        wood?: boolean | null,
-        plastic?: boolean | null,
-        metal?: boolean | null,
-        other?: boolean | null,
-      } | null > | null,
-      condition?: ItemCondition | null,
-      color?: string | null,
-      areaOfUse?:  Array< {
-        __typename: "ItemAreaOfUse",
-        indoors?: boolean | null,
-        outside?: boolean | null,
-      } | null > | null,
-      images?:  Array< {
-        __typename: "ItemImages",
-        src?: string | null,
-        alt?: string | null,
-      } | null > | null,
-      quantity?: number | null,
-      department?: string | null,
-      instructions?: string | null,
-      contactPerson?: string | null,
-      email?: string | null,
-      phoneNumber?: string | null,
-      giver?: string | null,
-      version: number,
-      climateImpact?: number | null,
-      reservedBySub?: string | null,
-      reservedByName?: string | null,
-      revisions?: number | null,
-      purchasePrice?: string | null,
-      company?: string | null,
-      aterbruketId?: string | null,
-      advertType: ItemAdvertType,
-      missingItemsInformation?: string | null,
-      pickUpInformation?: string | null,
-      lockerCodeInformation?: string | null,
-      lockerCode?: string | null,
-      returnInformation?: string | null,
-      reservationDate?: string | null,
-      pickUpInstructions?: string | null,
-      accessories: Array< string >,
-      borrowDifficultyLevel?: string | null,
-      advertBorrowCalendar?:  {
-        __typename: "AdvertBorrowCalendar",
-        allowedDateStart?: string | null,
-        allowedDateEnd?: string | null,
-        calendarEvents?:  Array< {
-          __typename: "CalendarEvent",
-          borrowedBySub?: string | null,
-          status?: string | null,
-          dateStart?: string | null,
-          dateEnd?: string | null,
-          returnDateTime?: string | null,
-        } | null > | null,
-      } | null,
-      advertPickUps?:  Array< {
-        __typename: "AdvertPickUp",
-        reservedBySub: string,
-        quantity: number,
-        reservationDate: string,
-      } | null > | null,
-      accessRestriction?: string | null,
-      accessRestrictionSelection?:  {
-        __typename: "Administration",
-        arbetsmarknadsforvaltningen?: boolean | null,
-        fastighetsforvaltningen?: boolean | null,
-        kulturforvaltningen?: boolean | null,
-        miljoforvaltningen?: boolean | null,
-        skolOchFritidsforvaltningen?: boolean | null,
-        socialforvaltningen?: boolean | null,
-        stadsbyggnadsforvaltningen?: boolean | null,
-        stadsledningsforvaltningen?: boolean | null,
-        vardOchOmsorgsforvaltningen?: boolean | null,
-      } | null,
-      address?: string | null,
-      city?: string | null,
-      postalCode?: string | null,
-      missingAccessories?:  Array< {
-        __typename: "MissingAccessories",
-        reportedBy: string,
-        reportedDate: string,
-        accessories: Array< string >,
-        lastReturnedBy: string,
-      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -1773,7 +1650,8 @@ export type OnCreateAdvertSubscription = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -1876,7 +1754,8 @@ export type OnUpdateAdvertSubscription = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",
@@ -1979,7 +1858,8 @@ export type OnDeleteAdvertSubscription = {
       reservedBySub: string,
       quantity: number,
       reservationDate: string,
-    } | null > | null,
+      pickedUp?: boolean | null,
+    } > | null,
     accessRestriction?: string | null,
     accessRestrictionSelection?:  {
       __typename: "Administration",

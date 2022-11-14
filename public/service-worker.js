@@ -13,8 +13,11 @@ appCache = 'aws-amplify-v1';
 addEventListener('install', (event) => {
     console.log('[Service Worker] Install Event', event)
     event.waitUntil(
-        caches.open(appCache).then(function(cache) {
-          return cache.addAll(appCacheFiles);
+        caches.keys().then(function(names) {
+            // Clear cache when a new update is released
+            console.log('cache delete')
+            for (let name of names)
+                caches.delete(name);
         })
     );
 })

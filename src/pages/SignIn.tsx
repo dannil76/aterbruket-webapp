@@ -17,10 +17,6 @@ const SignIn: FC = ({ children }) => {
                         label: 'Användarnamn',
                         placeholder: 'Ditt användarnamn',
                         required: true,
-                        handleInputChange: (event: Event) => {
-                            const target = event.target as HTMLInputElement;
-                            target.value = target.value.toLowerCase();
-                        },
                     },
                     {
                         type: 'password',

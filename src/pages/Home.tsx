@@ -9,14 +9,17 @@ import { sortBy } from 'sort-by-typescript';
 import { listAdverts } from '../graphql/queries';
 import { ListAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
-import { DEFAULTSORTVALUE } from '../utils/sortValuesUtils';
-import { getAllCategories } from '../utils/handleCategories';
 import { conditions } from '../static/advertMeta';
 import { IOption } from '../interfaces/IForm';
 import { Modal, useModal } from '../components/Modal';
 import { useQrCamera } from '../components/QrCamera';
 import QrModal from '../components/QrModal';
-import showBetaInfoToaster from '../utils/showBetaInfoToaster';
+import {
+    showUpdateAvailableToaster,
+    showBetaInfoToaster,
+    DEFAULTSORTVALUE,
+    getAllCategories,
+} from '../utils';
 
 const AdvertContainer = React.lazy(
     () => import('../components/AdvertContainer'),
@@ -292,6 +295,23 @@ const Home: FC = () => {
 
     useEffect(() => {
         showBetaInfoToaster();
+    }, []);
+
+    // Check if there is any update on service workers
+    useEffect(() => {
+        const updateServiceWorker = async () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const w = window as any;
+            const checkUpdateAvailable =
+                w.isUpdateAvailable as Promise<boolean>;
+
+            const isUpdateAvailable = await checkUpdateAvailable;
+            if (isUpdateAvailable) {
+                showUpdateAvailableToaster();
+            }
+        };
+
+        updateServiceWorker();
     }, []);
 
     const categoryData = getAllCategories();

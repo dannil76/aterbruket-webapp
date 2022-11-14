@@ -9,7 +9,6 @@ type Advert @model @searchable
   length: String
   borrowStatus: BorrowStatus
   status: ItemStatus 
-    @index(name: "byStatusAndReservationDateAndVersion", queryField:"getByStatusAndReservationDate" sortKeyFields: ["reservationDate", "version"])
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition
@@ -42,7 +41,7 @@ type Advert @model @searchable
   accessories: [String!]!
   borrowDifficultyLevel: String
   advertBorrowCalendar: AdvertBorrowCalendar
-  advertPickUps: [AdvertPickUp]
+  advertPickUps: [AdvertPickUp!]
   accessRestriction: String
   accessRestrictionSelection: Administration
   address: String
@@ -127,6 +126,7 @@ type AdvertPickUp {
   reservedBySub: String!
   quantity: Int!
   reservationDate: String!
+  pickedUp: Boolean
 }
 
 type Page @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["administrator"]}]) {

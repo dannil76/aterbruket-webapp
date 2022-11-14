@@ -85,6 +85,7 @@ export const searchAdverts = /* GraphQL */ `
           reservedBySub
           quantity
           reservationDate
+          pickedUp
         }
         accessRestriction
         accessRestrictionSelection {
@@ -197,6 +198,7 @@ export const getAdvert = /* GraphQL */ `
         reservedBySub
         quantity
         reservationDate
+        pickedUp
       }
       accessRestriction
       accessRestrictionSelection {
@@ -307,6 +309,7 @@ export const listAdverts = /* GraphQL */ `
           reservedBySub
           quantity
           reservationDate
+          pickedUp
         }
         accessRestriction
         accessRestrictionSelection {
@@ -368,118 +371,6 @@ export const listPages = /* GraphQL */ `
         slug
         title
         content
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getByStatusAndReservationDate = /* GraphQL */ `
-  query GetByStatusAndReservationDate(
-    $status: ItemStatus!
-    $reservationDateVersion: ModelAdvertByStatusAndReservationDateAndVersionCompositeKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelAdvertFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    getByStatusAndReservationDate(
-      status: $status
-      reservationDateVersion: $reservationDateVersion
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        title
-        description
-        height
-        width
-        length
-        borrowStatus
-        status
-        category
-        material {
-          wood
-          plastic
-          metal
-          other
-        }
-        condition
-        color
-        areaOfUse {
-          indoors
-          outside
-        }
-        images {
-          src
-          alt
-        }
-        quantity
-        department
-        instructions
-        contactPerson
-        email
-        phoneNumber
-        giver
-        version
-        climateImpact
-        reservedBySub
-        reservedByName
-        revisions
-        purchasePrice
-        company
-        aterbruketId
-        advertType
-        missingItemsInformation
-        pickUpInformation
-        lockerCodeInformation
-        lockerCode
-        returnInformation
-        reservationDate
-        pickUpInstructions
-        accessories
-        borrowDifficultyLevel
-        advertBorrowCalendar {
-          allowedDateStart
-          allowedDateEnd
-          calendarEvents {
-            borrowedBySub
-            status
-            dateStart
-            dateEnd
-            returnDateTime
-          }
-        }
-        advertPickUps {
-          reservedBySub
-          quantity
-          reservationDate
-        }
-        accessRestriction
-        accessRestrictionSelection {
-          arbetsmarknadsforvaltningen
-          fastighetsforvaltningen
-          kulturforvaltningen
-          miljoforvaltningen
-          skolOchFritidsforvaltningen
-          socialforvaltningen
-          stadsbyggnadsforvaltningen
-          stadsledningsforvaltningen
-          vardOchOmsorgsforvaltningen
-        }
-        address
-        city
-        postalCode
-        missingAccessories {
-          reportedBy
-          reportedDate
-          accessories
-          lastReturnedBy
-        }
         createdAt
         updatedAt
       }
