@@ -44,6 +44,12 @@ describe('Create new calendar event', () => {
 
     it('create first calendar event in empty calendar', () => {
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '11111-11111-11111-11111-11111',
+                dateEnd: '2022-11-19',
+                dateStart: '2022-11-17',
+                status: 'reserved',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 ...emptyCalendarEvents,
@@ -85,6 +91,12 @@ describe('Create new calendar event', () => {
         const userSub = '11111-11111-11111-11111-11111';
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '11111-11111-11111-11111-11111',
+                dateEnd: '2022-02-03',
+                dateStart: '2022-02-02',
+                status: 'reserved',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 allowedDateStart: null,
@@ -111,6 +123,12 @@ describe('Create new calendar event', () => {
 
     it('create second calendar event', () => {
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-11-19',
+                dateStart: '2022-11-17',
+                status: 'reserved',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 ...singleCalendarEvent,
@@ -155,6 +173,12 @@ describe('Create new calendar event', () => {
         };
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-12',
+                dateStart: '2022-02-08',
+                status: 'reserved',
+            },
             errorMessage:
                 'Prylen kan endast bokas under en sammanhängande period.',
             updateSuccessful: false,
@@ -197,6 +221,12 @@ describe('Create new calendar event', () => {
         };
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-12',
+                dateStart: '2022-02-08',
+                status: 'reserved',
+            },
             errorMessage:
                 'Prylen kan endast bokas under en sammanhängande period.',
             updateSuccessful: false,
@@ -239,6 +269,12 @@ describe('Create new calendar event', () => {
         };
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-12',
+                dateStart: '2022-02-08',
+                status: 'reserved',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 allowedDateEnd: '2022-02-28',
@@ -267,6 +303,12 @@ describe('Create new calendar event', () => {
 
     it('event shall not overlap with same dates', () => {
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-11-16',
+                dateStart: '2022-11-14',
+                status: 'reserved',
+            },
             updateSuccessful: false,
             errorMessage:
                 'Prylen kan endast bokas under en sammanhängande period.',
@@ -319,6 +361,12 @@ describe('Create new calendar event', () => {
         };
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-11-19',
+                dateStart: '2022-11-14',
+                status: 'reserved',
+            },
             updateSuccessful: false,
             errorMessage:
                 'Prylen kan endast bokas under en sammanhängande period.',
@@ -460,6 +508,12 @@ describe('Update event status', () => {
         const newStatus = 'pickedUp';
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-05',
+                dateStart: '2022-02-04',
+                status: 'pickedUp',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 allowedDateEnd: '2022-02-06',
@@ -598,6 +652,12 @@ describe('Update event status', () => {
         const newStatus = 'pickedUp';
 
         const expectedResult = {
+            currentEvent: {
+                borrowedBySub: '1',
+                dateEnd: '2022-02-10',
+                dateStart: '2022-02-08',
+                status: 'pickedUp',
+            },
             updateSuccessful: true,
             updatedCalendarResult: {
                 allowedDateStart: '2022-02-08',

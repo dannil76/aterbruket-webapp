@@ -70,6 +70,7 @@ export const onCreateAdvert = /* GraphQL */ `
         reservedBySub
         quantity
         reservationDate
+        pickedUp
       }
       accessRestriction
       accessRestrictionSelection {
@@ -165,6 +166,7 @@ export const onUpdateAdvert = /* GraphQL */ `
         reservedBySub
         quantity
         reservationDate
+        pickedUp
       }
       accessRestriction
       accessRestrictionSelection {
@@ -260,6 +262,7 @@ export const onDeleteAdvert = /* GraphQL */ `
         reservedBySub
         quantity
         reservationDate
+        pickedUp
       }
       accessRestriction
       accessRestrictionSelection {
