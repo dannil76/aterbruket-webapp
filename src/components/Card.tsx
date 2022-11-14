@@ -170,7 +170,6 @@ const Card: FC<Props> = ({
                     status: newStatus,
                     reservedBySub: user.sub,
                     reservedByName: user.name,
-                    returnDate: 'N/A',
                     reservationDate: new Date().toLocaleDateString('sv-SE', {
                         year: 'numeric',
                         month: 'numeric',
@@ -192,7 +191,6 @@ const Card: FC<Props> = ({
 
         if (!filteredItem.reservationDate) {
             historyItem.reservationDate = historyItem.reservationDate ?? 'N/A';
-            historyItem.returnDate = historyItem.returnDate ?? 'N/A';
         }
 
         await API.graphql(

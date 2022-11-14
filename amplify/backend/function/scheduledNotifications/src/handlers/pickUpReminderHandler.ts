@@ -1,12 +1,14 @@
-import { getReservations, sendEmail, CognitoService } from '../services';
+import { sendEmail, CognitoService, getReservedItems } from '../services';
 import {
+    dateToDayString,
     getHaffaFirstName,
     getHaffaFullName,
     logDebug,
     logException,
+    sendEmailHelper,
     subtractDays,
 } from '../utils';
-import { Reservation } from '../models';
+import { Advert } from '../models';
 import {
     userPoolId,
     appUrl,
@@ -16,7 +18,7 @@ import {
 } from '../config';
 import { pickUpReminderTemplate } from './templates';
 
-async function sendReminder(advert: Reservation) {
+async function sendReminder(advert: Advert): Promise<boolean> {
     try {
         const user = await CognitoService.getUserBySub(
             userPoolId,
@@ -51,17 +53,24 @@ async function sendReminder(advert: Reservation) {
     }
 }
 
-export default async function pickUpReminderHandler(): Promise<boolean> {
-    logDebug(`[pickUpReminderHandler] handler started`);
-    const reservationDate = subtractDays(new Date(), daysUntilPickUpReminder);
-    const reservations = await getReservations(reservationDate);
-    logDebug(`found ${reservations.length} reservations that need reminders.`);
-
-    const result = await Promise.all(
-        reservations.map((reservation) => {
-            return sendReminder(reservation);
-        }),
+function sendReminders(item: Advert): Promise<boolean>[] {
+    logDebug(
+        `[pickUpReminderHandler] try to find reserved items for id:"${item.id}"`,
     );
 
-    return result.every((mail) => mail);
+    const reservationDate = subtractDays(new Date(), daysUntilPickUpReminder);
+    const reservationDay = dateToDayString(reservationDate);
+    if (item.reservationDate !== reservationDay) {
+        return [Promise.resolve(true)];
+    }
+
+    return [sendReminder(item)];
+}
+
+export default async function pickUpReminderHandler(): Promise<boolean> {
+    logDebug(`[pickUpReminderHandler] handler started`);
+
+    const reservations = await getReservedItems();
+    logDebug(`found ${reservations.length} reservations that need reminders.`);
+    return sendEmailHelper(reservations, sendReminders);
 }
