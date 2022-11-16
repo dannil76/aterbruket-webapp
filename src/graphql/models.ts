@@ -55,6 +55,9 @@ export type CreateAdvertInput = {
 export enum BorrowStatus {
   available = "available",
   pickedUp = "pickedUp",
+  returned = "returned",
+  cancelled = "cancelled",
+  booked = "booked",
 }
 
 
@@ -98,15 +101,16 @@ export enum ItemAdvertType {
 export type AdvertBorrowCalendarInput = {
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
-  calendarEvents?: Array< CalendarEventInput | null > | null,
+  calendarEvents?: Array< CalendarEventInput > | null,
 };
 
 export type CalendarEventInput = {
   borrowedBySub?: string | null,
-  status?: string | null,
+  status?: BorrowStatus | null,
   dateStart?: string | null,
   dateEnd?: string | null,
   returnDateTime?: string | null,
+  quantity?: number | null,
 };
 
 export type AdvertPickUpInput = {
@@ -328,16 +332,17 @@ export type AdvertBorrowCalendar = {
   __typename: "AdvertBorrowCalendar",
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
-  calendarEvents?:  Array<CalendarEvent | null > | null,
+  calendarEvents?:  Array<CalendarEvent > | null,
 };
 
 export type CalendarEvent = {
   __typename: "CalendarEvent",
   borrowedBySub?: string | null,
-  status?: string | null,
+  status?: BorrowStatus | null,
   dateStart?: string | null,
   dateEnd?: string | null,
   returnDateTime?: string | null,
+  quantity?: number | null,
 };
 
 export type AdvertPickUp = {
@@ -866,11 +871,12 @@ export type CreateAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -975,11 +981,12 @@ export type UpdateAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1084,11 +1091,12 @@ export type DeleteAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1250,11 +1258,12 @@ export type SearchAdvertsQuery = {
         calendarEvents?:  Array< {
           __typename: "CalendarEvent",
           borrowedBySub?: string | null,
-          status?: string | null,
+          status?: BorrowStatus | null,
           dateStart?: string | null,
           dateEnd?: string | null,
           returnDateTime?: string | null,
-        } | null > | null,
+          quantity?: number | null,
+        } > | null,
       } | null,
       advertPickUps?:  Array< {
         __typename: "AdvertPickUp",
@@ -1378,11 +1387,12 @@ export type GetAdvertQuery = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1493,11 +1503,12 @@ export type ListAdvertsQuery = {
         calendarEvents?:  Array< {
           __typename: "CalendarEvent",
           borrowedBySub?: string | null,
-          status?: string | null,
+          status?: BorrowStatus | null,
           dateStart?: string | null,
           dateEnd?: string | null,
           returnDateTime?: string | null,
-        } | null > | null,
+          quantity?: number | null,
+        } > | null,
       } | null,
       advertPickUps?:  Array< {
         __typename: "AdvertPickUp",
@@ -1639,11 +1650,12 @@ export type OnCreateAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1743,11 +1755,12 @@ export type OnUpdateAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1847,11 +1860,12 @@ export type OnDeleteAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",

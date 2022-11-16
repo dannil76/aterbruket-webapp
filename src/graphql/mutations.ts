@@ -67,6 +67,7 @@ export const createAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {
@@ -166,6 +167,7 @@ export const updateAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {
@@ -265,6 +267,7 @@ export const deleteAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {

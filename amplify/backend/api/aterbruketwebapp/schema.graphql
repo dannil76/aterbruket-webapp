@@ -72,15 +72,16 @@ type Administration {
 type AdvertBorrowCalendar {
   allowedDateStart: AWSDate
   allowedDateEnd: AWSDate
-  calendarEvents: [CalendarEvent]
+  calendarEvents: [CalendarEvent!]
 }
 
 type CalendarEvent {
   borrowedBySub: String
-  status: String
+  status: BorrowStatus
   dateStart: AWSDate
   dateEnd: AWSDate
   returnDateTime: AWSDateTime
+  quantity: Int
 }
 
 enum ItemAdvertType {
@@ -97,6 +98,10 @@ enum ItemStatus {
 enum BorrowStatus {
   available
   pickedUp
+  returned
+  cancelled
+  booked
+  reserved
 }
 
 type ItemAMaterial {
