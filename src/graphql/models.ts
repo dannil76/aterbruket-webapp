@@ -14,6 +14,7 @@ export type CreateAdvertInput = {
   category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?: Array< ItemAreaOfUseInput | null > | null,
   images?: Array< ItemImagesInput | null > | null,
@@ -55,6 +56,10 @@ export type CreateAdvertInput = {
 export enum BorrowStatus {
   available = "available",
   pickedUp = "pickedUp",
+  returned = "returned",
+  cancelled = "cancelled",
+  booked = "booked",
+  reserved = "reserved",
 }
 
 
@@ -98,15 +103,16 @@ export enum ItemAdvertType {
 export type AdvertBorrowCalendarInput = {
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
-  calendarEvents?: Array< CalendarEventInput | null > | null,
+  calendarEvents?: Array< CalendarEventInput > | null,
 };
 
 export type CalendarEventInput = {
   borrowedBySub?: string | null,
-  status?: string | null,
+  status?: BorrowStatus | null,
   dateStart?: string | null,
   dateEnd?: string | null,
   returnDateTime?: string | null,
+  quantity?: number | null,
 };
 
 export type AdvertPickUpInput = {
@@ -145,6 +151,7 @@ export type ModelAdvertConditionInput = {
   status?: ModelItemStatusInput | null,
   category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
+  conditionValue?: ModelStringInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
   department?: ModelStringInput | null,
@@ -264,6 +271,7 @@ export type Advert = {
   category?: string | null,
   material?:  Array<ItemAMaterial | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?:  Array<ItemAreaOfUse | null > | null,
   images?:  Array<ItemImages | null > | null,
@@ -328,16 +336,17 @@ export type AdvertBorrowCalendar = {
   __typename: "AdvertBorrowCalendar",
   allowedDateStart?: string | null,
   allowedDateEnd?: string | null,
-  calendarEvents?:  Array<CalendarEvent | null > | null,
+  calendarEvents?:  Array<CalendarEvent > | null,
 };
 
 export type CalendarEvent = {
   __typename: "CalendarEvent",
   borrowedBySub?: string | null,
-  status?: string | null,
+  status?: BorrowStatus | null,
   dateStart?: string | null,
   dateEnd?: string | null,
   returnDateTime?: string | null,
+  quantity?: number | null,
 };
 
 export type AdvertPickUp = {
@@ -381,6 +390,7 @@ export type UpdateAdvertInput = {
   category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?: Array< ItemAreaOfUseInput | null > | null,
   images?: Array< ItemImagesInput | null > | null,
@@ -468,6 +478,7 @@ export type SearchableAdvertFilterInput = {
   width?: SearchableStringFilterInput | null,
   length?: SearchableStringFilterInput | null,
   category?: SearchableStringFilterInput | null,
+  conditionValue?: SearchableStringFilterInput | null,
   color?: SearchableStringFilterInput | null,
   quantity?: SearchableIntFilterInput | null,
   department?: SearchableStringFilterInput | null,
@@ -565,6 +576,7 @@ export enum SearchableAdvertSortableFields {
   width = "width",
   length = "length",
   category = "category",
+  conditionValue = "conditionValue",
   color = "color",
   quantity = "quantity",
   department = "department",
@@ -631,6 +643,7 @@ export enum SearchableAdvertAggregateField {
   status = "status",
   category = "category",
   condition = "condition",
+  conditionValue = "conditionValue",
   color = "color",
   quantity = "quantity",
   department = "department",
@@ -719,6 +732,7 @@ export type ModelAdvertFilterInput = {
   status?: ModelItemStatusInput | null,
   category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
+  conditionValue?: ModelStringInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
   department?: ModelStringInput | null,
@@ -823,6 +837,7 @@ export type CreateAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -866,11 +881,12 @@ export type CreateAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -932,6 +948,7 @@ export type UpdateAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -975,11 +992,12 @@ export type UpdateAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1041,6 +1059,7 @@ export type DeleteAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1084,11 +1103,12 @@ export type DeleteAdvertMutation = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1207,6 +1227,7 @@ export type SearchAdvertsQuery = {
         other?: boolean | null,
       } | null > | null,
       condition?: ItemCondition | null,
+      conditionValue?: string | null,
       color?: string | null,
       areaOfUse?:  Array< {
         __typename: "ItemAreaOfUse",
@@ -1250,11 +1271,12 @@ export type SearchAdvertsQuery = {
         calendarEvents?:  Array< {
           __typename: "CalendarEvent",
           borrowedBySub?: string | null,
-          status?: string | null,
+          status?: BorrowStatus | null,
           dateStart?: string | null,
           dateEnd?: string | null,
           returnDateTime?: string | null,
-        } | null > | null,
+          quantity?: number | null,
+        } > | null,
       } | null,
       advertPickUps?:  Array< {
         __typename: "AdvertPickUp",
@@ -1335,6 +1357,7 @@ export type GetAdvertQuery = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1378,11 +1401,12 @@ export type GetAdvertQuery = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1450,6 +1474,7 @@ export type ListAdvertsQuery = {
         other?: boolean | null,
       } | null > | null,
       condition?: ItemCondition | null,
+      conditionValue?: string | null,
       color?: string | null,
       areaOfUse?:  Array< {
         __typename: "ItemAreaOfUse",
@@ -1493,11 +1518,12 @@ export type ListAdvertsQuery = {
         calendarEvents?:  Array< {
           __typename: "CalendarEvent",
           borrowedBySub?: string | null,
-          status?: string | null,
+          status?: BorrowStatus | null,
           dateStart?: string | null,
           dateEnd?: string | null,
           returnDateTime?: string | null,
-        } | null > | null,
+          quantity?: number | null,
+        } > | null,
       } | null,
       advertPickUps?:  Array< {
         __typename: "AdvertPickUp",
@@ -1596,6 +1622,7 @@ export type OnCreateAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1639,11 +1666,12 @@ export type OnCreateAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1700,6 +1728,7 @@ export type OnUpdateAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1743,11 +1772,12 @@ export type OnUpdateAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",
@@ -1804,6 +1834,7 @@ export type OnDeleteAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1847,11 +1878,12 @@ export type OnDeleteAdvertSubscription = {
       calendarEvents?:  Array< {
         __typename: "CalendarEvent",
         borrowedBySub?: string | null,
-        status?: string | null,
+        status?: BorrowStatus | null,
         dateStart?: string | null,
         dateEnd?: string | null,
         returnDateTime?: string | null,
-      } | null > | null,
+        quantity?: number | null,
+      } > | null,
     } | null,
     advertPickUps?:  Array< {
       __typename: "AdvertPickUp",

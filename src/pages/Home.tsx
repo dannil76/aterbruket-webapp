@@ -1,30 +1,29 @@
 import React, { FC, useState, useEffect, useContext, Suspense } from 'react';
 import { Redirect } from 'react-router-dom';
-import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
-import { API } from 'aws-amplify';
 import styled from 'styled-components';
 import { MdNewReleases, MdSearch, MdTune, MdPhotoCamera } from 'react-icons/md';
 import { AuthState } from '@aws-amplify/ui-components';
-import { sortBy } from 'sort-by-typescript';
-import { listAdverts } from '../graphql/queries';
-import { ListAdvertsQuery } from '../graphql/models';
+import { ItemStatus } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
-import { conditions } from '../static/advertMeta';
+import { advertTypes } from '../static/advertMeta';
 import { IOption } from '../interfaces/IForm';
 import { Modal, useModal } from '../components/Modal';
 import { useQrCamera } from '../components/QrCamera';
 import QrModal from '../components/QrModal';
-import {
-    showUpdateAvailableToaster,
-    showBetaInfoToaster,
-    DEFAULTSORTVALUE,
-    getAllCategories,
-} from '../utils';
+import { showUpdateAvailableToaster, showBetaInfoToaster } from '../utils';
+import { DEFAULTSORTVALUE } from '../models/sort';
+import { HaffaFilter } from '../models/filter';
+import { getItemsFromApi } from '../api/items';
+import { PaginationOptions } from '../models/pagination';
+
+const tokenInitialValue = 'initial';
 
 const AdvertContainer = React.lazy(
     () => import('../components/AdvertContainer'),
 );
-const FilterMenu = React.lazy(() => import('../components/FilterMenu'));
+const FilterMenu = React.lazy(
+    () => import('../components/FilterMenu/FilterMenu'),
+);
 const ModalAddItemContent = React.lazy(
     () => import('../components/ModalAddItemContent'),
 );
@@ -173,125 +172,90 @@ const Home: FC = () => {
         setSearchValue(value);
     };
     const [paginationOption, setPaginationOption] = useState({
-        activePage: 1,
-        totalPages: 1, // Will change after the fetch
+        totalPages: 0, // Will change after the fetch
         amountToShow: 15,
         itemLength: 14, // Will change after the fetch
-    });
+    } as PaginationOptions);
+
+    const [activePage, setActivePage] = useState(1);
 
     const [items, setItems] = useState([]) as any;
     const [filterValueUpdated, setFilterValueUpdated] = useState(false);
-    const [conditionValues, setConditionValues] = useState<string[]>([]);
-    const [allValues, setAllValues] = useState<string[]>([]);
+    const [activeFilters, setActiveFilters] = useState<HaffaFilter>(
+        {} as HaffaFilter,
+    );
     const [error, setError] = useState(false);
+    const [nextToken, setToken] = useState<string | undefined>(
+        tokenInitialValue,
+    );
     const [filterValue, setFilterValue] = useState({
         version: { eq: 0 },
-        status: { eq: 'available' },
+        status: { eq: ItemStatus.available },
         or: [],
     }) as any;
     const [renderItems, setRenderItems] = useState([]) as any;
     const { authState } = useContext(UserContext);
     const [activeSorting, setActiveSorting] = useState(DEFAULTSORTVALUE);
 
-    const handlePages = (updatePage: number) => {
-        setPaginationOption({
-            ...paginationOption,
-            activePage: updatePage,
-        });
-
-        if (paginationOption.activePage !== updatePage) {
-            const start = (updatePage - 1) * paginationOption.amountToShow;
-            const end = start + paginationOption.amountToShow;
-
-            setRenderItems(
-                items
-                    .sort(sortBy(activeSorting.first, activeSorting.second))
-                    .slice(start, end),
-            );
-        }
+    const getStartIndex = function getStartIndex() {
+        return (activePage - 1) * paginationOption.amountToShow;
     };
 
-    const filterConditions: any = (fetchedData: any, conditions: any) => {
-        let copyItems: any[] = [];
-        let results: any[] = [];
-        copyItems = fetchedData.data?.listAdverts?.items;
-        results = copyItems.filter((item: Item) => {
-            return conditions.includes(item.condition);
-        });
-
-        return results;
-    };
-
-    const fetchItems = async () => {
-        let result = [] as any;
-        let filteredResult: any[] = [];
-        let advertItems = [] as any;
-
-        if (filterValue.or.length === 0 && conditionValues.length > 0) {
-            result = (await API.graphql(
-                graphqlOperation(listAdverts, {
-                    filter: { version: { eq: 0 }, status: { eq: 'available' } },
-                }),
-            )) as GraphQLResult<ListAdvertsQuery>;
-
-            filteredResult = filterConditions(result, conditionValues);
-        } else if (filterValue.or.length > 0 || conditionValues.length > 0) {
-            result = (await API.graphql(
-                graphqlOperation(listAdverts, { filter: filterValue }),
-            )) as GraphQLResult<ListAdvertsQuery>;
-
-            if (conditionValues.length === 0) {
-                filteredResult = [...result?.data?.listAdverts?.items];
-            } else {
-                filteredResult = filterConditions(result, conditionValues);
-            }
-        } else {
-            result = (await API.graphql(
-                graphqlOperation(listAdverts, {
-                    filter: { version: { eq: 0 }, status: { eq: 'available' } },
-                }),
-            )) as GraphQLResult<ListAdvertsQuery>;
-        }
-
-        if (filteredResult.length > 0) {
-            advertItems = [...filteredResult];
-            setError(false);
-        } else if (filterValue.or.length > 0 && filteredResult.length === 0) {
-            setError(true);
-        } else if (conditionValues.length > 0 && filteredResult.length === 0) {
-            setError(true);
-        } else if (filterValue.or.length === 0) {
-            advertItems = result?.data?.listAdverts?.items;
-            setError(false);
-        }
-
-        setItems(advertItems);
-        setFilterValue({
-            ...filterValue,
-            or: [],
-        });
-
-        setConditionValues([]);
-        setPaginationOption({
-            ...paginationOption,
-            totalPages: Math.ceil(
-                advertItems.length / paginationOption.amountToShow,
-            ),
-            itemLength: advertItems.length,
-        });
-
-        setRenderItems(
-            advertItems
-                .sort(sortBy(activeSorting.first, activeSorting.second))
-                .slice(0, paginationOption.amountToShow),
-        );
+    const getLastIndex = function getLastIndex() {
+        return activePage * paginationOption.amountToShow;
     };
 
     useEffect(() => {
-        if (authState === AuthState.SignedIn) {
-            fetchItems();
+        setRenderItems(items.slice(getStartIndex(), getLastIndex()));
+    }, [items, activePage]);
+
+    useEffect(() => {
+        // Sanity check don't handle page change before first fetch
+        if (activePage === 0) {
+            return;
         }
-    }, [authState, filterValueUpdated, activeSorting]);
+
+        if (authState === AuthState.SignedIn) {
+            getItemsFromApi(
+                activePage,
+                paginationOption.amountToShow,
+                activeSorting,
+                nextToken,
+                items,
+                activeFilters,
+                searchValue,
+                setToken,
+                setPaginationOption,
+            ).then((newItems) => {
+                setItems(newItems);
+            });
+        }
+    }, [activePage]);
+
+    useEffect(() => {
+        if (authState === AuthState.SignedIn) {
+            getItemsFromApi(
+                activePage,
+                paginationOption.amountToShow,
+                activeSorting,
+                undefined,
+                [],
+                activeFilters,
+                searchValue,
+                setToken,
+                setPaginationOption,
+            ).then((newItems) => {
+                setActivePage(1);
+                setItems(newItems);
+            });
+        }
+    }, [
+        authState,
+        filterValueUpdated,
+        activeFilters,
+        activeSorting,
+        searchValue,
+    ]);
 
     useEffect(() => {
         showBetaInfoToaster();
@@ -314,10 +278,13 @@ const Home: FC = () => {
         updateServiceWorker();
     }, []);
 
-    const categoryData = getAllCategories();
-    const filterOptions = [...categoryData, ...conditions];
+    const filterOptions = [...advertTypes];
+
     const activeFilterOptions = filterOptions.filter((item: IOption) => {
-        return allValues.includes(item.key);
+        return (
+            (item.key === 'borrow' && activeFilters.advertTypes?.borrow) ||
+            (item.key === 'recycle' && activeFilters.advertTypes?.recycle)
+        );
     });
 
     const [isModalVisible, toggleModal] = useModal();
@@ -381,15 +348,11 @@ const Home: FC = () => {
                     </button>
 
                     <FilterMenu
-                        setAllValues={setAllValues}
+                        setActiveFilters={setActiveFilters}
                         setIsOpen={setIsOpen}
                         isOpen={isOpen}
-                        filterValueUpdated={filterValueUpdated}
-                        setFilterValueUpdated={setFilterValueUpdated}
                         filterValue={filterValue}
                         setFilterValue={setFilterValue}
-                        setConditionValues={setConditionValues}
-                        activeSorting={activeSorting}
                         setActiveSorting={setActiveSorting}
                     />
                 </SearchFilterDiv>
@@ -403,7 +366,7 @@ const Home: FC = () => {
                 {items.length > 0 && (
                     <Pagination
                         paginationOption={paginationOption}
-                        handlePagination={handlePages}
+                        handlePagination={setActivePage}
                     />
                 )}
                 {error && (

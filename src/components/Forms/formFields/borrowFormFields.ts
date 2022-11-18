@@ -1,8 +1,6 @@
 import { IFields } from '../../../interfaces/IForm';
-import { getCategoriesExceptByParent } from '../../../utils/handleCategories';
+import { borrowCategories } from '../../../static/categories';
 import { administrations } from '../../../static/advertMeta';
-
-const borrowCategories = getCategoriesExceptByParent([1]);
 
 const borrowFormFields = (editing?: boolean): IFields[] => {
     return [

@@ -24,7 +24,6 @@ export interface ConditionLogic {
 
 export interface IOption {
     id: number;
-    parent?: number | null;
     key: string;
     title: string;
     disabled?: boolean;

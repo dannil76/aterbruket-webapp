@@ -4,12 +4,12 @@ import React, { useEffect, useState, FC, useContext } from 'react';
 import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
 import styled from 'styled-components';
-import { listAdverts } from '../graphql/queries';
-import { ListAdvertsQuery } from '../graphql/models';
-import { getAllCategories } from '../utils/handleCategories';
+import { searchAdverts } from '../graphql/queries';
+import { SearchAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
 import CardStatics from './CardStatics';
 import filterStatus from '../hooks/filterStatus';
+import { allCategories } from '../static/categories';
 
 const StaticContainer = styled.div`
     width: 90%;
@@ -104,24 +104,34 @@ const Statics: FC = () => {
         { title: 'Återbruket', filterOn: ATERBRUKETADRESS },
     ]);
     const [selected, setSelected] = useState('all');
-    const categories = getAllCategories();
 
     const fetchItems = async () => {
         const result = (await API.graphql(
-            graphqlOperation(listAdverts, { filter: { version: { eq: 0 } } }),
-        )) as GraphQLResult<ListAdvertsQuery>;
-        const advertItems = result.data?.listAdverts?.items;
+            graphqlOperation(searchAdverts, {
+                filter: { version: { eq: 0 } },
+                sort: {
+                    direction: 'desc',
+                    field: 'createdAt',
+                },
+            }),
+        )) as GraphQLResult<SearchAdvertsQuery>;
+        const advertItems = result.data?.searchAdverts?.items;
         setAllItems(advertItems);
-        const res = filterStatus(advertItems, categories);
+        const res = filterStatus(advertItems, allCategories);
         setStatusGroup(res);
     };
 
     const fetchItemsOverTime = async () => {
         const result = (await API.graphql(
-            graphqlOperation(listAdverts),
-        )) as GraphQLResult<ListAdvertsQuery>;
-        const advertItems = result.data?.listAdverts?.items;
-        const res = filterStatus(advertItems, categories);
+            graphqlOperation(searchAdverts, {
+                sort: {
+                    direction: 'desc',
+                    field: 'createdAt',
+                },
+            }),
+        )) as GraphQLResult<SearchAdvertsQuery>;
+        const advertItems = result.data?.searchAdverts?.items;
+        const res = filterStatus(advertItems, allCategories);
         setAllItemsOverTime(advertItems);
 
         setStatusGroupOverTime(res);
@@ -153,7 +163,7 @@ const Statics: FC = () => {
             });
         }
 
-        const res = filterStatus(filteredItems, categories);
+        const res = filterStatus(filteredItems, allCategories);
         setStatusGroup(res);
     };
 
@@ -171,7 +181,7 @@ const Statics: FC = () => {
             });
         }
 
-        const res = filterStatus(filteredItems, categories);
+        const res = filterStatus(filteredItems, allCategories);
         setStatusGroupOverTime(res);
     };
 

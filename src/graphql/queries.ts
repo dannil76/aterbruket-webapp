@@ -36,6 +36,7 @@ export const searchAdverts = /* GraphQL */ `
           other
         }
         condition
+        conditionValue
         color
         areaOfUse {
           indoors
@@ -79,6 +80,7 @@ export const searchAdverts = /* GraphQL */ `
             dateStart
             dateEnd
             returnDateTime
+            quantity
           }
         }
         advertPickUps {
@@ -149,6 +151,7 @@ export const getAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -192,6 +195,7 @@ export const getAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {
@@ -260,6 +264,7 @@ export const listAdverts = /* GraphQL */ `
           other
         }
         condition
+        conditionValue
         color
         areaOfUse {
           indoors
@@ -303,6 +308,7 @@ export const listAdverts = /* GraphQL */ `
             dateStart
             dateEnd
             returnDateTime
+            quantity
           }
         }
         advertPickUps {

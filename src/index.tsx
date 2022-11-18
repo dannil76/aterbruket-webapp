@@ -10,7 +10,7 @@ import App from './App';
 import awsExports from './aws-exports';
 
 ReactDOM.render(
-    <ReactPWAInstallProvider enableLogging>
+    <ReactPWAInstallProvider>
         <React.StrictMode>
             <App />
         </React.StrictMode>

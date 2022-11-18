@@ -21,6 +21,7 @@ export const onCreateAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -64,6 +65,7 @@ export const onCreateAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {
@@ -117,6 +119,7 @@ export const onUpdateAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -160,6 +163,7 @@ export const onUpdateAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {
@@ -213,6 +217,7 @@ export const onDeleteAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -256,6 +261,7 @@ export const onDeleteAdvert = /* GraphQL */ `
           dateStart
           dateEnd
           returnDateTime
+          quantity
         }
       }
       advertPickUps {

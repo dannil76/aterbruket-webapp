@@ -1,179 +1,5 @@
-const categories = [
-    // ***** Top level ***** //
-    {
-        id: 1,
-        parent: null,
-        key: 'recycle',
-        title: 'Återbruk',
-    },
-    {
-        id: 2,
-        parent: null,
-        key: 'furniture',
-        title: 'Möbler',
-    },
-    {
-        id: 3,
-        parent: null,
-        key: 'tool',
-        title: 'Verktyg',
-    },
-    {
-        id: 4,
-        parent: null,
-        key: 'vehicle',
-        title: 'Fordon',
-    },
-    {
-        id: 5,
-        parent: null,
-        key: 'workshop',
-        title: 'Workshop',
-    },
-    {
-        id: 6,
-        parent: null,
-        key: 'media',
-        title: 'Video & Ljud',
-    },
-    {
-        id: 7,
-        parent: null,
-        key: 'vrar',
-        title: 'VR, AR',
-    },
-    {
-        id: 8,
-        parent: null,
-        key: 'robot',
-        title: 'Robotar',
-    },
-    {
-        id: 9,
-        parent: null,
-        key: 'officeSupplies',
-        title: 'Kontor',
-    },
-    {
-        id: 10,
-        parent: null,
-        key: 'computerPhoneTablet',
-        title: 'Dator, telefon, padda',
-    },
-    {
-        id: 26,
-        parent: null,
-        key: 'other',
-        title: 'Övrigt',
-    },
-    {
-        id: 27,
-        parent: null,
-        key: 'clothes',
-        title: 'Kläder',
-    },
-    {
-        id: 28,
-        parent: null,
-        key: 'skill',
-        title: 'Kompetens',
-    },
-    // ***** Recycle ***** //
-    {
-        id: 11,
-        parent: 1,
-        key: 'kidsFurniture',
-        title: 'Barnmöbler',
-    },
-    {
-        id: 12,
-        parent: 1,
-        key: 'table',
-        title: 'Bord',
-    },
-    {
-        id: 13,
-        parent: 1,
-        key: 'other',
-        title: 'Övrigt',
-    },
-    {
-        id: 14,
-        parent: 1,
-        key: 'storageFurniture',
-        title: 'Förvaringsmöbler',
-    },
-    {
-        id: 15,
-        parent: 1,
-        key: 'raiseAndLowerableDesk',
-        title: 'Höj- och sänkbart skrivbord',
-    },
-    {
-        id: 16,
-        parent: 1,
-        key: 'officeChair',
-        title: 'Kontorsstolar',
-    },
-    {
-        id: 17,
-        parent: 1,
-        key: 'sparepart',
-        title: 'Reservdelar och Tillbehör',
-    },
-    {
-        id: 18,
-        parent: 1,
-        key: 'seatingFurniture',
-        title: 'Sittmöbler',
-    },
-    {
-        id: 19,
-        parent: 1,
-        key: 'desk',
-        title: 'Skrivbord',
-    },
-    {
-        id: 20,
-        parent: 1,
-        key: 'sofaAndBench',
-        title: 'Soffor och Bänkar',
-    },
-    {
-        id: 21,
-        parent: 1,
-        key: 'wanted',
-        title: 'Sökes',
-    },
-    {
-        id: 22,
-        parent: 1,
-        key: 'painting',
-        title: 'Tavlor',
-    },
-    {
-        id: 23,
-        parent: 1,
-        key: 'outdoorItem',
-        title: 'UteÅterbrukat',
-    },
-    {
-        id: 24,
-        parent: 1,
-        key: 'appliances',
-        title: 'Vitvaror',
-    },
-    {
-        id: 25,
-        parent: 1,
-        key: 'constructionMaterial',
-        title: 'Återbygg',
-    },
-];
-
-interface Category {
+export interface Category {
     id: number;
-    parent: number | null;
     key: string;
     title: string;
 }
@@ -192,4 +18,149 @@ const sortCategories = (unsortedCategories: Category[]) => {
     return sortedCategories;
 };
 
-export default sortCategories(categories);
+export const borrowCategories = sortCategories([
+    {
+        id: 2,
+        key: 'furniture',
+        title: 'Möbler',
+    },
+    {
+        id: 3,
+        key: 'tool',
+        title: 'Verktyg',
+    },
+    {
+        id: 4,
+        key: 'vehicle',
+        title: 'Fordon',
+    },
+    {
+        id: 5,
+        key: 'workshop',
+        title: 'Workshop',
+    },
+    {
+        id: 6,
+        key: 'media',
+        title: 'Video & Ljud',
+    },
+    {
+        id: 7,
+        key: 'vrar',
+        title: 'VR, AR',
+    },
+    {
+        id: 8,
+        key: 'robot',
+        title: 'Robotar',
+    },
+    {
+        id: 9,
+        key: 'officeSupplies',
+        title: 'Kontor',
+    },
+    {
+        id: 10,
+        key: 'computerPhoneTablet',
+        title: 'Dator, telefon, padda',
+    },
+    {
+        id: 26,
+        key: 'other',
+        title: 'Övrigt',
+    },
+    {
+        id: 27,
+        key: 'clothes',
+        title: 'Kläder',
+    },
+    {
+        id: 28,
+        key: 'skill',
+        title: 'Kompetens',
+    },
+]);
+
+export const recycleCategories = sortCategories([
+    {
+        id: 11,
+        key: 'kidsFurniture',
+        title: 'Barnmöbler',
+    },
+    {
+        id: 12,
+        key: 'table',
+        title: 'Bord',
+    },
+    {
+        id: 13,
+        key: 'other',
+        title: 'Övrigt',
+    },
+    {
+        id: 14,
+        key: 'storageFurniture',
+        title: 'Förvaringsmöbler',
+    },
+    {
+        id: 15,
+        key: 'raiseAndLowerableDesk',
+        title: 'Höj- och sänkbart skrivbord',
+    },
+    {
+        id: 16,
+        key: 'officeChair',
+        title: 'Kontorsstolar',
+    },
+    {
+        id: 17,
+        key: 'sparepart',
+        title: 'Reservdelar och Tillbehör',
+    },
+    {
+        id: 18,
+        key: 'seatingFurniture',
+        title: 'Sittmöbler',
+    },
+    {
+        id: 19,
+        key: 'desk',
+        title: 'Skrivbord',
+    },
+    {
+        id: 20,
+        key: 'sofaAndBench',
+        title: 'Soffor och Bänkar',
+    },
+    {
+        id: 21,
+        key: 'wanted',
+        title: 'Sökes',
+    },
+    {
+        id: 22,
+        key: 'painting',
+        title: 'Tavlor',
+    },
+    {
+        id: 23,
+        key: 'outdoorItem',
+        title: 'UteÅterbrukat',
+    },
+    {
+        id: 24,
+        key: 'appliances',
+        title: 'Vitvaror',
+    },
+    {
+        id: 25,
+        key: 'constructionMaterial',
+        title: 'Återbygg',
+    },
+]);
+
+// TODO: parents
+export const allCategories = sortCategories([
+    ...borrowCategories,
+    ...recycleCategories,
+]);

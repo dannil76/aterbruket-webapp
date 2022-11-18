@@ -45,10 +45,10 @@ describe('Create new calendar event', () => {
     it('create first calendar event in empty calendar', () => {
         const expectedResult = {
             currentEvent: {
-                borrowedBySub: '11111-11111-11111-11111-11111',
-                dateEnd: '2022-11-19',
-                dateStart: '2022-11-17',
-                status: 'reserved',
+                borrowedBySub: userSub1,
+                status: eventTwoDayReservation.eventType,
+                dateEnd: eventTwoDayReservation.dateRange.endDate,
+                dateStart: eventTwoDayReservation.dateRange.startDate,
             },
             updateSuccessful: true,
             updatedCalendarResult: {
@@ -124,10 +124,10 @@ describe('Create new calendar event', () => {
     it('create second calendar event', () => {
         const expectedResult = {
             currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-11-19',
-                dateStart: '2022-11-17',
-                status: 'reserved',
+                borrowedBySub: userSub2,
+                dateEnd: eventTwoDayReservation.dateRange.endDate,
+                dateStart: eventTwoDayReservation.dateRange.startDate,
+                status: eventTwoDayReservation.eventType,
             },
             updateSuccessful: true,
             updatedCalendarResult: {
@@ -302,12 +302,20 @@ describe('Create new calendar event', () => {
     });
 
     it('event shall not overlap with same dates', () => {
+        const eventWithDuplicateDates = {
+            dateRange: {
+                endDate: currentDay.format('YYYY-MM-DD'),
+                startDate: currentDay.format('YYYY-MM-DD'),
+            },
+            eventType: 'reserved',
+        };
+
         const expectedResult = {
             currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-11-16',
-                dateStart: '2022-11-14',
-                status: 'reserved',
+                borrowedBySub: userSub2,
+                dateEnd: eventWithDuplicateDates.dateRange.endDate,
+                dateStart: eventWithDuplicateDates.dateRange.startDate,
+                status: eventWithDuplicateDates.eventType,
             },
             updateSuccessful: false,
             errorMessage:
@@ -315,18 +323,6 @@ describe('Create new calendar event', () => {
             updatedCalendarResult: {
                 ...singleCalendarEvent,
             },
-        };
-
-        const eventWithDuplicateDates = {
-            dateRange: {
-                startDate:
-                    expectedResult.updatedCalendarResult.calendarEvents[0]
-                        .dateStart,
-                endDate:
-                    expectedResult.updatedCalendarResult.calendarEvents[0]
-                        .dateEnd,
-            },
-            eventType: 'reserved',
         };
 
         const tryAddingSameDates = addDateRangeToEvents(
@@ -362,10 +358,10 @@ describe('Create new calendar event', () => {
 
         const expectedResult = {
             currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-11-19',
-                dateStart: '2022-11-14',
-                status: 'reserved',
+                borrowedBySub: userSub2,
+                dateEnd: newEvent.dateRange.endDate,
+                dateStart: newEvent.dateRange.startDate,
+                status: newEvent.eventType,
             },
             updateSuccessful: false,
             errorMessage:

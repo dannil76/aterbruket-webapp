@@ -1,13 +1,11 @@
 import { IFields } from '../../../interfaces/IForm';
-import { getCategoriesByParent } from '../../../utils/handleCategories';
+import { recycleCategories } from '../../../static/categories';
 import {
     conditions,
     areaOfUse,
     materials,
     administrations,
 } from '../../../static/advertMeta';
-
-const categories = getCategoriesByParent([1]);
 
 const recycleFormFields = (editing?: boolean): IFields[] => {
     return [
@@ -50,7 +48,7 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
             disabled: false,
             required: true,
             title: 'Kategori / Typ av möbel',
-            options: categories,
+            options: recycleCategories,
         },
         {
             name: 'title',
