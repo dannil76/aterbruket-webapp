@@ -173,7 +173,7 @@ const Home: FC = () => {
     };
     const [paginationOption, setPaginationOption] = useState({
         totalPages: 0, // Will change after the fetch
-        amountToShow: 15,
+        amountToShow: 30,
         itemLength: 14, // Will change after the fetch
     } as PaginationOptions);
 
@@ -366,6 +366,7 @@ const Home: FC = () => {
                 {items.length > 0 && (
                     <Pagination
                         paginationOption={paginationOption}
+                        activePage={activePage}
                         handlePagination={setActivePage}
                     />
                 )}
