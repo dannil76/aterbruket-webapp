@@ -13,6 +13,7 @@ import UserContext from '../contexts/UserContext';
 import { searchAdverts } from '../graphql/queries';
 import { ICalendarDataEvent } from '../interfaces/IDateRange';
 import { IAdvert } from '../interfaces/IAdvert';
+import { PaginationOptions } from '../models/pagination';
 
 interface IListAdvertsFilter {
     not?: { status: { eq: string } };
@@ -29,21 +30,19 @@ const Pagination = React.lazy(() => import('./Pagination'));
 const ItemsToGet: FC = () => {
     const { user } = useContext(UserContext);
     const [reservedItems, setReservedItems] = useState([]) as any;
+    const [activePage, setActivePage] = useState(1);
+
     const [paginationOption, setPaginationOption] = useState({
-        activePage: 1,
         totalPages: 1, // Will change after the fetch
-        amountToShow: 15,
+        amountToShow: 30,
         itemLength: 14, // Will change after the fetch
-    });
+    } as PaginationOptions);
     const [renderItems, setRenderItems] = useState([]) as any;
 
     const handlePages = (updatePage: number) => {
-        setPaginationOption({
-            ...paginationOption,
-            activePage: updatePage,
-        });
+        setActivePage(updatePage);
 
-        if (paginationOption.activePage !== updatePage) {
+        if (activePage !== updatePage) {
             const start = (updatePage - 1) * paginationOption.amountToShow;
             const end = start + paginationOption.amountToShow;
 
@@ -123,15 +122,15 @@ const ItemsToGet: FC = () => {
 
     useEffect(() => {
         const totalReservedItems = reservedItems.length;
+        const { amountToShow } = paginationOption;
+        setActivePage(1);
         setPaginationOption({
-            ...paginationOption,
-            totalPages: Math.ceil(
-                totalReservedItems / paginationOption.amountToShow,
-            ),
+            amountToShow,
+            totalPages: Math.ceil(totalReservedItems / amountToShow),
             itemLength: totalReservedItems,
         });
 
-        setRenderItems(reservedItems.slice(0, paginationOption.amountToShow));
+        setRenderItems(reservedItems.slice(0, amountToShow));
     }, [reservedItems]);
 
     const listReservedItems = () => {
@@ -180,6 +179,7 @@ const ItemsToGet: FC = () => {
                 {reservedItems.length > 0 && (
                     <Pagination
                         paginationOption={paginationOption}
+                        activePage={activePage}
                         handlePagination={handlePages}
                     />
                 )}

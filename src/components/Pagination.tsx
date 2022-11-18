@@ -2,6 +2,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+import { PaginationOptions } from '../models/pagination';
 
 const Button = styled.button`
     background-color: ${(props) => props.theme.appTheme.primaryColor};
@@ -42,19 +43,17 @@ const ButtonContainer = styled.div`
     margin: 10px 0 80px 0;
 `;
 
-type PaginationOption = {
-    activePage: number | null | undefined;
-    totalPages: number | null | undefined;
-    amountToShow: number | null | undefined;
-    itemLength: number | null | undefined;
-};
-
 interface Props {
-    paginationOption: PaginationOption | any;
+    paginationOption: PaginationOptions;
+    activePage: number;
     handlePagination: (activePage: number) => void;
 }
 
-const Pagination: FC<Props> = ({ paginationOption, handlePagination }) => {
+const Pagination: FC<Props> = ({
+    paginationOption,
+    activePage,
+    handlePagination,
+}) => {
     // eslint-disable-next-line prefer-const
     let buttonArray: any = [];
 
@@ -68,9 +67,7 @@ const Pagination: FC<Props> = ({ paginationOption, handlePagination }) => {
                 key={element}
                 type="button"
                 onClick={() => handlePagination(element)}
-                className={
-                    element === paginationOption.activePage ? 'active' : 'not'
-                }
+                className={element === activePage ? 'active' : 'not'}
             >
                 {element}
             </Button>
@@ -79,22 +76,18 @@ const Pagination: FC<Props> = ({ paginationOption, handlePagination }) => {
 
     return (
         <ButtonContainer>
-            {paginationOption.activePage !== 1 && (
+            {activePage !== 1 && (
                 <Button
-                    onClick={() =>
-                        handlePagination(paginationOption.activePage - 1)
-                    }
+                    onClick={() => handlePagination(activePage - 1)}
                     className="endButtons"
                 >
                     <MdKeyboardArrowLeft />
                 </Button>
             )}
             {buttons}
-            {paginationOption.activePage !== paginationOption.totalPages && (
+            {activePage !== paginationOption.totalPages && (
                 <Button
-                    onClick={() =>
-                        handlePagination(paginationOption.activePage + 1)
-                    }
+                    onClick={() => handlePagination(activePage + 1)}
                     className="endButtons"
                 >
                     <MdKeyboardArrowRight />
