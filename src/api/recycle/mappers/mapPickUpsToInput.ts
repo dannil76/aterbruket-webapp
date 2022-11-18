@@ -2,7 +2,7 @@
 import { AdvertPickUp, AdvertPickUpInput } from '../../../graphql/models';
 
 export default function mapPickUpsToInput(
-    pickUps: (AdvertPickUp | null)[] | undefined | null,
+    pickUps: AdvertPickUp[] | undefined | null,
 ): AdvertPickUpInput[] {
     const advertPickUps = pickUps ?? ([] as AdvertPickUp[]);
     return advertPickUps.map((pickup) => {

@@ -35,6 +35,7 @@ export const createAdvert = /* GraphQL */ `
         alt
       }
       quantity
+      quantityUnit
       department
       instructions
       contactPerson
@@ -136,6 +137,7 @@ export const updateAdvert = /* GraphQL */ `
         alt
       }
       quantity
+      quantityUnit
       department
       instructions
       contactPerson
@@ -237,6 +239,7 @@ export const deleteAdvert = /* GraphQL */ `
         alt
       }
       quantity
+      quantityUnit
       department
       instructions
       contactPerson

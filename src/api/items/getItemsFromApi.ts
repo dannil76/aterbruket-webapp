@@ -78,12 +78,10 @@ export default async function getItemsFromApi(
         }
 
         first = false;
-        const searchResult =
-            result?.data?.searchAdverts?.items ?? ([] as Advert[]);
+        const searchResult = result?.data?.searchAdverts
+            ?.items as (Advert | null)[];
 
-        const foundItems = searchResult.filter(
-            (item) => item !== null,
-        ) as Advert[];
+        const foundItems = searchResult.filter((item) => item) as Advert[];
 
         newList.push(...foundItems);
         fetchToken = result?.data?.searchAdverts?.nextToken ?? undefined;

@@ -47,6 +47,7 @@ export const searchAdverts = /* GraphQL */ `
           alt
         }
         quantity
+        quantityUnit
         department
         instructions
         contactPerson
@@ -162,6 +163,7 @@ export const getAdvert = /* GraphQL */ `
         alt
       }
       quantity
+      quantityUnit
       department
       instructions
       contactPerson
@@ -275,6 +277,7 @@ export const listAdverts = /* GraphQL */ `
           alt
         }
         quantity
+        quantityUnit
         department
         instructions
         contactPerson
