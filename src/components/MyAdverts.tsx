@@ -2,8 +2,8 @@ import API, { GraphQLResult } from '@aws-amplify/api';
 import { graphqlOperation } from 'aws-amplify';
 import React, { FC, useContext, useEffect, useState, useCallback } from 'react';
 import AdvertContainer from './AdvertContainer';
-import { ListAdvertsQuery } from '../graphql/models';
-import { listAdverts } from '../graphql/queries';
+import { SearchAdvertsQuery } from '../graphql/models';
+import { searchAdverts } from '../graphql/queries';
 import UserContext from '../contexts/UserContext';
 import Pagination from './Pagination';
 
@@ -34,26 +34,27 @@ const MyAdverts: FC = () => {
 
     const fetchCreatedAdverts = useCallback(async () => {
         const result = (await API.graphql(
-            graphqlOperation(listAdverts, {
+            graphqlOperation(searchAdverts, {
                 filter: {
                     and: [{ giver: { eq: user.sub } }, { version: { eq: 0 } }],
                     not: { status: { eq: 'pickedUp' } },
                 },
             }),
-        )) as GraphQLResult<ListAdvertsQuery>;
+        )) as GraphQLResult<SearchAdvertsQuery>;
 
-        const advertItem: any = result.data?.listAdverts?.items;
-        if (advertItem.length > 0) {
+        const advertTotal = result.data?.searchAdverts?.total ?? 0;
+        const advertItems = result.data?.searchAdverts?.items ?? [];
+        if (advertTotal > 0) {
             setPaginationOption({
                 ...paginationOption,
                 totalPages: Math.ceil(
-                    advertItem.length / paginationOption.amountToShow,
+                    advertTotal / paginationOption.amountToShow,
                 ),
-                itemLength: advertItem.length,
+                itemLength: advertTotal,
             });
-            setRenderItems(advertItem.slice(0, paginationOption.amountToShow));
+            setRenderItems(advertItems.slice(0, paginationOption.amountToShow));
         }
-        setAdverts(advertItem);
+        setAdverts(advertItems);
     }, [user.sub]);
 
     useEffect(() => {
@@ -68,12 +69,7 @@ const MyAdverts: FC = () => {
                 items={renderItems}
                 searchValue={false}
                 itemsFrom="myAdds"
-                activeSorting={{
-                    first: '',
-                    second: '',
-                    sortTitle: '',
-                    secText: '',
-                }}
+                activeSorting={undefined}
             />
             {renderItems.length > 0 && (
                 <Pagination

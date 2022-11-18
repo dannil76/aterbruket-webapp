@@ -1,19 +1,7 @@
-import categories from "../static/categories";
+import { Category, allCategories } from '../static/categories';
 
-const getAllCategories = () => {
-  return categories;
-}
+const getCategoryByKey = (key: string): Category | undefined => {
+    return allCategories.find((category) => category.key === key);
+};
 
-const getCategoriesByParent = (ids: [Number|null]) => {
-  return categories.filter(category => ids.includes(category.parent));
-}
-
-const getCategoriesExceptByParent = (ids: [Number | null]) => {
-  return categories.filter(category => !(ids.includes(category.parent) || ids.includes(category.id)));
-}
-
-const getCategoryByKey = (key: String) => {
-  return categories.find(category => category.key === key);
-}
-
-export { getAllCategories, getCategoriesByParent, getCategoriesExceptByParent, getCategoryByKey };
+export { getCategoryByKey };

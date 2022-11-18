@@ -68,7 +68,6 @@ const AddItemForm: FC = () => {
             lockerCodeInformation: '',
             lockerCode: '',
             returnInformation: '',
-            reservationDate: 'N/A',
             accessories: [],
             borrowDifficultyLevel: '',
             accessRestriction: 'none',

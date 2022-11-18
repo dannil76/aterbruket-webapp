@@ -1,23 +1,16 @@
 import React, { FC, Suspense } from 'react';
 import styled from 'styled-components';
-import { Advert } from '../graphql/models';
 import { IOption } from '../interfaces/IForm';
+import { SortSelection } from '../models/sort';
 
 const Card = React.lazy(() => import('./Card'));
-
-type ISorting = {
-    first: string;
-    second: string;
-    sortTitle: string;
-    secText: string;
-};
 
 interface IAdvert {
     items: any;
     searchValue: any;
     itemsFrom: string;
     activeFilterOptions: IOption[];
-    activeSorting: ISorting;
+    activeSorting: SortSelection | undefined;
     fetchReservedAdverts?: any;
 }
 
@@ -101,7 +94,7 @@ const AdvertContainer: FC<IAdvert> = ({
                 <div className="allaDiv">
                     {itemsFrom === 'home' && activeFilterOptions.length > 0 ? (
                         <OptionWrapper>
-                            <h3>Aktiva filter :</h3>
+                            <h3>Aktiva filter:</h3>
                             {activeFilterOptions.map((option: IOption) => {
                                 return (
                                     <span
@@ -122,24 +115,23 @@ const AdvertContainer: FC<IAdvert> = ({
                             <OptionWrapper>
                                 {searchValue ? (
                                     <h3>
-                                        Sökning "{searchValue}" gav{' '}
-                                        {filteredItems.length} annonser
+                                        {`Sökning "${searchValue}" gav ${filteredItems.length} annonser`}
                                     </h3>
                                 ) : (
-                                    <h3>Alla möbler</h3>
+                                    <h3>Alla annonser</h3>
                                 )}
                             </OptionWrapper>
                         )
                     )}
-                    {itemsFrom === 'home' && activeSorting.sortTitle !== '' && (
+                    {itemsFrom === 'home' && (
                         <OptionWrapper>
                             <h3>Sorterar på:</h3>
                             <span
                                 className="options"
                                 style={{ margin: '5px', height: '15px' }}
                             >
-                                {activeSorting.sortTitle}:{' '}
-                                {activeSorting.secText}
+                                {activeSorting &&
+                                    `${activeSorting.title}: ${activeSorting.text}`}
                             </span>
                         </OptionWrapper>
                     )}
@@ -157,15 +149,16 @@ const AdvertContainer: FC<IAdvert> = ({
                     )}
                     {itemsFrom === 'myAdds' && <h3>Mina annonser</h3>}
                 </div>
-                {filteredItems.map((filteredItem: any) => (
-                    <Card
-                        key={filteredItem.id}
-                        imageKey={filteredItem.images[0].src}
-                        filteredItem={filteredItem}
-                        fetchReservedAdverts={fetchReservedAdverts}
-                        itemsFrom={itemsFrom}
-                    />
-                ))}
+                {filteredItems &&
+                    filteredItems.map((filteredItem: any) => (
+                        <Card
+                            key={filteredItem.id}
+                            imageKey={filteredItem.images[0].src}
+                            filteredItem={filteredItem}
+                            fetchReservedAdverts={fetchReservedAdverts}
+                            itemsFrom={itemsFrom}
+                        />
+                    ))}
             </Suspense>
         </AdvertContainerDiv>
     );

@@ -12,6 +12,7 @@ type Advert @model @searchable
   category: String
   material: [ItemAMaterial]
   condition: ItemCondition
+  conditionValue: String
   color: String
   areaOfUse: [ItemAreaOfUse]
   images: [ItemImages]

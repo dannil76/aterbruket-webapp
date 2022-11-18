@@ -14,6 +14,7 @@ export type CreateAdvertInput = {
   category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?: Array< ItemAreaOfUseInput | null > | null,
   images?: Array< ItemImagesInput | null > | null,
@@ -58,6 +59,7 @@ export enum BorrowStatus {
   returned = "returned",
   cancelled = "cancelled",
   booked = "booked",
+  reserved = "reserved",
 }
 
 
@@ -149,6 +151,7 @@ export type ModelAdvertConditionInput = {
   status?: ModelItemStatusInput | null,
   category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
+  conditionValue?: ModelStringInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
   department?: ModelStringInput | null,
@@ -268,6 +271,7 @@ export type Advert = {
   category?: string | null,
   material?:  Array<ItemAMaterial | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?:  Array<ItemAreaOfUse | null > | null,
   images?:  Array<ItemImages | null > | null,
@@ -386,6 +390,7 @@ export type UpdateAdvertInput = {
   category?: string | null,
   material?: Array< ItemAMaterialInput | null > | null,
   condition?: ItemCondition | null,
+  conditionValue?: string | null,
   color?: string | null,
   areaOfUse?: Array< ItemAreaOfUseInput | null > | null,
   images?: Array< ItemImagesInput | null > | null,
@@ -473,6 +478,7 @@ export type SearchableAdvertFilterInput = {
   width?: SearchableStringFilterInput | null,
   length?: SearchableStringFilterInput | null,
   category?: SearchableStringFilterInput | null,
+  conditionValue?: SearchableStringFilterInput | null,
   color?: SearchableStringFilterInput | null,
   quantity?: SearchableIntFilterInput | null,
   department?: SearchableStringFilterInput | null,
@@ -570,6 +576,7 @@ export enum SearchableAdvertSortableFields {
   width = "width",
   length = "length",
   category = "category",
+  conditionValue = "conditionValue",
   color = "color",
   quantity = "quantity",
   department = "department",
@@ -636,6 +643,7 @@ export enum SearchableAdvertAggregateField {
   status = "status",
   category = "category",
   condition = "condition",
+  conditionValue = "conditionValue",
   color = "color",
   quantity = "quantity",
   department = "department",
@@ -724,6 +732,7 @@ export type ModelAdvertFilterInput = {
   status?: ModelItemStatusInput | null,
   category?: ModelStringInput | null,
   condition?: ModelItemConditionInput | null,
+  conditionValue?: ModelStringInput | null,
   color?: ModelStringInput | null,
   quantity?: ModelIntInput | null,
   department?: ModelStringInput | null,
@@ -828,6 +837,7 @@ export type CreateAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -938,6 +948,7 @@ export type UpdateAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1048,6 +1059,7 @@ export type DeleteAdvertMutation = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1215,6 +1227,7 @@ export type SearchAdvertsQuery = {
         other?: boolean | null,
       } | null > | null,
       condition?: ItemCondition | null,
+      conditionValue?: string | null,
       color?: string | null,
       areaOfUse?:  Array< {
         __typename: "ItemAreaOfUse",
@@ -1344,6 +1357,7 @@ export type GetAdvertQuery = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1460,6 +1474,7 @@ export type ListAdvertsQuery = {
         other?: boolean | null,
       } | null > | null,
       condition?: ItemCondition | null,
+      conditionValue?: string | null,
       color?: string | null,
       areaOfUse?:  Array< {
         __typename: "ItemAreaOfUse",
@@ -1607,6 +1622,7 @@ export type OnCreateAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1712,6 +1728,7 @@ export type OnUpdateAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",
@@ -1817,6 +1834,7 @@ export type OnDeleteAdvertSubscription = {
       other?: boolean | null,
     } | null > | null,
     condition?: ItemCondition | null,
+    conditionValue?: string | null,
     color?: string | null,
     areaOfUse?:  Array< {
       __typename: "ItemAreaOfUse",

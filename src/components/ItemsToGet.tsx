@@ -8,9 +8,9 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { ListAdvertsQuery } from '../graphql/models';
+import { SearchAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
-import { listAdverts } from '../graphql/queries';
+import { searchAdverts } from '../graphql/queries';
 import { ICalendarDataEvent } from '../interfaces/IDateRange';
 import { IAdvert } from '../interfaces/IAdvert';
 
@@ -52,13 +52,14 @@ const ItemsToGet: FC = () => {
     };
 
     const fetchListAdverts = async (
-        listAdvertsFilter: IListAdvertsFilter,
-    ): Promise<GraphQLResult<ListAdvertsQuery>> => {
+        searchAdvertsFilter: IListAdvertsFilter,
+    ): Promise<GraphQLResult<SearchAdvertsQuery>> => {
         return (await API.graphql(
-            graphqlOperation(listAdverts, {
-                filter: listAdvertsFilter,
+            graphqlOperation(searchAdverts, {
+                filter: searchAdvertsFilter,
+                sort: { direction: 'desc', field: 'createdAt' },
             }),
-        )) as GraphQLResult<ListAdvertsQuery>;
+        )) as GraphQLResult<SearchAdvertsQuery>;
     };
 
     const storeFetchResult = (itemsToStore: [IAdvert]) => {
@@ -102,7 +103,7 @@ const ItemsToGet: FC = () => {
         };
 
         const borrowedAds = await fetchListAdverts(borrowedAdsFilter);
-        const borrowedAdsItems: any = borrowedAds.data?.listAdverts?.items;
+        const borrowedAdsItems: any = borrowedAds.data?.searchAdverts?.items;
         const foundResult = filterBorrowedItems(borrowedAdsItems, user.sub, [
             'reserved',
             'pickedUp',
@@ -110,7 +111,7 @@ const ItemsToGet: FC = () => {
         storeFetchResult(foundResult);
 
         const reservedAds = await fetchListAdverts(reservedAdsFilter);
-        const reservedAdsItems: any = reservedAds.data?.listAdverts?.items;
+        const reservedAdsItems: any = reservedAds.data?.searchAdverts?.items;
         storeFetchResult(reservedAdsItems);
     }, [user.sub]);
 
@@ -165,12 +166,7 @@ const ItemsToGet: FC = () => {
                     searchValue={false}
                     items={listReservedItems()}
                     itemsFrom="haffat"
-                    activeSorting={{
-                        first: '',
-                        second: '',
-                        sortTitle: '',
-                        secText: '',
-                    }}
+                    activeSorting={undefined}
                     fetchReservedAdverts={fetchAllReservations}
                 />
 
@@ -179,12 +175,7 @@ const ItemsToGet: FC = () => {
                     searchValue={false}
                     items={listPickedUpItems()}
                     itemsFrom="pickedUp"
-                    activeSorting={{
-                        first: '',
-                        second: '',
-                        sortTitle: '',
-                        secText: '',
-                    }}
+                    activeSorting={undefined}
                 />
                 {reservedItems.length > 0 && (
                     <Pagination

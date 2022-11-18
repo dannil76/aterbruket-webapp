@@ -176,6 +176,7 @@ const Card: FC<Props> = ({
                         day: 'numeric',
                     }),
                     version: 0,
+                    conditionValue: filteredItem.condition,
                     revisions: !filteredItem.revisions
                         ? 0
                         : filteredItem.revisions + 1,
@@ -188,10 +189,7 @@ const Card: FC<Props> = ({
         delete historyItem.createdAt;
         delete historyItem.updatedAt;
         historyItem.version = result.data.updateAdvert.revisions + 1;
-
-        if (!filteredItem.reservationDate) {
-            historyItem.reservationDate = historyItem.reservationDate ?? 'N/A';
-        }
+        historyItem.conditionValue = result.data.updateAdvert.condition;
 
         await API.graphql(
             graphqlOperation(createAdvert, { input: historyItem }),

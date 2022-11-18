@@ -24,6 +24,7 @@ export const createAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -124,6 +125,7 @@ export const updateAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -224,6 +226,7 @@ export const deleteAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors

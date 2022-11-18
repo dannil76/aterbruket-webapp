@@ -36,6 +36,7 @@ export const searchAdverts = /* GraphQL */ `
           other
         }
         condition
+        conditionValue
         color
         areaOfUse {
           indoors
@@ -150,6 +151,7 @@ export const getAdvert = /* GraphQL */ `
         other
       }
       condition
+      conditionValue
       color
       areaOfUse {
         indoors
@@ -262,6 +264,7 @@ export const listAdverts = /* GraphQL */ `
           other
         }
         condition
+        conditionValue
         color
         areaOfUse {
           indoors
