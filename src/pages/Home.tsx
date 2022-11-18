@@ -172,7 +172,7 @@ const Home: FC = () => {
         setSearchValue(value);
     };
     const [paginationOption, setPaginationOption] = useState({
-        totalPages: 1, // Will change after the fetch
+        totalPages: 0, // Will change after the fetch
         amountToShow: 15,
         itemLength: 14, // Will change after the fetch
     } as PaginationOptions);
@@ -207,9 +207,14 @@ const Home: FC = () => {
 
     useEffect(() => {
         setRenderItems(items.slice(getStartIndex(), getLastIndex()));
-    }, [items]);
+    }, [items, activePage]);
 
     useEffect(() => {
+        // Sanity check don't handle page change before first fetch
+        if (activePage === 0) {
+            return;
+        }
+
         if (authState === AuthState.SignedIn) {
             getItemsFromApi(
                 activePage,
@@ -240,6 +245,7 @@ const Home: FC = () => {
                 setToken,
                 setPaginationOption,
             ).then((newItems) => {
+                setActivePage(1);
                 setItems(newItems);
             });
         }

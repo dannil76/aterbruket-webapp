@@ -53,9 +53,9 @@ export default async function getItemsFromApi(
         filter.title = { wildcard: `*${searchValue}*` };
     }
 
-    const newList = [];
-    let first = true;
-    while ((newList.length <= pageStartIndex && fetchToken) || first) {
+    const newList = [...currentItems];
+    let first = newList.length === 0;
+    while ((currentItems.length <= pageStartIndex && fetchToken) || first) {
         if (fetchToken) {
             // eslint-disable-next-line no-await-in-loop
             result = (await API.graphql(
@@ -80,7 +80,12 @@ export default async function getItemsFromApi(
         first = false;
         const searchResult =
             result?.data?.searchAdverts?.items ?? ([] as Advert[]);
-        newList.push(...searchResult);
+
+        const foundItems = searchResult.filter(
+            (item) => item !== null,
+        ) as Advert[];
+
+        newList.push(...foundItems);
         fetchToken = result?.data?.searchAdverts?.nextToken ?? undefined;
     }
 
