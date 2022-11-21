@@ -1,6 +1,6 @@
 import { IFields } from '../../../interfaces/IForm';
 import { borrowCategories } from '../../../static/categories';
-import { administrations } from '../../../static/advertMeta';
+import { administrations, units } from '../../../static/advertMeta';
 
 const borrowFormFields = (editing?: boolean): IFields[] => {
     return [
@@ -67,6 +67,21 @@ const borrowFormFields = (editing?: boolean): IFields[] => {
             attributes: {
                 maxLength: '20',
             },
+        },
+        {
+            name: 'quantity',
+            fieldType: 'number',
+            disabled: false,
+            title: 'Mängd',
+            required: true,
+        },
+        {
+            name: 'unit',
+            fieldType: 'select',
+            disabled: false,
+            title: 'Enhet',
+            required: true,
+            options: units,
         },
         {
             name: 'description',

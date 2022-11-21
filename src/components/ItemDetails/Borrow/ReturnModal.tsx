@@ -7,12 +7,13 @@ import { Modal } from '../../Modal';
 import { QrCamera } from '../../QrCamera';
 import { AdvertImage } from '../Common';
 import useItemDetailsModal from '../useItemDetailsModal';
+import { AdvertAccessory } from '../../../models/accessory';
 
 interface Props {
     advert: Advert;
     isVisible: boolean;
     toggleModal: () => void;
-    onFinish: () => void;
+    onFinish: (checklistItems: AdvertAccessory[] | undefined) => void;
     image: string;
 }
 
@@ -35,15 +36,18 @@ const ReturnModal: React.FC<Props> = ({
     });
 
     const { accessories = [] } = advert;
-    const initialChecklist = accessories?.map((accessory) => ({
-        id: accessory,
-        label: accessory,
-        checked: true,
-    }));
+    const initialChecklist = accessories?.map(
+        (accessory) =>
+            ({
+                id: accessory,
+                label: accessory,
+                checked: true,
+            } as AdvertAccessory),
+    );
     const [checklistItems, setChecklistItems] = useState(initialChecklist);
 
     const handleFinish = useCallback(() => {
-        onFinish();
+        onFinish(checklistItems);
         reset();
         toggleModal();
     }, [onFinish, reset, toggleModal]);

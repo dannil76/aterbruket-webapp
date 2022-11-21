@@ -14,7 +14,7 @@ export default async function ReserveAdvert(
     user: User,
     quantity: number,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
-): Promise<void> {
+): Promise<string | undefined> {
     const advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps.push({
         reservedBySub: user.sub,
@@ -46,4 +46,6 @@ export default async function ReserveAdvert(
     await API.graphql(
         graphqlOperation(createAdvert, { input: createAdvertInput }),
     );
+
+    return undefined;
 }

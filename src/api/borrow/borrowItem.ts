@@ -3,16 +3,19 @@ import { API } from 'aws-amplify';
 import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, BorrowStatus } from '../../graphql/models';
+import { Advert, BorrowStatus, UpdateAdvertInput } from '../../graphql/models';
 import {
     getUserBookings,
     mapCalendarToInput,
     removeCalendarEvent,
+    updateMissingAccessories,
 } from './utils';
+import { mapAdvertToUpdateInput } from './mappers';
 
-export default async function pickUpItem(
+export default async function borrowItem(
     advert: Advert,
     user: User,
+    missing: string[] | undefined,
 ): Promise<string | undefined> {
     if (!advert.advertBorrowCalendar) {
         return 'Bokningen saknar kalender';
@@ -30,16 +33,29 @@ export default async function pickUpItem(
     // Only able to have 1 booking at a time
     const booking = userBookings[0];
 
-    const advertBorrowCalendar = removeCalendarEvent(events, booking);
+    const calendarEventInput = removeCalendarEvent(events, booking);
     booking.status = BorrowStatus.pickedUp;
-    advertBorrowCalendar.push(booking);
+    calendarEventInput.push(booking);
+
+    const missingAccessories = updateMissingAccessories(
+        advert.missingAccessories,
+        missing,
+        advert.advertBorrowCalendar,
+        user,
+    );
+
+    const updateInput = mapAdvertToUpdateInput(advert);
 
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
-                ...advert,
-                advertBorrowCalendar,
-            },
+                ...updateInput,
+                missingAccessories,
+                advertBorrowCalendar: {
+                    ...advert.advertBorrowCalendar,
+                    calendarEvents: calendarEventInput,
+                },
+            } as UpdateAdvertInput,
         }),
     );
 

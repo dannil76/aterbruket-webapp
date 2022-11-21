@@ -45,6 +45,29 @@ const areaOfUse = [
     },
 ];
 
+const units = [
+    {
+        id: 1,
+        key: 'units',
+        title: 'Stycken',
+    },
+    {
+        id: 2,
+        key: 'kilos',
+        title: 'Kilogram',
+    },
+    {
+        id: 3,
+        key: 'meters',
+        title: 'Meter',
+    },
+    {
+        id: 4,
+        key: 'cubicMeters',
+        title: 'Kubikmeter',
+    },
+];
+
 const materials = [
     {
         id: 1,
@@ -116,4 +139,11 @@ const administrations = [
     },
 ];
 
-export { advertTypes, conditions, areaOfUse, materials, administrations };
+export {
+    advertTypes,
+    conditions,
+    areaOfUse,
+    units,
+    materials,
+    administrations,
+};

@@ -13,7 +13,7 @@ export default async function UnreserveAdvert(
     item: Advert,
     user: User,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
-): Promise<void> {
+): Promise<string | undefined> {
     let advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps = removeFromPickupList(advertPickUps, user);
     const status = isAllQuantityReserved(advertPickUps, item.quantity)
@@ -45,4 +45,6 @@ export default async function UnreserveAdvert(
     await API.graphql(
         graphqlOperation(createAdvert, { input: createAdvertInput }),
     );
+
+    return undefined;
 }

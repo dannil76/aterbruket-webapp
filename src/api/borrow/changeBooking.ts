@@ -10,6 +10,7 @@ import {
     removeCalendarEvent,
     validateCalendarEvent,
 } from './utils';
+import { mapAdvertToUpdateInput } from './mappers';
 
 export default async function changeBooking(
     advert: Advert,
@@ -34,13 +35,13 @@ export default async function changeBooking(
     // Only able to have 1 booking at a time
     const booking = userBookings[0];
 
-    const advertBorrowCalendar = removeCalendarEvent(events, booking);
+    const calendarEventInput = removeCalendarEvent(events, booking);
     booking.dateStart = startDate;
     booking.dateEnd = endDate;
     booking.quantity = quantity;
 
     const validationMessage = validateCalendarEvent(
-        advertBorrowCalendar,
+        calendarEventInput,
         allowedDateStart,
         allowedDateEnd,
         booking,
@@ -51,11 +52,16 @@ export default async function changeBooking(
         return validationMessage;
     }
 
+    const updateInput = mapAdvertToUpdateInput(advert);
+
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
-                ...advert,
-                advertBorrowCalendar,
+                ...updateInput,
+                advertBorrowCalendar: {
+                    ...advert.advertBorrowCalendar,
+                    calendarEvents: calendarEventInput,
+                },
             },
         }),
     );

@@ -12,7 +12,7 @@ export default async function pickUpAdvert(
     item: Advert,
     user: User,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
-): Promise<void> {
+): Promise<string | undefined> {
     let advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps = addPickedUpStatus(advertPickUps, user);
 
@@ -35,4 +35,6 @@ export default async function pickUpAdvert(
     await API.graphql(
         graphqlOperation(createAdvert, { input: createAdvertInput }),
     );
+
+    return undefined;
 }

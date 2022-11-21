@@ -13,7 +13,7 @@ import Loader from 'react-loader-spinner';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { GetAdvertQuery } from '../graphql/models';
+import { Advert, BorrowStatus, GetAdvertQuery } from '../graphql/models';
 import Button from '../components/Button';
 import {
     DefaultContent as BorrowContent,
@@ -33,22 +33,27 @@ import RecycleContent from '../components/ItemDetails/Recycle/DefaultContent';
 import { useModal } from '../components/Modal';
 import QRCode from '../components/QRCodeContainer';
 import UserContext from '../contexts/UserContext';
-import { createAdvert, updateAdvert, deleteAdvert } from '../graphql/mutations';
+import { deleteAdvert } from '../graphql/mutations';
 import { getAdvert } from '../graphql/queries';
-import { ICalendarUpdateResult, IDateRange } from '../interfaces/IDateRange';
+import { IDateRange } from '../interfaces/IDateRange';
 import {
     convertToSwedishDate,
     getActiveReservation,
     getStatus,
 } from '../utils/advertHelper';
-import {
-    addDateRangeToEvents,
-    getLastReturnedCalendarEvent,
-    isDateAvailable,
-    updateAdvertCalendar,
-    updateEventStatus,
-} from '../utils/calendarUtils';
+import { isDateAvailable } from '../utils/calendarUtils';
 import { getCategoryByKey } from '../utils/handleCategories';
+import {
+    reserveAdvert,
+    unreserveAdvert,
+    pickUpAdvert,
+    addBooking,
+    cancelBooking,
+    changeBooking,
+    borrowItem,
+    returnItem,
+} from '../api';
+import { AdvertAccessory } from '../models/accessory';
 
 const CarouselComp = React.lazy(() => import('../components/CarouselComp'));
 const EditItemForm = React.lazy(
@@ -115,6 +120,7 @@ const ItemDetails: FC<ParamTypes> = () => {
     const { user } = useContext(UserContext);
     const [image, setImage] = useState('') as any;
     const [itemUpdated, setItemUpdated] = useState(false);
+    const [isReserved, setIsReserved] = useState(false);
     const buttonOutOfScreen = useRef(null);
     const [refVisible, setRefVisible] = useState(false);
     const [showHeaderBtn, setShowHeaderBtn] = useState(false);
@@ -148,6 +154,41 @@ const ItemDetails: FC<ParamTypes> = () => {
     };
 
     useEffect(() => {
+        if (!item) {
+            return;
+        }
+
+        const advert = item as Advert;
+        if (!advert) {
+            return;
+        }
+
+        if (advert.advertType === 'borrow') {
+            const status =
+                advert.advertBorrowCalendar?.calendarEvents?.some((event) => {
+                    return (
+                        (event.status === BorrowStatus.reserved ||
+                            event.status === BorrowStatus.pickedUp) &&
+                        event.borrowedBySub === user.sub
+                    );
+                }) ?? false;
+
+            setIsReserved(status);
+        }
+
+        if (advert.advertType === 'recycle') {
+            const status =
+                advert.advertPickUps?.some((pickUp) => {
+                    return (
+                        !pickUp.pickedUp && pickUp.reservedBySub === user.sub
+                    );
+                }) ?? false;
+
+            setIsReserved(status);
+        }
+    }, [item, user.sub]);
+
+    useEffect(() => {
         fetchItem();
         setItemUpdated(false);
     }, [itemUpdated]);
@@ -179,57 +220,6 @@ const ItemDetails: FC<ParamTypes> = () => {
         };
     });
 
-    const updateItem = async (newStatus: string) => {
-        const result = (await API.graphql(
-            graphqlOperation(updateAdvert, {
-                input: {
-                    id,
-                    status: newStatus,
-                    reservedBySub: user.sub,
-                    reservedByName: user.name,
-                    conditionValue: item.condition,
-                    reservationDate: new Date().toLocaleDateString('sv-SE', {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                    }),
-                    version: 0,
-                    revisions: item.revisions + 1,
-                },
-            }),
-        )) as any;
-
-        setItemUpdated(true);
-
-        delete item.createdAt;
-        delete item.updatedAt;
-        item.version = result.data.updateAdvert.revisions + 1;
-        item.conditionValue = item.condition;
-
-        await API.graphql(graphqlOperation(createAdvert, { input: item }));
-    };
-
-    const onClickReservBtn = () => {
-        updateItem('reserved');
-        setShowHeaderBtn(false);
-    };
-
-    const onClickRemoveResBtn = () => {
-        updateItem('available');
-        setShowHeaderBtn(false);
-    };
-
-    const onClickPickUpBtn = () => {
-        updateItem('pickedUp');
-        setShowHeaderBtn(false);
-    };
-
-    const history = useHistory();
-
-    const goBackFunc = () => {
-        history.goBack();
-    };
-
     const isRecycleType = item.advertType === 'recycle';
     const isBorrowType = item.advertType === 'borrow';
 
@@ -243,6 +233,78 @@ const ItemDetails: FC<ParamTypes> = () => {
         bookingType: '',
     });
 
+    const callApi = async (
+        call: Promise<string | undefined>,
+    ): Promise<string | undefined> => {
+        const error = await call;
+        if (!error) {
+            setShowHeaderBtn(false);
+            fetchItem();
+        }
+
+        return error;
+    };
+
+    // RECYCLE
+    const onClickReservBtn = async () => {
+        return callApi(reserveAdvert(item, user, 1, setItemUpdated));
+    };
+
+    const onClickUnreserveBtn = () => {
+        return callApi(unreserveAdvert(item, user, setItemUpdated));
+    };
+
+    const onClickPickUpBtn = () => {
+        return callApi(pickUpAdvert(item, user, setItemUpdated));
+    };
+
+    // BORROW
+    const onClickAddBookingBtn = async () => {
+        return callApi(
+            addBooking(
+                item,
+                user,
+                reservationDateRange.startDate,
+                reservationDateRange.endDate,
+                1,
+            ),
+        );
+    };
+
+    const onClickCancelBtn = async () => {
+        return callApi(cancelBooking(item, user));
+    };
+
+    const onClickChangeBooking = async () => {
+        return callApi(
+            changeBooking(
+                item,
+                reservationDateRange.startDate,
+                reservationDateRange.endDate,
+                user,
+                1,
+            ),
+        );
+    };
+
+    const onClickBorrowBtn = async (
+        missingAccessories: string[] | undefined,
+    ) => {
+        return callApi(borrowItem(item, user, missingAccessories));
+    };
+
+    const onClickReturnBtn = async (
+        accessories: AdvertAccessory[] | undefined,
+    ) => {
+        return callApi(returnItem(item, user, accessories));
+    };
+
+    const history = useHistory();
+
+    const goBackFunc = () => {
+        history.goBack();
+    };
+
     const userSub = user?.sub ? user.sub : '';
     const status = getStatus(item, user, new Date());
     const activeReservation = getActiveReservation(item, userSub);
@@ -253,72 +315,6 @@ const ItemDetails: FC<ParamTypes> = () => {
     ) => {
         const { startDate, endDate } = changeEvent;
         setReservationDateRange({ startDate, endDate, bookingType });
-    };
-
-    const handleSaveReservation = async (): Promise<ICalendarUpdateResult> => {
-        const newCalendarEvent = {
-            dateRange: {
-                startDate: reservationDateRange.startDate,
-                endDate: reservationDateRange.endDate,
-            },
-            eventType: reservationDateRange.bookingType,
-        };
-
-        const addEventResult = addDateRangeToEvents(
-            item.advertBorrowCalendar,
-            newCalendarEvent,
-            userSub,
-        );
-
-        if (addEventResult.updateSuccessful) {
-            await updateAdvertCalendar(
-                item,
-                addEventResult.updatedCalendarResult,
-            );
-        }
-        await fetchItem();
-
-        return addEventResult;
-    };
-
-    const handleSaveReservationStatus = async (
-        newStatus: string,
-        missingAccessories?: string[],
-    ): Promise<boolean> => {
-        const updatedEvent = updateEventStatus(
-            item.advertBorrowCalendar,
-            activeReservation,
-            newStatus,
-        );
-
-        if (updatedEvent.updateSuccessful) {
-            item.status = newStatus === 'returned' ? 'available' : newStatus;
-            const lastReturnedEvent = getLastReturnedCalendarEvent(
-                item.advertBorrowCalendar,
-            );
-
-            if (
-                newStatus === 'pickedUp' &&
-                typeof missingAccessories !== 'undefined' &&
-                missingAccessories.length &&
-                typeof lastReturnedEvent !== 'undefined'
-            ) {
-                (item.missingAccessories = item.missingAccessories || []).push({
-                    reportedBy: userSub,
-                    reportedDate: new Date().toISOString(),
-                    accessories: missingAccessories,
-                    lastReturnedBy: lastReturnedEvent?.borrowedBySub,
-                });
-            }
-
-            await updateAdvertCalendar(
-                item,
-                updatedEvent.updatedCalendarResult,
-            );
-        }
-        await fetchItem();
-
-        return updatedEvent.updateSuccessful;
     };
 
     const components: IComponents = {
@@ -362,18 +358,13 @@ const ItemDetails: FC<ParamTypes> = () => {
                         dateRange={reservationDateRange}
                         setDateRange={handleReservationDateRange}
                         onFinish={() => {
-                            handleSaveReservation().then(
-                                (saveReservationResult) => {
-                                    return saveReservationResult.updateSuccessful
-                                        ? toast('Prylen är nu bokad!')
-                                        : toast.error(
-                                              `Prylen kunde tyvärr inte bokas. ${
-                                                  saveReservationResult.errorMessage ||
-                                                  ''
-                                              }`,
-                                          );
-                                },
-                            );
+                            onClickAddBookingBtn().then((error) => {
+                                return !error
+                                    ? toast('Prylen är nu bokad!')
+                                    : toast.error(
+                                          `Prylen kunde tyvärr inte bokas. ${error}`,
+                                      );
+                            });
                         }}
                         availableCalendarDates={(date) =>
                             !isDateAvailable(date, item.advertBorrowCalendar)
@@ -387,18 +378,17 @@ const ItemDetails: FC<ParamTypes> = () => {
                         isVisible={isPickUpModalVisible}
                         toggleModal={togglePickUpModal}
                         onFinish={(missingAccessories) => {
-                            handleSaveReservationStatus(
-                                'pickedUp',
-                                missingAccessories,
-                            ).then((statusSaved) => {
-                                return statusSaved
-                                    ? toast(
-                                          'Snyggt! Prylen är nu lånad och i ditt ansvar!',
-                                      )
-                                    : toast.error(
-                                          'Prylen kunde tyvärr inte lånas.',
-                                      );
-                            });
+                            onClickBorrowBtn(missingAccessories).then(
+                                (error) => {
+                                    return !error
+                                        ? toast(
+                                              'Snyggt! Prylen är nu lånad och i ditt ansvar!',
+                                          )
+                                        : toast.error(
+                                              `Prylen kunde tyvärr inte lånas. ${error}`,
+                                          );
+                                },
+                            );
                         }}
                     />
                 ),
@@ -408,18 +398,14 @@ const ItemDetails: FC<ParamTypes> = () => {
                         advert={item}
                         isVisible={isReturnModalVisible}
                         toggleModal={toggleReturnModal}
-                        onFinish={() => {
-                            handleSaveReservationStatus('returned').then(
-                                (statusSaved) => {
-                                    return statusSaved
-                                        ? toast(
-                                              'Snyggt! Prylen är nu återlämnad!',
-                                          )
-                                        : toast.error(
-                                              'Prylen kunde tyvärr inte lämnas tillbaka.',
-                                          );
-                                },
-                            );
+                        onFinish={(accessories) => {
+                            onClickReturnBtn(accessories).then((error) => {
+                                return !error
+                                    ? toast('Snyggt! Prylen är nu återlämnad!')
+                                    : toast.error(
+                                          `Prylen kunde tyvärr inte lämnas tillbaka. ${error}`,
+                                      );
+                            });
                         }}
                     />
                 ),
@@ -607,42 +593,40 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </Button>
                 )}
 
-                {isRecycleType &&
-                    status === 'reserved' &&
-                    item.reservedBySub === user.sub && (
-                        <>
-                            <Button
-                                size="xl"
-                                marginBottom={12}
-                                marginLeft={24}
-                                marginRight={24}
-                                color="primaryLight"
-                                ref={(el: any) => {
-                                    buttonOutOfScreen.current = el;
-                                    setRefVisible(!!el);
-                                }}
-                                onClick={() => {
-                                    togglePickUpModal();
-                                }}
-                                type="button"
-                            >
-                                Hämta ut
-                            </Button>
-                            <Button
-                                size="lg"
-                                marginBottom={12}
-                                marginLeft={24}
-                                marginRight={24}
-                                transparent
-                                type="button"
-                                onClick={() => {
-                                    onClickRemoveResBtn();
-                                }}
-                            >
-                                Ta bort reservation
-                            </Button>
-                        </>
-                    )}
+                {isRecycleType && status === 'reserved' && isReserved && (
+                    <>
+                        <Button
+                            size="xl"
+                            marginBottom={12}
+                            marginLeft={24}
+                            marginRight={24}
+                            color="primaryLight"
+                            ref={(el: any) => {
+                                buttonOutOfScreen.current = el;
+                                setRefVisible(!!el);
+                            }}
+                            onClick={() => {
+                                togglePickUpModal();
+                            }}
+                            type="button"
+                        >
+                            Hämta ut
+                        </Button>
+                        <Button
+                            size="lg"
+                            marginBottom={12}
+                            marginLeft={24}
+                            marginRight={24}
+                            transparent
+                            type="button"
+                            onClick={() => {
+                                onClickUnreserveBtn();
+                            }}
+                        >
+                            Ta bort reservation
+                        </Button>
+                    </>
+                )}
 
                 {isBorrowType && status === 'available' && (
                     <Button
@@ -702,22 +686,20 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </Button>
                 )}
 
-                {status === 'pickedUp' &&
-                    isRecycleType &&
-                    item.reservedBySub === user.sub && (
-                        <Button
-                            size="xl"
-                            marginBottom={24}
-                            marginLeft={24}
-                            marginRight={24}
-                            onClick={() => {
-                                setRegive(true);
-                            }}
-                            type="button"
-                        >
-                            Annonsera igen
-                        </Button>
-                    )}
+                {status === 'pickedUp' && isRecycleType && isReserved && (
+                    <Button
+                        size="xl"
+                        marginBottom={24}
+                        marginLeft={24}
+                        marginRight={24}
+                        onClick={() => {
+                            setRegive(true);
+                        }}
+                        type="button"
+                    >
+                        Annonsera igen
+                    </Button>
+                )}
 
                 {(status === 'available' || isBorrowType) &&
                     (item.giver === user.sub || user.isAdmin) && (
@@ -786,40 +768,55 @@ const ItemDetails: FC<ParamTypes> = () => {
         </>
     );
 
+    const getFormComponent = () => {
+        if (editItem) {
+            return (
+                <EditItemForm
+                    setEditItem={setEditItem}
+                    item={item}
+                    closeEditformAndFetchItem={closeEditformAndFetchItem}
+                    image={image}
+                />
+            );
+        }
+
+        if (regive) {
+            return (
+                <RegiveItemForm
+                    setRegive={setRegive}
+                    item={item}
+                    closeEditformAndFetchItem={closeEditformAndFetchItem}
+                    image={image}
+                />
+            );
+        }
+
+        if (showCarousel) {
+            return (
+                <CarouselComp setShowCarousel={setShowCarousel} image={image} />
+            );
+        }
+
+        if (item && Object.keys(item).length === 0) {
+            return (
+                <LoaderWrapper>
+                    <Loader
+                        type="Rings"
+                        color="#50811b"
+                        height={80}
+                        width={80}
+                    />
+                </LoaderWrapper>
+            );
+        }
+
+        return allDetails;
+    };
+
     return (
         <main style={{ padding: 0 }}>
             <Suspense fallback={<div>Loading...</div>}>
-                {editItem ? (
-                    <EditItemForm
-                        setEditItem={setEditItem}
-                        item={item}
-                        closeEditformAndFetchItem={closeEditformAndFetchItem}
-                        image={image}
-                    />
-                ) : regive ? (
-                    <RegiveItemForm
-                        setRegive={setRegive}
-                        item={item}
-                        closeEditformAndFetchItem={closeEditformAndFetchItem}
-                        image={image}
-                    />
-                ) : showCarousel ? (
-                    <CarouselComp
-                        setShowCarousel={setShowCarousel}
-                        image={image}
-                    />
-                ) : item && Object.keys(item).length === 0 ? (
-                    <LoaderWrapper>
-                        <Loader
-                            type="Rings"
-                            color="#50811b"
-                            height={80}
-                            width={80}
-                        />
-                    </LoaderWrapper>
-                ) : (
-                    allDetails
-                )}
+                {getFormComponent()}
             </Suspense>
         </main>
     );

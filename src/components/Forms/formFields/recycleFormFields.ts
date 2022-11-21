@@ -5,6 +5,7 @@ import {
     areaOfUse,
     materials,
     administrations,
+    units,
 } from '../../../static/advertMeta';
 
 const recycleFormFields = (editing?: boolean): IFields[] => {
@@ -47,7 +48,7 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
             fieldType: 'select',
             disabled: false,
             required: true,
-            title: 'Kategori / Typ av möbel',
+            title: 'Kategori',
             options: recycleCategories,
         },
         {
@@ -85,8 +86,16 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
             name: 'quantity',
             fieldType: 'number',
             disabled: false,
-            title: 'Antal',
-            placeholder: 'Hur många?',
+            title: 'Mängd',
+            required: true,
+        },
+        {
+            name: 'unit',
+            fieldType: 'select',
+            disabled: false,
+            title: 'Enhet',
+            required: true,
+            options: units,
         },
         {
             name: 'measurementLabel',
