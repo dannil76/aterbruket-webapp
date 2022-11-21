@@ -32,6 +32,14 @@ export default async function newBookingEmail(
         return false;
     }
 
+    if (!haffaUser.email) {
+        logDebug(
+            `[newBookingEmail] can't send e-mail missing email information ${reservedBySub}`,
+        );
+
+        return false;
+    }
+
     const { title, contactPerson, id, email } = newItem;
     const body = newBookingTemplate(
         title,
@@ -42,6 +50,9 @@ export default async function newBookingEmail(
         formatDate(calendarEvent.dateStart),
         formatDate(calendarEvent.dateEnd),
         haffaUser.email,
+        calendarEvent.quantity,
+        newItem.quantityUnit,
+        newItem.quantity,
     );
 
     const toAddress = email;

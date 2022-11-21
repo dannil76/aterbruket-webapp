@@ -23,6 +23,15 @@ export default async function sendReturnedEmail(
 
     try {
         const haffaUser = await getReservedByUser(calendarEvent.borrowedBySub);
+
+        if (!haffaUser.email) {
+            logDebug(
+                `[sendReturnedEmail] can't send e-mail missing email information ${calendarEvent.borrowedBySub}`,
+            );
+
+            return false;
+        }
+
         const firstName = getHaffaFirstName(haffaUser);
         const body = returnedTemplate(
             title,
@@ -34,6 +43,9 @@ export default async function sendReturnedEmail(
             formatDate(calendarEvent.dateStart),
             formatDate(calendarEvent.dateEnd),
             haffaUser?.email,
+            calendarEvent.quantity,
+            newItem.quantityUnit,
+            newItem.quantity,
         );
 
         logDebug(

@@ -1,7 +1,7 @@
 import { HaffaUser } from '../models/haffaUser';
 
 export default function getFullName(
-    user: HaffaUser | string | undefined,
+    user: HaffaUser | string | undefined | null,
 ): string {
     if (!user) {
         return '';

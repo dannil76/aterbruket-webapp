@@ -40,7 +40,7 @@ export default async function borrowItem(
     const missingAccessories = updateMissingAccessories(
         advert.missingAccessories,
         missing,
-        advert.advertBorrowCalendar,
+        advert.advertBorrowCalendar.calendarEvents,
         user,
     );
 

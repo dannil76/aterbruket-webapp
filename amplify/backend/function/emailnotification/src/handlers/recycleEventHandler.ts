@@ -1,3 +1,4 @@
+import { getChangedPickUp, logDebug, logWarning } from '../utils';
 import {
     confirmNewReservationEmail,
     notifyAboutNewReservationEmail,
@@ -6,7 +7,6 @@ import {
 } from '../emails';
 import { AdvertStatus } from '../models/enums';
 import { Advert } from '../models/haffaAdvert';
-import { logDebug, logWarning } from '../utils/logHelper';
 
 /**
  * Handle modifications in the Haffa database.This is usually the modification of the current version 0 item.
@@ -29,23 +29,35 @@ export async function onModify(
 
     const emails = [] as Promise<boolean>[];
 
-    logDebug(
-        `new status: ${newItem.status}, old status: ${previousItem.status}`,
+    const changedReservation = getChangedPickUp(
+        previousItem.advertPickUps,
+        newItem.advertPickUps,
     );
 
-    if (
-        previousItem.status === AdvertStatus.AVAILABLE &&
-        newItem.status === AdvertStatus.RESERVED
-    ) {
-        emails.push(confirmNewReservationEmail(newItem));
-        emails.push(notifyAboutNewReservationEmail(newItem));
+    if (!changedReservation) {
+        logWarning(
+            '[recycleEventHandler] reservation is undefined. Return false',
+        );
+        return false;
     }
 
-    if (
-        previousItem.status === AdvertStatus.RESERVED &&
-        newItem.status === AdvertStatus.PICKEDUP
-    ) {
-        emails.push(pickedUpEmail(newItem));
+    logDebug(
+        `found reservation: 
+            by ${changedReservation.reservedBySub} 
+            on ${changedReservation.reservationDate} 
+            for ${changedReservation.quantity} 
+            picked up ${changedReservation.pickedUp}`,
+    );
+
+    if (!changedReservation.pickedUp) {
+        emails.push(confirmNewReservationEmail(newItem, changedReservation));
+        emails.push(
+            notifyAboutNewReservationEmail(newItem, changedReservation),
+        );
+    }
+
+    if (changedReservation.pickedUp) {
+        emails.push(pickedUpEmail(newItem, changedReservation));
     }
 
     if (

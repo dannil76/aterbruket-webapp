@@ -4,10 +4,10 @@ import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
 import React from 'react';
 import { createAdvert, updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, ItemStatus, UpdateAdvertMutation } from '../../graphql/models';
+import { Advert, UpdateAdvertMutation } from '../../graphql/models';
 import { dayToDateString } from '../../utils';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
-import { isAllQuantityReserved } from './utils';
+import { getUpdatedItemStatus } from './utils';
 
 export default async function ReserveAdvert(
     item: Advert,
@@ -22,17 +22,13 @@ export default async function ReserveAdvert(
         reservationDate: dayToDateString(),
     });
 
-    const status = isAllQuantityReserved(advertPickUps, item.quantity)
-        ? ItemStatus.reserved
-        : ItemStatus.available;
-
     const updateResult = (await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
                 id: item.id,
-                status,
                 version: 0,
                 advertPickUps,
+                status: getUpdatedItemStatus(advertPickUps, item.quantity),
                 revisions: (item.revisions ?? 0) + 1,
             },
         }),

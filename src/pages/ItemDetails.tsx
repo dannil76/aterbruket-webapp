@@ -13,7 +13,12 @@ import Loader from 'react-loader-spinner';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { Advert, BorrowStatus, GetAdvertQuery } from '../graphql/models';
+import {
+    Advert,
+    BorrowStatus,
+    GetAdvertQuery,
+    ItemAdvertType,
+} from '../graphql/models';
 import Button from '../components/Button';
 import {
     DefaultContent as BorrowContent,
@@ -220,8 +225,8 @@ const ItemDetails: FC<ParamTypes> = () => {
         };
     });
 
-    const isRecycleType = item.advertType === 'recycle';
-    const isBorrowType = item.advertType === 'borrow';
+    const isRecycleType = item.advertType === ItemAdvertType.recycle;
+    const isBorrowType = item.advertType === ItemAdvertType.borrow;
 
     const [reservationDateRange, setReservationDateRange] = useState<{
         startDate: string | null;

@@ -40,6 +40,9 @@ export default async function borrowedEmail(
             formatDate(calendarEvent.dateStart),
             formatDate(calendarEvent.dateEnd),
             haffaUser?.email ?? '',
+            calendarEvent.quantity,
+            newItem.quantityUnit,
+            newItem.quantity,
         );
 
         logDebug(

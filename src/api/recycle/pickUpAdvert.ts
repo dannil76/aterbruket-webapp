@@ -6,7 +6,7 @@ import { createAdvert, updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
 import { Advert, UpdateAdvertMutation } from '../../graphql/models';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
-import { addPickedUpStatus } from './utils';
+import { addPickedUpStatus, getUpdatedItemStatus } from './utils';
 
 export default async function pickUpAdvert(
     item: Advert,
@@ -22,6 +22,7 @@ export default async function pickUpAdvert(
                 id: item.id,
                 version: 0,
                 advertPickUps,
+                status: getUpdatedItemStatus(advertPickUps, item.quantity),
                 revisions: (item.revisions ?? 0) + 1,
             },
         }),

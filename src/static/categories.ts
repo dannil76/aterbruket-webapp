@@ -15,7 +15,11 @@ const sortCategories = (unsortedCategories: Category[]) => {
         return 0;
     });
 
-    return sortedCategories;
+    // Store swedish word in DB to make it searchable
+    return sortedCategories.map((category) => {
+        const { id, title, title: key } = category;
+        return { id, title, key };
+    });
 };
 
 export const borrowCategories = sortCategories([

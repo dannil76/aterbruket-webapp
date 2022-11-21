@@ -8,7 +8,13 @@ export default function returnedEmail(
     fromDate: string,
     toDate: string,
     reservationEmail: string,
+    quantity: number,
+    quantityUnit: string,
+    totalQuantity: number,
 ): string {
+    const quantityText =
+        totalQuantity > 1 ? `Antal: ${quantity}${quantityUnit}<br>` : '';
+
     return `
   <html>
   <body>
@@ -17,7 +23,7 @@ export default function returnedEmail(
   <p>${reservationPersonFirstName} har lämnat tillbaka <a href="${link}">${title}</a>.</p>
 
   <p>
-    Utlåningsperiod: ${fromDate} - ${toDate} <br>
+    Utlåningsperiod: ${fromDate} - ${toDate} <br>${quantityText}
     Lämnad av: ${reservationPersonFullName}<br>
     Förvaltning: ${department}<br>
     Mejl: ${reservationEmail}<br>

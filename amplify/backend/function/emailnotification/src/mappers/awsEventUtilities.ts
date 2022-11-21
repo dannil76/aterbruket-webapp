@@ -1,4 +1,5 @@
 import {
+    BooleanRecord,
     DateRecord,
     EnumRecord,
     ListRecord,
@@ -18,6 +19,18 @@ export function getString(
     }
 
     return value.S;
+}
+
+export function getBoolean(
+    value: BooleanRecord | undefined,
+    propertyName = '',
+): boolean | undefined {
+    if (!value) {
+        logWarning(`Missing String value ${propertyName}`);
+        return undefined;
+    }
+
+    return value.B;
 }
 
 export function getNumber(

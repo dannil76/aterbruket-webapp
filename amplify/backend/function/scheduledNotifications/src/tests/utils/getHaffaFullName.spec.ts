@@ -3,7 +3,17 @@ import getHaffaFullName from '../../utils/getHaffaFullName';
 
 describe('Get string first name', () => {
     it('handle null', () => {
+        const actual = getHaffaFullName(null);
+        expect(actual).toBe('');
+    });
+
+    it('handle undefined', () => {
         const actual = getHaffaFullName(undefined);
+        expect(actual).toBe('');
+    });
+
+    it('handle empty', () => {
+        const actual = getHaffaFullName('');
         expect(actual).toBe('');
     });
 
@@ -25,8 +35,20 @@ describe('Get string first name', () => {
 
 describe('Get HaffaUser first name', () => {
     const user = {} as HaffaUser;
-    it('handle null', () => {
+    it('handle empty string', () => {
         user.name = '';
+        const actual = getHaffaFullName(user);
+        expect(actual).toBe('');
+    });
+
+    it('handle null', () => {
+        user.name = null;
+        const actual = getHaffaFullName(user);
+        expect(actual).toBe('');
+    });
+
+    it('handle undefined', () => {
+        user.name = undefined;
         const actual = getHaffaFullName(user);
         expect(actual).toBe('');
     });

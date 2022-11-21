@@ -1,5 +1,5 @@
 import { SES } from 'aws-sdk';
-import { Advert } from '../../models/haffaAdvert';
+import { Advert, AdvertPickUp } from '../../models/haffaAdvert';
 import {
     getReservedByUser,
     logDebug,
@@ -16,14 +16,21 @@ const config = new Config();
 
 export default async function notifyAboutNewReservationEmail(
     newItem: Advert,
+    changedReservation: AdvertPickUp,
 ): Promise<boolean> {
     logDebug(
         `[notifyAboutNewReservationEmail] Start notifyAboutNewReservationEmail.`,
     );
 
-    // Borrowed items get user from event, recycle items get user directly from item
-    const { reservedBySub } = newItem;
-    const haffaUser = await getReservedByUser(reservedBySub);
+    if (changedReservation.pickedUp) {
+        logDebug(
+            `[notifyAboutNewReservationEmail] reservation is picked up. Don't send notification email. ID: ${newItem.id}`,
+        );
+
+        return false;
+    }
+
+    const haffaUser = await getReservedByUser(changedReservation.reservedBySub);
 
     const reservedDate = formatDate(newItem.updatedAt);
 
@@ -44,6 +51,9 @@ export default async function notifyAboutNewReservationEmail(
         haffaUser ? haffaUser['custom:department'] ?? '' : '',
         reservedDate,
         haffaUser?.email,
+        changedReservation.quantity,
+        newItem.quantityUnit,
+        newItem.quantity,
     );
 
     const toAddress = email;

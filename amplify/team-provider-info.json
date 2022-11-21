@@ -30,7 +30,7 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-45456856354d6f626c58-build.zip",
+          "s3Key": "amplify-builds/emailnotification-2b692b59496765554b38-build.zip",
           "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "Niclas.Ranlind@helsingborg.se",
@@ -43,7 +43,7 @@
         },
         "scheduledNotifications": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/scheduledNotifications-596b6f64704a454a3355-build.zip",
+          "s3Key": "amplify-builds/scheduledNotifications-49444367454e76775550-build.zip",
           "reservationDaysUntilNotifications": "7",
           "reservationDaysUntilCancellation": "14",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",

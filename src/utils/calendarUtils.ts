@@ -1,8 +1,5 @@
 import moment from 'moment';
-import { API } from 'aws-amplify';
-import { graphqlOperation } from '@aws-amplify/api';
-import { updateAdvert } from '../graphql/mutations';
-import { IAdvert, IReservation } from '../interfaces/IAdvert';
+import { IReservation } from '../interfaces/IAdvert';
 import {
     ICalendarUpdateResult,
     ICalendarData,
@@ -118,25 +115,6 @@ const addDateRangeToEvents = (
     };
 };
 
-const updateAdvertCalendar = async (
-    ad: IAdvert,
-    advertBorrowCalendar: ICalendarData,
-): Promise<void> => {
-    const input = {
-        ...ad,
-        advertBorrowCalendar,
-    };
-
-    delete input.createdAt;
-    delete input.updatedAt;
-
-    await API.graphql(
-        graphqlOperation(updateAdvert, {
-            input,
-        }),
-    );
-};
-
 /**
  * Events with status "returned" shall not be possible to change. This prevents edge case where a user reserved,
  * picked up, returned an item and then tried to reserv the item again on the very same day.
@@ -202,8 +180,7 @@ const getLastReturnedCalendarEvent = (
 
 export {
     isDateAvailable,
-    addDateRangeToEvents,
-    updateAdvertCalendar,
+    // addDateRangeToEvents,
     updateEventStatus,
     getLastReturnedCalendarEvent,
 };

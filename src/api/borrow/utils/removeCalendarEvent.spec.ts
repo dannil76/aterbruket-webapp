@@ -1,5 +1,4 @@
 import { CalendarEventInput, BorrowStatus } from '../../../graphql/models';
-import { BorrowStatus as TempStatus } from '../../../models/borrowStatus';
 import removeCalendarEvent from './removeCalendarEvent';
 
 describe('remove calendar event', () => {

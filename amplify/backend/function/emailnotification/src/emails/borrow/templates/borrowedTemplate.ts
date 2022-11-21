@@ -8,7 +8,13 @@ export default function borrowedTemplate(
     fromDate: string,
     toDate: string,
     reservationPersonEmail: string,
+    quantity: number,
+    quantityUnit: string,
+    totalQuantity: number,
 ): string {
+    const quantityText =
+        totalQuantity > 1 ? `Antal: ${quantity}${quantityUnit}<br>` : '';
+
     return `
   <html>
   <body>
@@ -17,7 +23,7 @@ export default function borrowedTemplate(
   <p>${reservationPersonFirstName} har hämtat <a href="${link}">${title}</a>.</p>
 
   <p>
-    Utlåningsperiod: ${fromDate} - ${toDate}<br>
+    Utlåningsperiod: ${fromDate} - ${toDate}<br>${quantityText}
     Uthämtat av: ${reservationPersonFullName}<br>
     Förvaltning: ${department}<br>
     Mejl: ${reservationPersonEmail}<br>

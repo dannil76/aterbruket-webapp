@@ -1,22 +1,19 @@
 import { User } from '../../../contexts/UserContext';
-import {
-    AdvertBorrowCalendar,
-    MissingAccessories,
-} from '../../../graphql/models';
+import { CalendarEvent, MissingAccessories } from '../../../graphql/models';
 import getLastReturnedCalendarEvent from './getLastReturnedCalendarEvent';
 
 export default function updateMissingAccessories(
-    currentList: (MissingAccessories | null)[] | undefined | null,
+    currentList: MissingAccessories[] | undefined | null,
     missingAccessories: string[] | undefined | null,
-    advertBorrowCalendar: AdvertBorrowCalendar,
+    calendarEvents: CalendarEvent[] | undefined | null,
     user: User,
-): (MissingAccessories | null)[] | undefined | null {
-    if (!missingAccessories) {
+): MissingAccessories[] | undefined | null {
+    if (!missingAccessories || missingAccessories.length === 0) {
         return currentList;
     }
 
     const listToUpdate = currentList ?? [];
-    const lastReturned = getLastReturnedCalendarEvent(advertBorrowCalendar);
+    const lastReturned = getLastReturnedCalendarEvent(calendarEvents);
 
     listToUpdate.push({
         reportedBy: user.sub,

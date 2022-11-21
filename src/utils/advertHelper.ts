@@ -1,32 +1,34 @@
 import { isMobile } from 'react-device-detect';
 import { User } from '../contexts/UserContext';
-import { IAdvert, IReservation } from '../interfaces/IAdvert';
 import { administrations } from '../static/advertMeta';
-import { AdministrationInput, Advert, ItemStatus } from '../graphql/models';
+import {
+    AdministrationInput,
+    Advert,
+    CalendarEvent,
+    ItemStatus,
+} from '../graphql/models';
 
 export const getActiveReservation = (
-    item: IAdvert,
+    item: Advert,
     userSub: string,
-): IReservation | null => {
+): CalendarEvent | null => {
     const allReservations = item?.advertBorrowCalendar?.calendarEvents
         ? item.advertBorrowCalendar.calendarEvents
         : [];
 
-    const userReservations = allReservations?.filter(
-        (reservation: IReservation) => {
-            return reservation.borrowedBySub === userSub;
-        },
-    );
+    const userReservations = allReservations?.filter((reservation) => {
+        return reservation.borrowedBySub === userSub;
+    });
 
     if (userReservations?.length === 0) {
         return null;
     }
 
-    const mostRecentReservation = userReservations?.reduce(
-        (prev: IReservation, current: IReservation) => {
-            return prev.dateStart > current.dateStart ? prev : current;
-        },
-    );
+    const mostRecentReservation = userReservations?.reduce((prev, current) => {
+        const prevDateStart = new Date(prev.dateStart ?? 0);
+        const currDateStart = new Date(current.dateStart ?? 0);
+        return prevDateStart > currDateStart ? prev : current;
+    });
 
     if (mostRecentReservation.status === 'returned') {
         return null;
@@ -35,7 +37,7 @@ export const getActiveReservation = (
     return mostRecentReservation;
 };
 
-export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
+export const hasUserBorrowPermission = (user: User, advert: Advert) => {
     if (advert.accessRestriction !== 'selection') {
         return true;
     }
@@ -91,7 +93,7 @@ export const getStatus = (item: Advert, user: User, date: Date): string => {
         borrowPermissionDenied: 'borrowPermissionDenied',
     };
 
-    if (!hasUserBorrowPermission(user, item as IAdvert)) {
+    if (!hasUserBorrowPermission(user, item)) {
         return statuses.borrowPermissionDenied;
     }
 

@@ -1,10 +1,8 @@
-import { AdvertBorrowCalendar, CalendarEvent } from '../../../graphql/models';
+import { CalendarEvent } from '../../../graphql/models';
 
 export default function getLastReturnedCalendarEvent(
-    adCalendar: AdvertBorrowCalendar,
+    calendarEvents: CalendarEvent[] | undefined | null,
 ): undefined | CalendarEvent {
-    const { calendarEvents } = adCalendar;
-
     if (!calendarEvents) {
         return undefined;
     }

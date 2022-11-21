@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { IAdvert } from '../../../interfaces/IAdvert';
+import { Advert } from '../../../graphql/models';
 import { Card, SubTitle, AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: IAdvert;
+    advert: Advert;
 }
 
 const ReturnContent: FC<Props> = ({ advert }) => {

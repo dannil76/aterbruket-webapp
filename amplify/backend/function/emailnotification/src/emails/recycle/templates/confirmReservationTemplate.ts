@@ -6,13 +6,18 @@ export default function confirmNewReservationEmail(
     department: string,
     contactEmail: string,
     phone: string,
+    quantity: number,
+    quantityUnit: string,
+    totalQuantity: number,
 ): string {
+    const quantityText = totalQuantity > 1 ? `${quantity}${quantityUnit} ` : '';
+
     return `
   <html>
   <body>
   <p>Hej ${reservationPerson}!</p>
 
-  <p>Du har reserverat <a href="${link}">${title}</a> i Haffa.</p>
+  <p>Du har reserverat ${quantityText}<a href="${link}">${title}</a> i Haffa.</p>
   <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson. </p>
   <p>${contactPerson}<br>
   ${department}<br>

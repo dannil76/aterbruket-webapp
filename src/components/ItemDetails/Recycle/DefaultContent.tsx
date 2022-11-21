@@ -1,16 +1,16 @@
 import React, { FC } from 'react';
-import { IAdvert } from '../../../interfaces/IAdvert';
 import showDays from '../../../hooks/showDays';
 import { conditions, materials, areaOfUse } from '../../../static/advertMeta';
 import { IOption } from '../../../interfaces/IForm';
 import {
+    Advert,
     ItemAMaterialInput,
     ItemAreaOfUseInput,
 } from '../../../graphql/models';
 import { AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: IAdvert;
+    advert: Advert;
     status: string;
 }
 
