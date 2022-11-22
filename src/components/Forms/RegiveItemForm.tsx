@@ -43,6 +43,7 @@ const RegiveItemForm: FC<Props> = ({
             status: 'available',
             category: item.category,
             quantity: item.quantity,
+            quantityUnit: item.quantityUnit,
             height: item.height,
             width: item.width,
             length: item.length,

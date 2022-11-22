@@ -8,6 +8,7 @@ import { createAdvert } from '../../graphql/mutations';
 import { borrowFormFields, recycleFormFields } from './formFields';
 import UserContext from '../../contexts/UserContext';
 import { administrations } from '../../static/advertMeta';
+import { QuantityUnit } from '../../graphql/models';
 
 const ItemImg = styled.img`
     width: 200px;
@@ -38,6 +39,7 @@ const AddItemForm: FC = () => {
             aterbruketId: '',
             category: '',
             quantity: 1,
+            quantityUnit: QuantityUnit.st,
             height: '',
             width: '',
             length: '',

@@ -264,7 +264,9 @@ const Card: FC<Props> = ({
                     )}
 
                     <h3>{filteredItem.title}</h3>
-                    <SubTitle>{filteredItem.quantity} stycken</SubTitle>
+                    <SubTitle>
+                        {filteredItem.quantity} {filteredItem.quantityUnit}
+                    </SubTitle>
                     <p className="desc">{filteredItem.description}</p>
                     {filteredItem.advertType === 'recycle' &&
                         filteredItem.status === 'reserved' &&

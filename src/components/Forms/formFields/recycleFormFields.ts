@@ -5,7 +5,7 @@ import {
     areaOfUse,
     materials,
     administrations,
-    units,
+    quantityUnits,
 } from '../../../static/advertMeta';
 
 const recycleFormFields = (editing?: boolean): IFields[] => {
@@ -13,7 +13,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'advertType',
             fieldType: 'radio',
-            disabled: false,
             title: 'Den är till för',
             required: true,
             attributes: {
@@ -35,7 +34,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'images',
             fieldType: 'file',
-            disabled: false,
             required: !editing,
             title: 'Lägg till en bild',
             attributes: {
@@ -46,7 +44,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'category',
             fieldType: 'select',
-            disabled: false,
             required: true,
             title: 'Kategori',
             options: recycleCategories,
@@ -54,7 +51,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'title',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Rubrik',
             description: 'Max 20 tecken',
@@ -66,14 +62,12 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'aterbruketId',
             fieldType: 'text',
-            disabled: false,
             title: 'Återbruket ID',
             placeholder: 'ex. 4435A',
         },
         {
             name: 'description',
             fieldType: 'textarea',
-            disabled: false,
             title: 'Beskrivning',
             description:
                 'En kort text om prylen som gör den intressant att haffa. Detaljerad information om mått, färg mm lämnar du i nästa steg 😊',
@@ -83,33 +77,43 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
             },
         },
         {
-            name: 'quantity',
-            fieldType: 'number',
-            disabled: false,
-            title: 'Mängd',
-            required: true,
+            name: 'quantityLabel',
+            fieldType: 'layout',
+            title: 'Lagersaldo',
         },
         {
-            name: 'unit',
-            fieldType: 'select',
-            disabled: false,
-            title: 'Enhet',
+            name: 'quantity',
+            fieldType: 'text',
             required: true,
-            options: units,
+            title: 'Lagersaldo',
+            placeholder: '1',
+            attributes: {
+                inlineLabel: true,
+                pattern: '[0-9]*',
+            },
+            description:
+                'Om du inte vet mängden prylar kan du sätta den till 0.',
+        },
+        {
+            name: 'quantityUnit',
+            fieldType: 'select',
+            required: true,
+            title: 'Enhet',
+            options: quantityUnits,
+            attributes: {
+                inlineLabel: true,
+            },
         },
         {
             name: 'measurementLabel',
             fieldType: 'layout',
             title: 'Mått',
-            disabled: false,
-            attributes: {},
         },
         {
             name: 'height',
             fieldType: 'text',
-            disabled: false,
             title: 'Höjd',
-            placeholder: '34 cm',
+            placeholder: '34',
             attributes: {
                 inlineLabel: true,
                 pattern: '[0-9]*',
@@ -118,9 +122,8 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'width',
             fieldType: 'text',
-            disabled: false,
             title: 'Bredd',
-            placeholder: '34 cm',
+            placeholder: '34',
             attributes: {
                 inlineLabel: true,
                 pattern: '[0-9]*',
@@ -129,13 +132,13 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'length',
             fieldType: 'text',
-            disabled: false,
             title: 'Djup',
-            placeholder: '34 cm',
+            placeholder: '34',
             attributes: {
                 inlineLabel: true,
                 pattern: '[0-9]*',
             },
+            description: 'Måtten anges i cm.',
         },
         {
             name: 'describeLabel',
@@ -148,14 +151,12 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'color',
             fieldType: 'text',
-            disabled: false,
             title: 'Färg',
             placeholder: 'Färg',
         },
         {
             name: 'material',
             fieldType: 'checkbox',
-            disabled: false,
             title: 'Material',
             options: materials,
             description: 'Välj en eller flera',
@@ -166,7 +167,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'condition',
             fieldType: 'select',
-            disabled: false,
             required: true,
             title: 'Skick',
             options: conditions,
@@ -175,7 +175,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
             name: 'areaOfUse',
             fieldType: 'checkbox',
             title: 'Användningsområde',
-            disabled: false,
             required: true,
             options: areaOfUse,
             description: 'Välj en eller flera',
@@ -186,7 +185,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'purchasePrice',
             fieldType: 'number',
-            disabled: false,
             required: false,
             title: 'Inköpspris',
             placeholder: 'Inköpspris',
@@ -207,7 +205,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'company',
             fieldType: 'select',
-            disabled: false,
             required: true,
             title: 'Förvaltning',
             options: administrations,
@@ -215,7 +212,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'department',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Avdelning',
             placeholder: 'ex. Digitaliseringsavdelningen',
@@ -223,7 +219,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'address',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Adress',
             placeholder: 'ex. Larmvägen 33',
@@ -231,7 +226,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'postalCode',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Postnummer',
             placeholder: '',
@@ -239,7 +233,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'city',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Ort',
             placeholder: 'Helsingborg',
@@ -255,7 +248,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'contactPerson',
             fieldType: 'text',
-            disabled: false,
             required: true,
             title: 'Kontaktperson',
             placeholder: 'Kontaktperson',
@@ -263,7 +255,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'phoneNumber',
             fieldType: 'text',
-            disabled: false,
             title: 'Telefon',
             placeholder: 'ex. 0701234567',
             attributes: {
@@ -273,7 +264,6 @@ const recycleFormFields = (editing?: boolean): IFields[] => {
         {
             name: 'email',
             fieldType: 'email',
-            disabled: false,
             required: true,
             title: 'Epost',
             placeholder: 'namn.efternamn@helsingborg.se',

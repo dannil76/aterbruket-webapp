@@ -1,4 +1,4 @@
-import { ItemAdvertType, ItemCondition } from '../graphql/models';
+import { ItemAdvertType, ItemCondition, QuantityUnit } from '../graphql/models';
 import { IOption } from '../interfaces/IForm';
 
 const advertTypes = [
@@ -45,26 +45,56 @@ const areaOfUse = [
     },
 ];
 
-const units = [
+const quantityUnits = [
     {
         id: 1,
-        key: 'units',
-        title: 'Stycken',
+        key: QuantityUnit.kg,
+        title: 'Kilo',
     },
     {
         id: 2,
-        key: 'kilos',
-        title: 'Kilogram',
+        key: QuantityUnit.hg,
+        title: 'Hekto',
     },
     {
         id: 3,
-        key: 'meters',
-        title: 'Meter',
+        key: QuantityUnit.g,
+        title: 'Gram',
     },
     {
         id: 4,
-        key: 'cubicMeters',
+        key: QuantityUnit.l,
+        title: 'Liter',
+    },
+    {
+        id: 5,
+        key: QuantityUnit.dl,
+        title: 'Deciliter',
+    },
+    {
+        id: 6,
+        key: QuantityUnit.cl,
+        title: 'Centiliter',
+    },
+    {
+        id: 7,
+        key: QuantityUnit.m3,
         title: 'Kubikmeter',
+    },
+    {
+        id: 8,
+        key: QuantityUnit.m2,
+        title: 'Kvadratmeter',
+    },
+    {
+        id: 9,
+        key: QuantityUnit.m,
+        title: 'Meter',
+    },
+    {
+        id: 10,
+        key: QuantityUnit.st,
+        title: 'Stycken',
     },
 ];
 
@@ -143,7 +173,7 @@ export {
     advertTypes,
     conditions,
     areaOfUse,
-    units,
+    quantityUnits,
     materials,
     administrations,
 };

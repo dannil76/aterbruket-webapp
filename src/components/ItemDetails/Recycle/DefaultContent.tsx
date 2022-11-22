@@ -61,6 +61,15 @@ const DefaultContent: FC<Props> = ({ advert, status }) => {
 
                         <tr>
                             <td>
+                                <h4>Lagersaldo</h4>
+                            </td>
+                            <td>
+                                {advert.quantity}{' '}
+                                <span>{advert.quantityUnit}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <h4>Höjd</h4>
                             </td>
                             <td>
