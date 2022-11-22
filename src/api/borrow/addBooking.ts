@@ -41,6 +41,7 @@ export default async function addBooking(
         allowedDateStart,
         allowedDateEnd,
         calendarEvent,
+        item.quantity ?? 1,
     );
 
     // Validation error return message

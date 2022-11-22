@@ -49,6 +49,7 @@ export default async function changeBooking(
         allowedDateStart,
         allowedDateEnd,
         booking,
+        quantity ?? 1,
     );
 
     // Validation error return message
