@@ -3,7 +3,7 @@ import { Advert } from '../../graphql/models';
 import { useQrCamera } from '../QrCamera';
 
 interface Props {
-    advert: Advert;
+    advert: Advert | undefined;
 }
 
 const useItemDetailsModal = ({
@@ -35,7 +35,7 @@ const useItemDetailsModal = ({
     };
 
     useEffect(() => {
-        if (typeof result === 'string' && result === advert.id) {
+        if (typeof result === 'string' && result === advert?.id) {
             setIsQrResultValid(true);
             next();
         }

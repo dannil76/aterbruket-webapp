@@ -4,20 +4,30 @@ import { administrations } from '../static/advertMeta';
 import {
     AdministrationInput,
     Advert,
+    BorrowStatus,
     CalendarEvent,
+    ItemAdvertType,
     ItemStatus,
 } from '../graphql/models';
 
 export const getActiveReservation = (
-    item: Advert,
+    item: Advert | undefined,
     userSub: string,
 ): CalendarEvent | null => {
+    if (!item) {
+        return null;
+    }
+
     const allReservations = item?.advertBorrowCalendar?.calendarEvents
         ? item.advertBorrowCalendar.calendarEvents
         : [];
 
     const userReservations = allReservations?.filter((reservation) => {
-        return reservation.borrowedBySub === userSub;
+        return (
+            reservation.borrowedBySub === userSub &&
+            reservation.status !== BorrowStatus.cancelled &&
+            reservation.status !== BorrowStatus.returned
+        );
     });
 
     if (userReservations?.length === 0) {
@@ -55,8 +65,16 @@ export const hasUserBorrowPermission = (user: User, advert: Advert) => {
     ];
 };
 
-export const getStatus = (item: Advert, user: User, date: Date): string => {
-    if (item.advertType === 'recycle') {
+export const getStatus = (
+    item: Advert | undefined,
+    user: User,
+    date: Date,
+): string => {
+    if (!item) {
+        return 'Retrieved undefined item';
+    }
+
+    if (item.advertType === ItemAdvertType.recycle) {
         const reserved = item.advertPickUps?.some((pickUp) => {
             return pickUp.reservedBySub === user.sub && !pickUp.pickedUp;
         });
@@ -102,7 +120,11 @@ export const getStatus = (item: Advert, user: User, date: Date): string => {
         : [];
 
     const userReservations = allReservations?.filter((reservation) => {
-        return reservation.borrowedBySub === user.sub;
+        return (
+            reservation.borrowedBySub === user.sub &&
+            reservation.status !== BorrowStatus.cancelled &&
+            reservation.status !== BorrowStatus.returned
+        );
     });
 
     if (userReservations?.length === 0) {

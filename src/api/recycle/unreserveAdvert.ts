@@ -10,10 +10,14 @@ import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
 import { getUpdatedItemStatus, removeFromPickupList } from './utils';
 
 export default async function UnreserveAdvert(
-    item: Advert,
+    item: Advert | undefined,
     user: User,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
 ): Promise<string | undefined> {
+    if (!item) {
+        return 'Retrieved undefined item';
+    }
+
     let advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps = removeFromPickupList(advertPickUps, user);
 

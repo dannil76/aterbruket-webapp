@@ -8,7 +8,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { SearchAdvertsQuery } from '../graphql/models';
+import { BorrowStatus, SearchAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
 import { searchAdverts } from '../graphql/queries';
 import { ICalendarDataEvent } from '../interfaces/IDateRange';
@@ -104,8 +104,8 @@ const ItemsToGet: FC = () => {
         const borrowedAds = await fetchListAdverts(borrowedAdsFilter);
         const borrowedAdsItems: any = borrowedAds.data?.searchAdverts?.items;
         const foundResult = filterBorrowedItems(borrowedAdsItems, user.sub, [
-            'reserved',
-            'pickedUp',
+            BorrowStatus.reserved,
+            BorrowStatus.pickedUp,
         ]);
         storeFetchResult(foundResult);
 
@@ -135,11 +135,11 @@ const ItemsToGet: FC = () => {
 
     const listReservedItems = () => {
         const haffaItems = renderItems.filter((renderItem: IAdvert) => {
-            return renderItem.status === 'reserved';
+            return renderItem.status === BorrowStatus.reserved;
         });
 
         const borrowItems = filterBorrowedItems(renderItems, user.sub, [
-            'reserved',
+            BorrowStatus.reserved,
         ]);
 
         return [...haffaItems, ...borrowItems];
@@ -147,11 +147,11 @@ const ItemsToGet: FC = () => {
 
     const listPickedUpItems = () => {
         const haffaItems = renderItems.filter((renderItem: IAdvert) => {
-            return renderItem.status === 'pickedUp';
+            return renderItem.status === BorrowStatus.pickedUp;
         });
 
         const borrowItems = filterBorrowedItems(renderItems, user.sub, [
-            'pickedUp',
+            BorrowStatus.pickedUp,
         ]);
 
         return [...haffaItems, ...borrowItems];

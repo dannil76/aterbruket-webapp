@@ -10,11 +10,15 @@ import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
 import { getUpdatedItemStatus } from './utils';
 
 export default async function ReserveAdvert(
-    item: Advert,
+    item: Advert | undefined,
     user: User,
     quantity: number,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
 ): Promise<string | undefined> {
+    if (!item) {
+        return 'missing item';
+    }
+
     const advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps.push({
         reservedBySub: user.sub,

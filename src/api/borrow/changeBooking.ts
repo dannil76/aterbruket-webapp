@@ -13,12 +13,16 @@ import {
 import { mapAdvertToUpdateInput } from './mappers';
 
 export default async function changeBooking(
-    advert: Advert,
+    advert: Advert | undefined,
     startDate: string | null | undefined,
     endDate: string | null | undefined,
     user: User,
     quantity: number | null | undefined = 1,
 ): Promise<string | undefined> {
+    if (!advert) {
+        return 'Retrieved undefined item';
+    }
+
     if (!advert.advertBorrowCalendar) {
         return 'Bokningen saknar kalender';
     }

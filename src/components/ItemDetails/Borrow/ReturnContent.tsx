@@ -3,10 +3,14 @@ import { Advert } from '../../../graphql/models';
 import { Card, SubTitle, AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: Advert;
+    advert: Advert | undefined;
 }
 
 const ReturnContent: FC<Props> = ({ advert }) => {
+    if (!advert) {
+        return <></>;
+    }
+
     return (
         <>
             {advert.returnInformation && (

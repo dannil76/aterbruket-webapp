@@ -10,11 +10,15 @@ import {
 import { AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: Advert;
+    advert: Advert | undefined;
     status: string;
 }
 
 const DefaultContent: FC<Props> = ({ advert, status }) => {
+    if (!advert) {
+        return <></>;
+    }
+
     const getMetaValues = (
         itemValues: ItemAMaterialInput | ItemAreaOfUseInput,
         allValues: IOption[],

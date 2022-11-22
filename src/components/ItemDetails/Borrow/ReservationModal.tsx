@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
+import { Moment } from 'moment';
 import { Modal } from '../../Modal';
 import Button from '../../Button';
 import DateRangePicker from '../../DateRangePicker';
 import { IDateRange } from '../../../interfaces/IDateRange';
-import { Advert } from '../../../graphql/models';
 
 const ModalContent = styled(Modal.Content)`
     margin-top: 72px;
@@ -17,26 +16,21 @@ const ModalContent = styled(Modal.Content)`
 `;
 
 interface Props {
-    advert: Advert;
     isVisible: boolean;
     toggleModal: () => void;
-    dateRange: {
-        startDate: string | null;
-        endDate: string | null;
-    };
     setDateRange: (changeEvent: IDateRange, bookingType: string) => void;
     onFinish: () => void;
-    availableCalendarDates?: (date: moment.Moment) => boolean;
+    availableCalendarDates: (quantity: number) => (date: Moment) => boolean;
+    quantity: number;
 }
 
 const ReservationModal: React.FC<Props> = ({
-    advert,
     isVisible,
     toggleModal,
-    dateRange,
     setDateRange,
     onFinish,
     availableCalendarDates,
+    quantity,
 }) => {
     return (
         <Modal isVisible={isVisible}>
@@ -49,6 +43,7 @@ const ReservationModal: React.FC<Props> = ({
                         onValueChange={setDateRange}
                         bookingType="reserved"
                         blockedDay={availableCalendarDates}
+                        quantity={quantity}
                     />
 
                     <Button

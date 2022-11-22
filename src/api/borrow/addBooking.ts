@@ -9,7 +9,7 @@ import { mapAdvertToUpdateInput } from './mappers';
 import { HaffaApiError } from '../../models/ApiError';
 
 export default async function addBooking(
-    item: Advert,
+    item: Advert | undefined,
     user: User,
     startDate: string | null | undefined,
     endDate: string | null | undefined,
@@ -22,6 +22,10 @@ export default async function addBooking(
         status: BorrowStatus.reserved,
         quantity,
     } as CalendarEventInput;
+
+    if (!item) {
+        return 'Retrieved undefined item';
+    }
 
     if (!item.advertBorrowCalendar) {
         return 'Bokningen saknar kalender';

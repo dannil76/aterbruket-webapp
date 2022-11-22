@@ -4,7 +4,7 @@ import { Advert } from '../../../graphql/models';
 import { Card, SubTitle, AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: Advert;
+    advert: Advert | undefined;
 }
 
 const DifficultyIcon = styled.span<{ level?: string | null | undefined }>`
@@ -27,6 +27,10 @@ const DifficultyIcon = styled.span<{ level?: string | null | undefined }>`
 `;
 
 const DefaultContent: FC<Props> = ({ advert }) => {
+    if (!advert) {
+        return <></>;
+    }
+
     return (
         <>
             <section>

@@ -13,10 +13,14 @@ import {
 import { mapAdvertToUpdateInput } from './mappers';
 
 export default async function borrowItem(
-    advert: Advert,
+    advert: Advert | undefined,
     user: User,
     missing: string[] | undefined,
 ): Promise<string | undefined> {
+    if (!advert) {
+        return 'Retrieved undefined item';
+    }
+
     if (!advert.advertBorrowCalendar) {
         return 'Bokningen saknar kalender';
     }

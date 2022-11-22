@@ -1,10 +1,10 @@
 import {
+    QuantityUnit,
     Advert,
     AdvertBorrowCalendar,
     AdvertBorrowCalendarEvent,
     AdvertPickUp,
-} from 'models/haffaAdvert';
-import { QuantityUnit } from 'models/enums';
+} from '../models';
 import {
     Advert as AwsAdvert,
     MissingAccessory,
@@ -57,21 +57,25 @@ export default function mapAwsEvent(
 
     let advertPickUps = [];
     if (event.advertPickUps) {
-        const pickUps = getModel(event.advertPickUps, 'advertPickUps');
-        advertPickUps = pickUps.map((pickUp) => {
-            return {
-                pickedUp: getBoolean(pickUp.pickedUp, 'pickedUp'),
-                quantity: getNumber(pickUp.quantity, 'pickUpQuantity'),
-                reservationDate: getDate(
-                    pickUp.reservationDate,
-                    'pickUpReservationDate',
-                ),
-                reservedBySub: getString(
-                    pickUp.reservedBySub,
-                    'pickUpReservedBySub',
-                ),
-            } as AdvertPickUp;
-        });
+        const pickUps = getList(event.advertPickUps, 'advertPickUpList');
+        advertPickUps = pickUps
+            .map((pickUp) => {
+                return getModel(pickUp, 'advertPickup');
+            })
+            .map((pickUp) => {
+                return {
+                    pickedUp: getBoolean(pickUp.pickedUp, 'pickedUp'),
+                    quantity: getNumber(pickUp.quantity, 'pickUpQuantity'),
+                    reservationDate: getDate(
+                        pickUp.reservationDate,
+                        'pickUpReservationDate',
+                    ),
+                    reservedBySub: getString(
+                        pickUp.reservedBySub,
+                        'pickUpReservedBySub',
+                    ),
+                } as AdvertPickUp;
+            });
     }
 
     let advertBorrowCalendar = undefined as AdvertBorrowCalendar;

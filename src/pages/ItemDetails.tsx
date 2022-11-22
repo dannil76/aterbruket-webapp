@@ -13,6 +13,7 @@ import Loader from 'react-loader-spinner';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { Moment } from 'moment';
 import {
     Advert,
     BorrowStatus,
@@ -118,7 +119,7 @@ interface ParamTypes {
 
 const ItemDetails: FC<ParamTypes> = () => {
     const { id } = useParams<ParamTypes>();
-    const [item, setItem] = useState({}) as any;
+    const [item, setItem] = useState(undefined as Advert | undefined);
     const [editItem, setEditItem] = useState(false);
     const [regive, setRegive] = useState(false);
     const [showCarousel, setShowCarousel] = useState(false);
@@ -131,12 +132,24 @@ const ItemDetails: FC<ParamTypes> = () => {
     const [showHeaderBtn, setShowHeaderBtn] = useState(false);
     const [isReservationModalVisible, toggleReservationModal] = useModal();
     const [isPickUpModalVisible, togglePickUpModal] = useModal();
+    const [isRecycleType, setIsRecycleType] = useState(false);
+    const [isBorrowType, setIsBorrowType] = useState(false);
     const [isReturnModalVisible, toggleReturnModal] = useModal();
 
     const itemCategory = getCategoryByKey(item?.category);
 
-    const fetchImage = (advert: any) => {
-        Storage.get(advert.images[0].src).then((url: any) => {
+    const fetchImage = (advert: Advert) => {
+        if (
+            !advert.images ||
+            advert.images.length === 0 ||
+            !advert.images[0].src
+        ) {
+            return;
+        }
+
+        // Type from storage
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        Storage.get(advert.images[0].src).then((url: Object | string) => {
             setImage(url);
             setItem(advert);
         });
@@ -146,10 +159,12 @@ const ItemDetails: FC<ParamTypes> = () => {
         const result = (await API.graphql(
             graphqlOperation(getAdvert, { id, version: 0 }),
         )) as GraphQLResult<GetAdvertQuery>;
-        const advertItem: any = result.data?.getAdvert;
+        const advertItem = result.data?.getAdvert as Advert;
 
         fetchImage(advertItem);
         setItem(advertItem);
+        setIsRecycleType(advertItem.advertType === ItemAdvertType.recycle);
+        setIsBorrowType(advertItem.advertType === ItemAdvertType.borrow);
     };
 
     const closeEditformAndFetchItem = async () => {
@@ -224,9 +239,6 @@ const ItemDetails: FC<ParamTypes> = () => {
             window.removeEventListener('scroll', handler, false);
         };
     });
-
-    const isRecycleType = item.advertType === ItemAdvertType.recycle;
-    const isBorrowType = item.advertType === ItemAdvertType.borrow;
 
     const [reservationDateRange, setReservationDateRange] = useState<{
         startDate: string | null;
@@ -325,7 +337,7 @@ const ItemDetails: FC<ParamTypes> = () => {
     const components: IComponents = {
         recycle: {
             modal: {
-                reserved: (
+                reserved: (item && (
                     <PickUpModal
                         advert={item}
                         isVisible={isPickUpModalVisible}
@@ -335,7 +347,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                             toast('Snyggt! Prylen är nu haffad!');
                         }}
                     />
-                ),
+                )) ?? <></>,
                 default: null,
             },
             content: {
@@ -347,8 +359,8 @@ const ItemDetails: FC<ParamTypes> = () => {
                     <QRCode
                         key="2"
                         id={id}
-                        recycleId={item.aterbruketId}
-                        itemTitle={item.title}
+                        recycleId={item?.aterbruketId}
+                        itemTitle={item?.title}
                     />,
                 ],
             },
@@ -357,11 +369,10 @@ const ItemDetails: FC<ParamTypes> = () => {
             modal: {
                 available: (
                     <ReservationModal
-                        advert={item}
                         isVisible={isReservationModalVisible}
                         toggleModal={toggleReservationModal}
-                        dateRange={reservationDateRange}
                         setDateRange={handleReservationDateRange}
+                        quantity={1}
                         onFinish={() => {
                             onClickAddBookingBtn().then((error) => {
                                 return !error
@@ -371,12 +382,18 @@ const ItemDetails: FC<ParamTypes> = () => {
                                       );
                             });
                         }}
-                        availableCalendarDates={(date) =>
-                            !isDateAvailable(date, item.advertBorrowCalendar)
-                        }
+                        availableCalendarDates={(quantity: number) => {
+                            return (date: Moment) =>
+                                !isDateAvailable(
+                                    date,
+                                    item?.advertBorrowCalendar,
+                                    item?.quantity,
+                                    quantity,
+                                );
+                        }}
                     />
                 ),
-                pickUpAllowed: (
+                pickUpAllowed: (item && (
                     <PickUpModal
                         image={image}
                         advert={item}
@@ -396,8 +413,8 @@ const ItemDetails: FC<ParamTypes> = () => {
                             );
                         }}
                     />
-                ),
-                pickedUp: (
+                )) ?? <></>,
+                pickedUp: (item && (
                     <ReturnModal
                         image={image}
                         advert={item}
@@ -413,7 +430,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                             });
                         }}
                     />
-                ),
+                )) ?? <></>,
                 default: null,
             },
             content: {
@@ -423,14 +440,14 @@ const ItemDetails: FC<ParamTypes> = () => {
             bottom: {
                 default: [
                     <Separator />,
-                    <QRCode id={id} itemTitle={item.title} />,
+                    <QRCode id={id} itemTitle={item?.title} />,
                 ],
             },
         },
     };
 
     const renderSection = (
-        type: string,
+        type: string | undefined | null,
         section: string,
         advertStatus: string,
     ): JSX.Element | null | JSX.Element[] => {
@@ -445,7 +462,11 @@ const ItemDetails: FC<ParamTypes> = () => {
         return components[type][section][advertStatus];
     };
 
-    const handleDeleteAdvert = async (advertId: string) => {
+    const handleDeleteAdvert = async (advertId: string | undefined) => {
+        if (!advertId) {
+            return;
+        }
+
         if (window.confirm('Är du säker på att du vill ta bort annonsen?')) {
             try {
                 await API.graphql({
@@ -461,15 +482,33 @@ const ItemDetails: FC<ParamTypes> = () => {
         }
     };
 
+    const handleUnbookAdvert = async (advert: Advert | undefined) => {
+        if (!advert) {
+            return;
+        }
+
+        if (window.confirm('Är du säker på att du vill ångra reservationen?')) {
+            const message = await cancelBooking(advert, user);
+            fetchItem();
+            if (message) {
+                toast.warn(
+                    `Ett okänt fel inträffade 😵 Försök igen! ${message}`,
+                );
+            } else {
+                toast.success('Reservationen är nu borttagen!');
+            }
+        }
+    };
+
     const allDetails = (
         <>
-            {renderSection(item.advertType, 'modal', status)}
+            {renderSection(item?.advertType, 'modal', status)}
 
             {(status === 'available' ||
                 status === 'borrowPermissionDenied') && (
                 <Header>
                     <MdArrowBack onClick={goBackFunc} />
-                    <p className="headerTitle">{item.title}</p>
+                    <p className="headerTitle">{item?.title}</p>
                     {showHeaderBtn && isRecycleType && (
                         <HeaderButton
                             size="sm"
@@ -495,15 +534,16 @@ const ItemDetails: FC<ParamTypes> = () => {
                 </Header>
             )}
 
-            {(status === 'reserved' ||
-                status === 'pickedUp' ||
+            {(status === BorrowStatus.reserved ||
+                status === BorrowStatus.pickedUp ||
                 status === 'pickUpAllowed') && (
                 <Header reserved>
                     <MdArrowBack onClick={goBackFunc} />
 
                     <div>
-                        <p className="headerTitle">{item.title}</p>
-                        {status === 'reserved' || status === 'pickUpAllowed' ? (
+                        <p className="headerTitle">{item?.title}</p>
+                        {status === BorrowStatus.reserved ||
+                        status === 'pickUpAllowed' ? (
                             <p className="reservedP">Reserverad</p>
                         ) : (
                             <p className="reservedP">Uthämtad</p>
@@ -543,7 +583,7 @@ const ItemDetails: FC<ParamTypes> = () => {
             <TopSection>
                 <AdvertImage
                     src={image}
-                    alt={item.title}
+                    alt={item?.title}
                     onClick={(e) => setShowCarousel(true)}
                 />
 
@@ -555,8 +595,8 @@ const ItemDetails: FC<ParamTypes> = () => {
                     )}
                     {isRecycleType && <h4>{itemCategory?.title}</h4>}
 
-                    <h1>{item.title}</h1>
-                    <p>{item.aterbruketId}</p>
+                    <h1>{item?.title}</h1>
+                    <p>{item?.aterbruketId}</p>
                 </div>
 
                 {isBorrowType && status === 'borrowPermissionDenied' && (
@@ -633,7 +673,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </>
                 )}
 
-                {isBorrowType && status === 'available' && (
+                {isBorrowType && status === BorrowStatus.available && (
                     <Button
                         shadow
                         size="xl"
@@ -671,7 +711,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </Button>
                 )}
 
-                {isBorrowType && status === 'pickedUp' && (
+                {isBorrowType && status === BorrowStatus.pickedUp && (
                     <Button
                         shadow
                         size="xl"
@@ -691,23 +731,25 @@ const ItemDetails: FC<ParamTypes> = () => {
                     </Button>
                 )}
 
-                {status === 'pickedUp' && isRecycleType && isReserved && (
-                    <Button
-                        size="xl"
-                        marginBottom={24}
-                        marginLeft={24}
-                        marginRight={24}
-                        onClick={() => {
-                            setRegive(true);
-                        }}
-                        type="button"
-                    >
-                        Annonsera igen
-                    </Button>
-                )}
+                {status === BorrowStatus.pickedUp &&
+                    isRecycleType &&
+                    isReserved && (
+                        <Button
+                            size="xl"
+                            marginBottom={24}
+                            marginLeft={24}
+                            marginRight={24}
+                            onClick={() => {
+                                setRegive(true);
+                            }}
+                            type="button"
+                        >
+                            Annonsera igen
+                        </Button>
+                    )}
 
-                {(status === 'available' || isBorrowType) &&
-                    (item.giver === user.sub || user.isAdmin) && (
+                {(status === BorrowStatus.available || isBorrowType) &&
+                    (item?.giver === user.sub || user.isAdmin) && (
                         <>
                             <EditButton
                                 size="xl"
@@ -727,54 +769,65 @@ const ItemDetails: FC<ParamTypes> = () => {
                                 size="sm"
                                 transparent
                                 marginBottom={16}
-                                onClick={() => handleDeleteAdvert(item.id)}
+                                onClick={() => handleDeleteAdvert(item?.id)}
                             >
                                 Ta bort annons
                             </Button>
 
-                            {item.giver === user.sub && (
+                            {item?.giver === user.sub && (
                                 <span>Den här annonsen har du lagt upp.</span>
                             )}
                         </>
                     )}
 
                 {isBorrowType &&
-                    (status === 'reserved' ||
+                    (status === BorrowStatus.reserved ||
                         status === 'pickUpAllowed' ||
-                        status === 'pickedUp') && (
-                        <ReservationSection>
-                            {(status === 'reserved' ||
-                                status === 'pickUpAllowed') && (
-                                <SubTitle>Reserverad av dig</SubTitle>
-                            )}
-                            {status === 'pickedUp' && (
-                                <SubTitle>Uthämtad av dig</SubTitle>
-                            )}
-                            <p>
-                                {convertToSwedishDate(
-                                    activeReservation?.dateStart ?? '',
-                                )}{' '}
-                                -{' '}
-                                {convertToSwedishDate(
-                                    activeReservation?.dateEnd ?? '',
+                        status === BorrowStatus.pickedUp) && (
+                        <>
+                            <ReservationSection>
+                                {(status === BorrowStatus.reserved ||
+                                    status === 'pickUpAllowed') && (
+                                    <SubTitle>Reserverad av dig</SubTitle>
                                 )}
-                            </p>
-                        </ReservationSection>
+                                {status === 'pickedUp' && (
+                                    <SubTitle>Uthämtad av dig</SubTitle>
+                                )}
+                                <p>
+                                    {convertToSwedishDate(
+                                        activeReservation?.dateStart ?? '',
+                                    )}{' '}
+                                    -{' '}
+                                    {convertToSwedishDate(
+                                        activeReservation?.dateEnd ?? '',
+                                    )}
+                                </p>
+                            </ReservationSection>
+                            <Button
+                                color="darkest"
+                                size="sm"
+                                transparent
+                                marginTop={-26}
+                                onClick={() => handleUnbookAdvert(item)}
+                            >
+                                Avboka reservationen
+                            </Button>
+                        </>
                     )}
             </TopSection>
 
             <MainSection>
-                {renderSection(item.advertType, 'content', status)}
+                {renderSection(item?.advertType, 'content', status)}
             </MainSection>
 
             <BottomSection>
-                {renderSection(item.advertType, 'bottom', status)}
+                {renderSection(item?.advertType, 'bottom', status)}
             </BottomSection>
         </>
     );
 
     const getFormComponent = () => {
-        if (editItem) {
+        if (editItem && item) {
             return (
                 <EditItemForm
                     setEditItem={setEditItem}
@@ -785,7 +838,7 @@ const ItemDetails: FC<ParamTypes> = () => {
             );
         }
 
-        if (regive) {
+        if (regive && item) {
             return (
                 <RegiveItemForm
                     setRegive={setRegive}

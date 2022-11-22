@@ -86,7 +86,7 @@ export interface Advert {
     city: StringRecord;
     missingAccessories: ListRecord<ModelRecord<MissingAccessory>>;
     advertBorrowCalendar: ModelRecord<AdvertBorrowCalendar>;
-    advertPickUps: ModelRecord<AdvertPickUp[]>;
+    advertPickUps: ListRecord<ModelRecord<AdvertPickUp>>;
     reservedBySub: StringRecord;
     version: NumberRecord;
     updatedAt: DateRecord;

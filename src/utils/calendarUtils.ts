@@ -1,118 +1,92 @@
-import moment from 'moment';
+import moment, { Moment } from 'moment';
+import {
+    AdvertBorrowCalendar,
+    BorrowStatus,
+    CalendarEvent,
+} from '../graphql/models';
 import { IReservation } from '../interfaces/IAdvert';
 import {
     ICalendarUpdateResult,
     ICalendarData,
     ICalendarDataEvent,
-    ICalendarEvent,
 } from '../interfaces/IDateRange';
 
-const isDateSameOrBetween = (
-    date: moment.Moment,
-    betweenDateStart: moment.MomentInput,
-    betweenDateEnd: moment.MomentInput,
-) => {
-    return date.isBetween(betweenDateStart, betweenDateEnd, 'day', '[]');
+const getBorrowedQuantity = (currentDate: Date, event: CalendarEvent) => {
+    // sanity check shouldn't be able to borrow without start and end dates
+    if (!event.dateEnd || !event.dateStart) {
+        return 0;
+    }
+    const dateStart = new Date(event.dateStart);
+    const dateEnd = new Date(event.dateEnd);
+    dateEnd.setDate(dateEnd.getDate() + 1);
+
+    if (
+        currentDate.getTime() < dateStart.getTime() ||
+        currentDate.getTime() >= dateEnd.getTime()
+    ) {
+        return 0;
+    }
+
+    // Late return
+    if (
+        currentDate.getTime() >= dateEnd.getTime() &&
+        event.status === 'pickedUp' &&
+        currentDate.toDateString() === new Date().toDateString()
+    ) {
+        return event.quantity ?? 1;
+    }
+
+    return event.quantity ?? 1;
 };
 
 /**
  * Note: Dates that occur on an event with status "returned" shall be available.
  */
 const isDateAvailable = (
-    date: moment.Moment,
-    calendarData: ICalendarData | undefined,
+    inputDate: Date | Moment,
+    calendarData: AdvertBorrowCalendar | undefined | null,
+    totalQuantity: number | null | undefined,
+    requestedQuantity: number,
 ): boolean => {
-    if (typeof calendarData === 'undefined') {
-        return true;
-    }
-
-    if (date.isBefore(moment(calendarData.allowedDateStart), 'day')) {
+    if (!calendarData) {
         return false;
     }
 
-    if (date.isAfter(moment(calendarData.allowedDateEnd), 'day')) {
+    const date = (inputDate as Moment)?.toDate() ?? (inputDate as Date);
+
+    const dateStart = new Date(calendarData.allowedDateStart ?? '2022-01-01');
+    const dateEnd = new Date(calendarData.allowedDateEnd ?? '2122-01-01');
+    dateEnd.setDate(dateEnd.getDate() + 1);
+
+    if (date.getTime() < dateStart.getTime()) {
         return false;
     }
 
-    if (calendarData.calendarEvents?.length > 0) {
-        return !calendarData.calendarEvents.some((event) => {
-            return (
-                !(event.status === 'returned') &&
-                isDateSameOrBetween(date, event.dateStart, event.dateEnd)
-            );
-        });
+    if (date.getTime() > dateEnd.getTime()) {
+        return false;
     }
-
-    return true;
-};
-
-const addDateRangeToEvents = (
-    adCalendar: ICalendarData,
-    newCalendarEvent: ICalendarEvent,
-    userSub: string,
-): ICalendarUpdateResult => {
-    const advertBorrowCalendar = JSON.parse(JSON.stringify(adCalendar));
-    const calendarEvent = {
-        borrowedBySub: userSub,
-        dateStart: newCalendarEvent.dateRange.startDate,
-        dateEnd: newCalendarEvent.dateRange.endDate,
-        status: newCalendarEvent.eventType,
-    };
 
     if (
-        !newCalendarEvent.dateRange.startDate ||
-        !newCalendarEvent.dateRange.endDate
+        !calendarData.calendarEvents ||
+        calendarData.calendarEvents.length === 0
     ) {
-        return {
-            updateSuccessful: false,
-            errorMessage:
-                'Datum ej valda, både start och slut datum behöver väljas.',
-            updatedCalendarResult: advertBorrowCalendar,
-            currentEvent: calendarEvent,
-        };
+        return requestedQuantity <= (totalQuantity ?? 1);
     }
 
-    const overlappingDays = adCalendar.calendarEvents.some((event) => {
-        if (event.status === 'returned') {
-            return false;
-        }
-
+    const borrowedEvents = calendarData.calendarEvents.filter((event) => {
         return (
-            isDateSameOrBetween(
-                moment(newCalendarEvent.dateRange.startDate),
-                event.dateStart,
-                event.dateEnd,
-            ) ||
-            isDateSameOrBetween(
-                moment(newCalendarEvent.dateRange.endDate),
-                event.dateStart,
-                event.dateEnd,
-            ) ||
-            isDateSameOrBetween(
-                moment(event.dateStart),
-                newCalendarEvent.dateRange.startDate,
-                newCalendarEvent.dateRange.endDate,
-            )
+            event.status !== BorrowStatus.returned &&
+            event.status !== BorrowStatus.cancelled
         );
     });
 
-    if (overlappingDays) {
-        return {
-            updateSuccessful: false,
-            errorMessage:
-                'Prylen kan endast bokas under en sammanhängande period.',
-            updatedCalendarResult: advertBorrowCalendar,
-            currentEvent: calendarEvent,
-        };
-    }
+    const borrowedQuantity = borrowedEvents.reduce(
+        (acc, current) => acc + getBorrowedQuantity(date, current),
+        0,
+    );
 
-    advertBorrowCalendar.calendarEvents.push(calendarEvent);
-
-    return {
-        updateSuccessful: true,
-        updatedCalendarResult: advertBorrowCalendar,
-        currentEvent: calendarEvent,
-    };
+    const left = (totalQuantity ?? 1) - borrowedQuantity;
+    return requestedQuantity <= (left ?? 1);
 };
 
 /**

@@ -68,7 +68,7 @@ export default async function getItemsFromApi(
         };
     }
 
-    while ((currentItems.length <= pageStartIndex && fetchToken) || first) {
+    while ((newList.length <= pageStartIndex && fetchToken) || first) {
         if (fetchToken) {
             query.nextToken = fetchToken;
         }
@@ -88,7 +88,12 @@ export default async function getItemsFromApi(
         fetchToken = result?.data?.searchAdverts?.nextToken ?? undefined;
     }
 
-    const advertTotal = result?.data?.searchAdverts?.total ?? 0;
+    // Amplify total shows items before filtering on search value.
+    // Use newlist length if it's less than page size and uses opensearch matching
+    const advertTotal =
+        searchValue && newList.length <= itemsToShow
+            ? newList.length
+            : result?.data?.searchAdverts?.total ?? 0;
     setPagination({
         amountToShow: itemsToShow,
         itemLength: advertTotal,

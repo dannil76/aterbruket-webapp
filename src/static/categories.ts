@@ -5,7 +5,7 @@ export interface Category {
 }
 
 const sortCategories = (unsortedCategories: Category[]) => {
-    const sortedCategories = unsortedCategories.sort((a, b) => {
+    return unsortedCategories.sort((a, b) => {
         if (a.title < b.title) {
             return -1;
         }
@@ -13,12 +13,6 @@ const sortCategories = (unsortedCategories: Category[]) => {
             return 1;
         }
         return 0;
-    });
-
-    // Store swedish word in DB to make it searchable
-    return sortedCategories.map((category) => {
-        const { id, title, title: key } = category;
-        return { id, title, key };
     });
 };
 

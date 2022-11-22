@@ -12,9 +12,13 @@ import {
 import { mapAdvertToUpdateInput } from './mappers';
 
 export default async function cancelBooking(
-    advert: Advert,
+    advert: Advert | undefined,
     user: User,
 ): Promise<string | undefined> {
+    if (!advert) {
+        return 'Retrieved undefined item';
+    }
+
     const events = mapCalendarToInput(
         advert.advertBorrowCalendar?.calendarEvents,
     );

@@ -4,13 +4,13 @@ import Form from './FormLayout/FormLayout';
 import useForm from '../../hooks/useForm';
 import { updateAdvert } from '../../graphql/mutations';
 import UserContext from '../../contexts/UserContext';
-import { IAdvert } from '../../interfaces/IAdvert';
 import { Modal } from '../Modal';
 import { AdvertImage } from '../ItemDetails/Common';
 import { recycleFormFields } from './formFields';
+import { Advert } from '../../graphql/models';
 
 interface Props {
-    item: IAdvert;
+    item: Advert;
     setRegive: React.Dispatch<React.SetStateAction<boolean>>;
     closeEditformAndFetchItem: () => void;
     image: string;
@@ -70,7 +70,7 @@ const RegiveItemForm: FC<Props> = ({
             phoneNumber: item.phoneNumber ? item.phoneNumber : '',
             climateImpact: item.climateImpact,
             version: 0,
-            revisions: item.revisions + 1,
+            revisions: (item.revisions ?? 0) + 1,
             purchasePrice: item.purchasePrice ? item.purchasePrice : '',
             giver: user.sub,
             missingItemsInformation: item.missingItemsInformation ?? '',
