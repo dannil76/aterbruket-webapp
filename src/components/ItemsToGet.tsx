@@ -8,7 +8,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { BorrowStatus, SearchAdvertsQuery } from '../graphql/models';
+import { Advert, BorrowStatus, SearchAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
 import { searchAdverts } from '../graphql/queries';
 import { ICalendarDataEvent } from '../interfaces/IDateRange';
@@ -17,11 +17,7 @@ import { PaginationOptions } from '../models/pagination';
 
 interface IListAdvertsFilter {
     not?: { status: { eq: string } };
-    and: (
-        | { reservedBySub: { eq: string | undefined } }
-        | { version: { eq: number } }
-        | { advertType: { eq: string } }
-    )[];
+    and: ({ version: { eq: number } } | { advertType: { eq: string } })[];
 }
 
 const AdvertContainer = React.lazy(() => import('./AdvertContainer'));
@@ -52,24 +48,50 @@ const ItemsToGet: FC = () => {
 
     const fetchListAdverts = async (
         searchAdvertsFilter: IListAdvertsFilter,
-    ): Promise<GraphQLResult<SearchAdvertsQuery>> => {
-        return (await API.graphql(
+    ): Promise<(Advert | null)[]> => {
+        const result = (await API.graphql(
             graphqlOperation(searchAdverts, {
                 filter: searchAdvertsFilter,
                 sort: { direction: 'desc', field: 'createdAt' },
             }),
         )) as GraphQLResult<SearchAdvertsQuery>;
+
+        if (!result.data?.searchAdverts?.nextToken) {
+            return result.data?.searchAdverts?.items ?? [];
+        }
+
+        const resultList = result.data?.searchAdverts?.items ?? [];
+        let token = result.data?.searchAdverts?.nextToken as
+            | string
+            | null
+            | undefined;
+        while (token) {
+            // eslint-disable-next-line no-await-in-loop
+            const nextResult = (await API.graphql(
+                graphqlOperation(searchAdverts, {
+                    filter: searchAdvertsFilter,
+                    sort: { direction: 'desc', field: 'createdAt' },
+                    nextToken: token,
+                }),
+            )) as GraphQLResult<SearchAdvertsQuery>;
+
+            token = nextResult.data?.searchAdverts?.nextToken;
+            const newList = nextResult.data?.searchAdverts?.items ?? [];
+            resultList.push(...newList);
+        }
+
+        return resultList;
     };
 
-    const storeFetchResult = (itemsToStore: [IAdvert]) => {
-        setReservedItems((currentReservedItems: [IAdvert]) => [
+    const storeFetchResult = (itemsToStore: Advert[]) => {
+        setReservedItems((currentReservedItems: Advert[]) => [
             ...currentReservedItems,
             ...itemsToStore,
         ]);
     };
 
     const filterBorrowedItems = (
-        advertBorrowedItems: any,
+        advertBorrowedItems: Advert[],
         filterUserSub: undefined | string,
         statusFilter: string[],
     ) => {
@@ -77,12 +99,13 @@ const ItemsToGet: FC = () => {
             return [];
         }
 
-        return advertBorrowedItems.filter((borrowedItem: IAdvert) => {
+        return advertBorrowedItems.filter((borrowedItem) => {
             const foundElem =
-                borrowedItem?.advertBorrowCalendar?.calendarEvents.find(
-                    (event: ICalendarDataEvent) => {
+                borrowedItem?.advertBorrowCalendar?.calendarEvents?.find(
+                    (event) => {
                         return (
                             event.borrowedBySub === filterUserSub &&
+                            event.status &&
                             statusFilter.includes(event.status)
                         );
                     },
@@ -92,17 +115,44 @@ const ItemsToGet: FC = () => {
         });
     };
 
+    const filterReservedItems = (
+        advertReservedItems: Advert[],
+        filterUserSub: undefined | string,
+    ) => {
+        if (typeof filterUserSub === 'undefined') {
+            return [];
+        }
+
+        return advertReservedItems.filter((item) => {
+            return item?.advertPickUps?.some((event) => {
+                return event.reservedBySub === filterUserSub && !event.pickedUp;
+            });
+        });
+    };
+
     const fetchAllReservations = useCallback(async () => {
         const borrowedAdsFilter = {
-            and: [{ advertType: { eq: 'borrow' } }, { version: { eq: 0 } }],
+            and: [
+                {
+                    advertType: { eq: 'borrow' },
+                    version: { eq: 0 },
+                    status: { ne: 'pickedUp' },
+                },
+            ],
         };
         const reservedAdsFilter = {
-            and: [{ reservedBySub: { eq: user.sub } }, { version: { eq: 0 } }],
-            not: { status: { eq: 'available' } },
+            and: [
+                {
+                    version: { eq: 0 },
+                    advertType: { eq: 'recycle' },
+                    status: { ne: 'pickedUp' },
+                },
+            ],
         };
 
         const borrowedAds = await fetchListAdverts(borrowedAdsFilter);
-        const borrowedAdsItems: any = borrowedAds.data?.searchAdverts?.items;
+        const borrowedAdsItems =
+            (borrowedAds.filter((item) => item) as Advert[] | undefined) ?? [];
         const foundResult = filterBorrowedItems(borrowedAdsItems, user.sub, [
             BorrowStatus.reserved,
             BorrowStatus.pickedUp,
@@ -110,8 +160,10 @@ const ItemsToGet: FC = () => {
         storeFetchResult(foundResult);
 
         const reservedAds = await fetchListAdverts(reservedAdsFilter);
-        const reservedAdsItems: any = reservedAds.data?.searchAdverts?.items;
-        storeFetchResult(reservedAdsItems);
+        const reservedAdsItems =
+            (reservedAds.filter((item) => item) as Advert[] | undefined) ?? [];
+        const filtered = filterReservedItems(reservedAdsItems, user.sub);
+        storeFetchResult(filtered);
     }, [user.sub]);
 
     useEffect(() => {
