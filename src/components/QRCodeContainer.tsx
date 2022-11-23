@@ -33,7 +33,7 @@ interface IProps {
 }
 
 const QRCodeContainer: FC<IProps> = ({ id, recycleId, itemTitle }: IProps) => {
-    if (!recycleId || !itemTitle) {
+    if (!id || !itemTitle) {
         return <></>;
     }
 
