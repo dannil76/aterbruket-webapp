@@ -5,3 +5,4 @@ export { default as dayToDateString } from './dateToDayString';
 export * from './handleCategories';
 export { default as showUpdateAvailableToaster } from './showUpdateAvailableToaster';
 export { default as showBetaInfoToaster } from './showBetaInfoToaster';
+export { default as getRecycleInventory } from './getRecycleInventory';

@@ -8,13 +8,18 @@ export default function confirmNewReservationEmail(
     phone: string,
     fromDate: string,
     toDate: string,
+    quantity: number,
+    quantityUnit: string,
+    totalQuantity: number,
 ): string {
+    const quantityText = totalQuantity > 1 ? `${quantity}${quantityUnit} ` : '';
+
     return `
   <html>
   <body>
   <p>Hej ${reservationPerson}!</p>
 
-  <p>Du har bokat <a href="${link}">${title}</a> i Haffa mellan ${fromDate} - ${toDate} </p>
+  <p>Du har bokat ${quantityText}<a href="${link}">${title}</a> i Haffa mellan ${fromDate} - ${toDate} </p>
   <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson. </p>
   <p>
   Utlånas av: ${contactPerson}<br>

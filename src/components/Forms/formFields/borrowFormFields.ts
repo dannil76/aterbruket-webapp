@@ -1,6 +1,6 @@
 import { IFields } from '../../../interfaces/IForm';
 import { borrowCategories } from '../../../static/categories';
-import { administrations } from '../../../static/advertMeta';
+import { administrations, quantityUnits } from '../../../static/advertMeta';
 
 const borrowFormFields = (editing?: boolean): IFields[] => {
     return [
@@ -78,6 +78,34 @@ const borrowFormFields = (editing?: boolean): IFields[] => {
             placeholder: 'Beskriv grejen...',
             attributes: {
                 maxLength: '300',
+            },
+        },
+        {
+            name: 'quantityLabel',
+            fieldType: 'layout',
+            title: 'Lagersaldo',
+        },
+        {
+            name: 'quantity',
+            fieldType: 'text',
+            required: true,
+            title: 'Lagersaldo',
+            placeholder: '1',
+            attributes: {
+                inlineLabel: true,
+                pattern: '[0-9]*',
+            },
+            description:
+                'Om du inte vet mängden prylar kan du sätta den till 0.',
+        },
+        {
+            name: 'quantityUnit',
+            fieldType: 'select',
+            required: true,
+            title: 'Enhet',
+            options: quantityUnits,
+            attributes: {
+                inlineLabel: true,
             },
         },
         {

@@ -9,11 +9,16 @@ import {
     getUserBookings,
     removeCalendarEvent,
 } from './utils';
+import { mapAdvertToUpdateInput } from './mappers';
 
 export default async function cancelBooking(
-    advert: Advert,
+    advert: Advert | undefined,
     user: User,
 ): Promise<string | undefined> {
+    if (!advert) {
+        return 'Retrieved undefined item';
+    }
+
     const events = mapCalendarToInput(
         advert.advertBorrowCalendar?.calendarEvents,
     );
@@ -26,15 +31,19 @@ export default async function cancelBooking(
     // Only able to have 1 booking at a time
     const booking = userBookings[0];
 
-    const advertBorrowCalendar = removeCalendarEvent(events, booking);
+    const calendarEventInput = removeCalendarEvent(events, booking);
     booking.status = BorrowStatus.cancelled;
-    advertBorrowCalendar.push(booking);
+    calendarEventInput.push(booking);
 
+    const updateInput = mapAdvertToUpdateInput(advert);
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
-                ...advert,
-                advertBorrowCalendar,
+                ...updateInput,
+                advertBorrowCalendar: {
+                    ...advert.advertBorrowCalendar,
+                    calendarEvents: calendarEventInput,
+                },
             },
         }),
     );

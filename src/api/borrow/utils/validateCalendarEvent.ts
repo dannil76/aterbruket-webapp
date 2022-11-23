@@ -6,13 +6,14 @@ export default function validateCalendarEvent(
     startDate: string | undefined | null,
     endDate: string | undefined | null,
     newEvent: CalendarEventInput,
+    totalQuantity: number,
 ): string | undefined {
     if (!calendarEvents) {
         return 'Saknar kalender för bokningen';
     }
 
     if (!newEvent.dateStart || !newEvent.dateEnd) {
-        return 'Datum ej valda, både start och slut datum behöver väljas.';
+        return 'Datum ej valda, både start- och slutdatum behöver väljas.';
     }
 
     if (
@@ -22,7 +23,11 @@ export default function validateCalendarEvent(
         return 'Bokningen kan inte vara utanför annonsens datumintervall';
     }
 
-    const isOverlappingDays = overlappingDays(newEvent, calendarEvents);
+    const isOverlappingDays = overlappingDays(
+        newEvent,
+        calendarEvents,
+        totalQuantity,
+    );
 
     if (isOverlappingDays) {
         return 'Prylen kan endast bokas under en sammanhängande period.';

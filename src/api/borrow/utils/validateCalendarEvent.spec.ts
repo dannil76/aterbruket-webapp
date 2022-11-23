@@ -12,6 +12,7 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe('Saknar kalender för bokningen');
@@ -27,10 +28,11 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe(
-            'Datum ej valda, både start och slut datum behöver väljas.',
+            'Datum ej valda, både start- och slutdatum behöver väljas.',
         );
     });
 
@@ -44,10 +46,11 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe(
-            'Datum ej valda, både start och slut datum behöver väljas.',
+            'Datum ej valda, både start- och slutdatum behöver väljas.',
         );
     });
 
@@ -62,6 +65,7 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe(
@@ -80,6 +84,7 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe(
@@ -98,6 +103,7 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBeUndefined();
@@ -114,12 +120,13 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBeUndefined();
     });
 
-    it('should return error when not overlapping', () => {
+    it('should return error when overlapping', () => {
         const mock = overlappingDays as jest.Mock;
         mock.mockReturnValue(true);
         const event = {
@@ -132,12 +139,13 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBe(
             'Prylen kan endast bokas under en sammanhängande period.',
         );
-        expect(mock).toHaveBeenCalledWith(event, events);
+        expect(mock).toHaveBeenCalledWith(event, events, 5);
     });
 
     it('should return undefined when not overlapping', () => {
@@ -153,6 +161,7 @@ describe('validate calendar event', () => {
             '2022-01-05',
             '2022-01-10',
             event,
+            5,
         );
 
         expect(actual).toBeUndefined();

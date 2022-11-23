@@ -1,6 +1,9 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
+const fieldHeight = '56px';
+const labelFontSize = '14px';
+
 export const FormContainer = styled.div`
     width: 100%;
     display: flex;
@@ -24,7 +27,7 @@ export const FormContainer = styled.div`
             background: ${(props) => props.theme.colors.grayLighter};
             color: black;
             width: 100%;
-            height: 56px;
+            height: ${fieldHeight};
             border: none;
             padding: 3px;
             font-weight: 500;
@@ -72,7 +75,7 @@ export const FieldSection = styled.section<FieldSectionProps>`
         border-radius: 4.5px;
         border: none;
         font-size: 16px;
-        height: 56px;
+        height: ${fieldHeight};
         padding: 0 0 0 24px;
         background-color: ${(props) => props.theme.colors.grayLighter};
         ::placeholder {
@@ -99,29 +102,36 @@ export const FieldSection = styled.section<FieldSectionProps>`
     }
 
     ${({ inlineLabel, theme }) =>
-        inlineLabel === true &&
+        inlineLabel &&
         `
-    position: relative;
-    height: 56px;
+            position: relative;
 
-    input {
-      text-align: right;
-      padding: 0 10px 0 24px;
-    }
+            input {
+            text-align: right;
+            padding: 0 10px 0 24px;
+            }
 
-    label {
-      margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 40px;
-      transform: translate(0, -50%);
-      font-style: normal;
-      font-weight: bold;
-      text-transform: none;
+            label {
+            margin: 0;
+            position: absolute;
+            top: calc(${fieldHeight} / 2 - ${labelFontSize} / 2);
+            left: 40px;
+            font-style: normal;
+            font-weight: bold;
+            text-transform: none;
 
-      color: ${theme.colors.darkest};
-    }
-  `}
+            color: ${theme.colors.darkest};
+            }
+
+            select {
+                height: ${fieldHeight};
+                padding-left: 100px;
+                padding-right: 10px;
+                option {
+                    direction: rtl;
+                }
+            }
+        `}
 `;
 
 interface MultipleChoiceDivProps {
@@ -200,7 +210,7 @@ export const LabelWrapper = styled.label`
     padding-bottom: 2px;
     font-style: normal;
     font-weight: 900;
-    font-size: 14px;
+    font-size: ${labelFontSize};
     line-height: 150%;
     text-transform: uppercase;
     margin: 0px 8px 8px 8px;

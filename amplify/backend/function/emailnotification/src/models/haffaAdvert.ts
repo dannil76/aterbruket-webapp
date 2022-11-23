@@ -1,4 +1,4 @@
-import { AdvertStatus, BorrowStatus, AdvertType } from './enums';
+import { AdvertStatus, BorrowStatus, AdvertType, QuantityUnit } from './enums';
 
 export interface MissingAccessory {
     reportedBy: string;
@@ -13,12 +13,20 @@ export interface AdvertBorrowCalendarEvent {
     dateStart: Date;
     returnDateTime: Date | null;
     status: BorrowStatus;
+    quantity: number;
 }
 
 export interface AdvertBorrowCalendar {
     allowedDateEnd: Date;
     allowedDateStart: Date;
     calendarEvents: AdvertBorrowCalendarEvent[];
+}
+
+export interface AdvertPickUp {
+    reservedBySub: string;
+    quantity: number;
+    reservationDate: Date;
+    pickedUp: boolean | undefined | null;
 }
 
 export interface Advert {
@@ -33,9 +41,11 @@ export interface Advert {
     phoneNumber: string;
     city: string;
     missingAccessories: MissingAccessory[];
-    reservedBySub: string | undefined;
     advertBorrowCalendar: AdvertBorrowCalendar | undefined;
+    advertPickUps: AdvertPickUp[];
     version: number;
     status: AdvertStatus;
     updatedAt: Date;
+    quantity: number;
+    quantityUnit: QuantityUnit;
 }

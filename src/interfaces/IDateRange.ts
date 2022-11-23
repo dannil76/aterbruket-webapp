@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 export interface IDateRange {
     startDate: null | string;
@@ -13,10 +13,11 @@ export interface IDateRangePickerHandler {
 export interface IDateRangePickerProps {
     onValueChange: (selectedDates: IDateRange, bookingType: string) => void;
     enabledDateRange?: IDateRange;
-    blockedDay?: (day: moment.Moment) => boolean;
+    blockedDay?: (quantity: number) => (day: Moment) => boolean;
     bookingType: string;
     initialStartDate?: string;
     initialEndDate?: string;
+    quantity?: number;
     [key: string]: any;
 }
 

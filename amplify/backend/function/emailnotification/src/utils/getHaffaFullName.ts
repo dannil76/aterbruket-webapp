@@ -1,10 +1,14 @@
 import { HaffaUser } from '../models/haffaUser';
 
 export default function getFullName(
-    user: HaffaUser | string | undefined,
+    user: HaffaUser | string | undefined | null,
 ): string {
     if (!user) {
         return '';
+    }
+
+    if (!(typeof user === 'string') && !user.name) {
+        return user.email;
     }
 
     const userName = typeof user === 'string' ? user : user.name;

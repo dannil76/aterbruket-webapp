@@ -2,6 +2,7 @@ import {
     ItemAMaterialInput,
     ItemAreaOfUseInput,
     AdministrationInput,
+    QuantityUnit,
 } from '../graphql/models';
 
 export interface IReservation {
@@ -20,6 +21,7 @@ export interface IAdvert {
     status: string;
     category?: string;
     quantity?: number;
+    quantityUnit?: QuantityUnit;
     height?: string;
     width?: string;
     length?: string;

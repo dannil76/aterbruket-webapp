@@ -10,6 +10,7 @@ jest.mock('@aws-amplify/api');
 jest.mock('./utils', () => {
     return {
         isAllQuantityReserved: jest.fn(),
+        getUpdatedItemStatus: jest.fn(),
     };
 });
 jest.mock('./mappers', () => {

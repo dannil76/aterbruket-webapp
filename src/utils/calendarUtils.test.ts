@@ -1,518 +1,524 @@
 import moment from 'moment';
+import { AdvertBorrowCalendar, CalendarEvent } from '../graphql/models';
 import { ICalendarEvent } from '../interfaces/IDateRange';
 import {
-    addDateRangeToEvents,
     getLastReturnedCalendarEvent,
     isDateAvailable,
     updateEventStatus,
 } from './calendarUtils';
 
 describe('Create new calendar event', () => {
-    const currentDay = moment();
-    const twoDaysFromToday = moment().add(2, 'days');
-    const sevenDaysFromToday = moment().add(7, 'days');
+    // const currentDay = moment();
+    // const twoDaysFromToday = moment().add(2, 'days');
+    // const sevenDaysFromToday = moment().add(7, 'days');
 
-    const userSub1 = '11111-11111-11111-11111-11111';
-    const userSub2 = '22222-22222-22222-22222-22222';
+    // const userSub1 = '11111-11111-11111-11111-11111';
+    // const userSub2 = '22222-22222-22222-22222-22222';
 
-    const emptyCalendarEvents = {
-        allowedDateStart: currentDay.format('YYYY-MM-DD'),
-        allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
-        calendarEvents: [],
-    };
+    // const emptyCalendarEvents = {
+    //     allowedDateStart: currentDay.format('YYYY-MM-DD'),
+    //     allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
+    //     calendarEvents: [],
+    // };
 
-    const singleCalendarEvent = {
-        allowedDateStart: currentDay.format('YYYY-MM-DD'),
-        allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
-        calendarEvents: [
-            {
-                borrowedBySub: userSub1,
-                status: 'reserved',
-                dateStart: currentDay.format('YYYY-MM-DD'),
-                dateEnd: twoDaysFromToday.format('YYYY-MM-DD'),
-            },
-        ],
-    };
+    // const singleCalendarEvent = {
+    //     allowedDateStart: currentDay.format('YYYY-MM-DD'),
+    //     allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
+    //     calendarEvents: [
+    //         {
+    //             borrowedBySub: userSub1,
+    //             status: 'reserved',
+    //             dateStart: currentDay.format('YYYY-MM-DD'),
+    //             dateEnd: twoDaysFromToday.format('YYYY-MM-DD'),
+    //         },
+    //     ],
+    // };
 
-    const eventTwoDayReservation: ICalendarEvent = {
-        dateRange: {
-            startDate: twoDaysFromToday.add(1, 'day').format('YYYY-MM-DD'),
-            endDate: twoDaysFromToday.add(2, 'day').format('YYYY-MM-DD'),
-        },
-        eventType: 'reserved',
-    };
+    // const eventTwoDayReservation: ICalendarEvent = {
+    //     dateRange: {
+    //         startDate: twoDaysFromToday.add(1, 'day').format('YYYY-MM-DD'),
+    //         endDate: twoDaysFromToday.add(2, 'day').format('YYYY-MM-DD'),
+    //     },
+    //     eventType: 'reserved',
+    // };
 
-    it('create first calendar event in empty calendar', () => {
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: userSub1,
-                status: eventTwoDayReservation.eventType,
-                dateEnd: eventTwoDayReservation.dateRange.endDate,
-                dateStart: eventTwoDayReservation.dateRange.startDate,
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
-                ...emptyCalendarEvents,
-                calendarEvents: [
-                    {
-                        borrowedBySub: userSub1,
-                        status: eventTwoDayReservation.eventType,
-                        dateEnd: eventTwoDayReservation.dateRange.endDate,
-                        dateStart: eventTwoDayReservation.dateRange.startDate,
-                    },
-                ],
-            },
-        };
+    // it('create first calendar event in empty calendar', () => {
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: userSub1,
+    //             status: eventTwoDayReservation.eventType,
+    //             dateEnd: eventTwoDayReservation.dateRange.endDate,
+    //             dateStart: eventTwoDayReservation.dateRange.startDate,
+    //         },
+    //         updateSuccessful: true,
+    //         updatedCalendarResult: {
+    //             ...emptyCalendarEvents,
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: userSub1,
+    //                     status: eventTwoDayReservation.eventType,
+    //                     dateEnd: eventTwoDayReservation.dateRange.endDate,
+    //                     dateStart: eventTwoDayReservation.dateRange.startDate,
+    //                 },
+    //             ],
+    //         },
+    //     };
 
-        const addedRangeResult = addDateRangeToEvents(
-            emptyCalendarEvents,
-            eventTwoDayReservation,
-            userSub1,
-        );
+    //     const addedRangeResult = addDateRangeToEvents(
+    //         emptyCalendarEvents,
+    //         eventTwoDayReservation,
+    //         userSub1,
+    //     );
 
-        expect(addedRangeResult).toEqual(expectedResult);
-    });
+    //     expect(addedRangeResult).toEqual(expectedResult);
+    // });
 
-    it('create first calendar event with allowed dates set to null', () => {
-        const nullAllowedDateCalendar = {
-            allowedDateStart: null,
-            calendarEvents: [],
-            allowedDateEnd: null,
-        };
+    // it('create first calendar event with allowed dates set to null', () => {
+    //     const nullAllowedDateCalendar = {
+    //         allowedDateStart: null,
+    //         calendarEvents: [],
+    //         allowedDateEnd: null,
+    //     };
 
-        const newCalendarEvent = {
-            dateRange: {
-                startDate: '2022-02-02',
-                endDate: '2022-02-03',
-            },
-            eventType: 'reserved',
-        };
+    //     const newCalendarEvent = {
+    //         dateRange: {
+    //             startDate: '2022-02-02',
+    //             endDate: '2022-02-03',
+    //         },
+    //         eventType: 'reserved',
+    //     };
 
-        const userSub = '11111-11111-11111-11111-11111';
+    //     const userSub = '11111-11111-11111-11111-11111';
 
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: '11111-11111-11111-11111-11111',
-                dateEnd: '2022-02-03',
-                dateStart: '2022-02-02',
-                status: 'reserved',
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: '11111-11111-11111-11111-11111',
+    //             dateEnd: '2022-02-03',
+    //             dateStart: '2022-02-02',
+    //             status: 'reserved',
+    //         },
+    //         updateSuccessful: true,
+    //         updatedCalendarResult: {
+    //             allowedDateStart: null,
+    //             allowedDateEnd: null,
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: userSub,
+    //                     dateStart: '2022-02-02',
+    //                     dateEnd: '2022-02-03',
+    //                     status: 'reserved',
+    //                 },
+    //             ],
+    //         },
+    //     };
+
+    //     const addedRangeResult = addDateRangeToEvents(
+    //         nullAllowedDateCalendar,
+    //         newCalendarEvent,
+    //         userSub,
+    //     );
+
+    //     expect(addedRangeResult).toEqual(expectedResult);
+    // });
+
+    // it('create second calendar event', () => {
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: userSub2,
+    //             dateEnd: eventTwoDayReservation.dateRange.endDate,
+    //             dateStart: eventTwoDayReservation.dateRange.startDate,
+    //             status: eventTwoDayReservation.eventType,
+    //         },
+    //         updateSuccessful: true,
+    //         updatedCalendarResult: {
+    //             ...singleCalendarEvent,
+    //             calendarEvents: [
+    //                 ...singleCalendarEvent.calendarEvents,
+    //                 {
+    //                     borrowedBySub: userSub2,
+    //                     status: eventTwoDayReservation.eventType,
+    //                     dateEnd: eventTwoDayReservation.dateRange.endDate,
+    //                     dateStart: eventTwoDayReservation.dateRange.startDate,
+    //                 },
+    //             ],
+    //         },
+    //     };
+
+    //     const addedRangeResult = addDateRangeToEvents(
+    //         singleCalendarEvent,
+    //         eventTwoDayReservation,
+    //         userSub2,
+    //     );
+
+    //     expect(addedRangeResult).toEqual(expectedResult);
+    // });
+
+    // it('event shall not overlap with other events', () => {
+    //     const calendar = {
+    //         allowedDateStart: '2022-02-07',
+    //         calendarEvents: [
+    //             {
+    //                 borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
+    //                 dateEnd: '2022-02-11',
+    //                 dateStart: '2022-02-09',
+    //                 status: 'reserved',
+    //             },
+    //         ],
+    //         allowedDateEnd: '2022-02-13',
+    //     };
+
+    //     const newEvent: ICalendarEvent = {
+    //         dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
+    //         eventType: 'reserved',
+    //     };
+
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: '22222-22222-22222-22222-22222',
+    //             dateEnd: '2022-02-12',
+    //             dateStart: '2022-02-08',
+    //             status: 'reserved',
+    //         },
+    //         errorMessage:
+    //             'Prylen kan endast bokas under en sammanhängande period.',
+    //         updateSuccessful: false,
+    //         updatedCalendarResult: {
+    //             allowedDateEnd: '2022-02-13',
+    //             allowedDateStart: '2022-02-07',
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
+    //                     dateEnd: '2022-02-11',
+    //                     dateStart: '2022-02-09',
+    //                     status: 'reserved',
+    //                 },
+    //             ],
+    //         },
+    //     };
+
+    //     expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
+    //         expectedResult,
+    //     );
+    // });
+
+    // it('event shall not overlap with other events in calendar with allowed dates set to null', () => {
+    //     const nullAllowedDateCalendar = {
+    //         allowedDateStart: null,
+    //         calendarEvents: [
+    //             {
+    //                 borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
+    //                 dateEnd: '2022-02-11',
+    //                 dateStart: '2022-02-09',
+    //                 status: 'reserved',
+    //             },
+    //         ],
+    //         allowedDateEnd: null,
+    //     };
+
+    //     const newEvent: ICalendarEvent = {
+    //         dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
+    //         eventType: 'reserved',
+    //     };
+
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: '22222-22222-22222-22222-22222',
+    //             dateEnd: '2022-02-12',
+    //             dateStart: '2022-02-08',
+    //             status: 'reserved',
+    //         },
+    //         errorMessage:
+    //             'Prylen kan endast bokas under en sammanhängande period.',
+    //         updateSuccessful: false,
+    //         updatedCalendarResult: {
+    //             allowedDateEnd: null,
+    //             allowedDateStart: null,
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
+    //                     dateEnd: '2022-02-11',
+    //                     dateStart: '2022-02-09',
+    //                     status: 'reserved',
+    //                 },
+    //             ],
+    //         },
+    //     };
+
+    //     expect(
+    //         addDateRangeToEvents(nullAllowedDateCalendar, newEvent, userSub2),
+    //     ).toEqual(expectedResult);
+    // });
+
+    // it('new event is allowed to overlap with returned events', () => {
+    //     const calendar = {
+    //         allowedDateStart: '2022-02-08',
+    //         calendarEvents: [
+    //             {
+    //                 borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
+    //                 dateEnd: '2022-02-11',
+    //                 dateStart: '2022-02-08',
+    //                 status: 'returned',
+    //             },
+    //         ],
+    //         allowedDateEnd: '2022-02-28',
+    //     };
+
+    //     const newEvent: ICalendarEvent = {
+    //         dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
+    //         eventType: 'reserved',
+    //     };
+
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: '22222-22222-22222-22222-22222',
+    //             dateEnd: '2022-02-12',
+    //             dateStart: '2022-02-08',
+    //             status: 'reserved',
+    //         },
+    //         updateSuccessful: true,
+    //         updatedCalendarResult: {
+    //             allowedDateEnd: '2022-02-28',
+    //             allowedDateStart: '2022-02-08',
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
+    //                     dateEnd: '2022-02-11',
+    //                     dateStart: '2022-02-08',
+    //                     status: 'returned',
+    //                 },
+    //                 {
+    //                     borrowedBySub: '22222-22222-22222-22222-22222',
+    //                     dateEnd: '2022-02-12',
+    //                     dateStart: '2022-02-08',
+    //                     status: 'reserved',
+    //                 },
+    //             ],
+    //         },
+    //     };
+
+    //     expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
+    //         expectedResult,
+    //     );
+    // });
+
+    // it('event shall not overlap with same dates', () => {
+    //     const eventWithDuplicateDates = {
+    //         dateRange: {
+    //             endDate: currentDay.format('YYYY-MM-DD'),
+    //             startDate: currentDay.format('YYYY-MM-DD'),
+    //         },
+    //         eventType: 'reserved',
+    //     };
+
+    //     const expectedResult = {
+    //         currentEvent: {
+    //             borrowedBySub: userSub2,
+    //             dateEnd: eventWithDuplicateDates.dateRange.endDate,
+    //             dateStart: eventWithDuplicateDates.dateRange.startDate,
+    //             status: eventWithDuplicateDates.eventType,
+    //         },
+    //         updateSuccessful: false,
+    //         errorMessage:
+    //             'Prylen kan endast bokas under en sammanhängande period.',
+    //         updatedCalendarResult: {
+    //             ...singleCalendarEvent,
+    //         },
+    //     };
+
+    //     const tryAddingSameDates = addDateRangeToEvents(
+    //         singleCalendarEvent,
+    //         eventWithDuplicateDates,
+    //         userSub2,
+    //     );
+
+    //     expect(tryAddingSameDates).toEqual(expectedResult);
+    // });
+
+    //     it('event shall not overlap with another event start date', () => {
+    //         const calendar = {
+    //             allowedDateStart: currentDay.format('YYYY-MM-DD'),
+    //             allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
+    //             calendarEvents: [
+    //                 {
+    //                     borrowedBySub: userSub1,
+    //                     status: 'reserved',
+    //                     dateStart: twoDaysFromToday.format('YYYY-MM-DD'),
+    //                     dateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
+    //                 },
+    //             ],
+    //         };
+
+    //         const newEvent: ICalendarEvent = {
+    //             dateRange: {
+    //                 startDate: currentDay.format('YYYY-MM-DD'),
+    //                 endDate: calendar.calendarEvents[0].dateStart,
+    //             },
+    //             eventType: 'reserved',
+    //         };
+
+    //         const expectedResult = {
+    //             currentEvent: {
+    //                 borrowedBySub: userSub2,
+    //                 dateEnd: newEvent.dateRange.endDate,
+    //                 dateStart: newEvent.dateRange.startDate,
+    //                 status: newEvent.eventType,
+    //             },
+    //             updateSuccessful: false,
+    //             errorMessage:
+    //                 'Prylen kan endast bokas under en sammanhängande period.',
+    //             updatedCalendarResult: {
+    //                 ...calendar,
+    //             },
+    //         };
+
+    //         const addDateRangeToEventsResult = addDateRangeToEvents(
+    //             calendar,
+    //             newEvent,
+    //             userSub2,
+    //         );
+
+    //         expect(addDateRangeToEventsResult).toEqual(expectedResult);
+    //     });
+    // });
+
+    describe('Is date available', () => {
+        it('current date between current date and tomorrow', () => {
+            const result = isDateAvailable(
+                moment(),
+                {
+                    allowedDateStart: moment().format('YYYY-MM-DD'),
+                    allowedDateEnd: moment()
+                        .add(1, 'days')
+                        .format('YYYY-MM-DD'),
+                    calendarEvents: [],
+                } as unknown as AdvertBorrowCalendar,
+                1,
+                1,
+            );
+
+            expect(result).toBeTruthy();
+        });
+
+        it('all dates shall be available if allowed dates set to null', () => {
+            const nullAllowedDateCalendar = {
                 allowedDateStart: null,
+                calendarEvents: [],
                 allowedDateEnd: null,
-                calendarEvents: [
-                    {
-                        borrowedBySub: userSub,
-                        dateStart: '2022-02-02',
-                        dateEnd: '2022-02-03',
-                        status: 'reserved',
-                    },
-                ],
-            },
-        };
+            } as unknown as AdvertBorrowCalendar;
 
-        const addedRangeResult = addDateRangeToEvents(
-            nullAllowedDateCalendar,
-            newCalendarEvent,
-            userSub,
-        );
+            const result = isDateAvailable(
+                moment(),
+                nullAllowedDateCalendar,
+                1,
+                1,
+            );
 
-        expect(addedRangeResult).toEqual(expectedResult);
-    });
+            expect(result).toBeTruthy();
+        });
 
-    it('create second calendar event', () => {
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: userSub2,
-                dateEnd: eventTwoDayReservation.dateRange.endDate,
-                dateStart: eventTwoDayReservation.dateRange.startDate,
-                status: eventTwoDayReservation.eventType,
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
-                ...singleCalendarEvent,
-                calendarEvents: [
-                    ...singleCalendarEvent.calendarEvents,
-                    {
-                        borrowedBySub: userSub2,
-                        status: eventTwoDayReservation.eventType,
-                        dateEnd: eventTwoDayReservation.dateRange.endDate,
-                        dateStart: eventTwoDayReservation.dateRange.startDate,
-                    },
-                ],
-            },
-        };
-
-        const addedRangeResult = addDateRangeToEvents(
-            singleCalendarEvent,
-            eventTwoDayReservation,
-            userSub2,
-        );
-
-        expect(addedRangeResult).toEqual(expectedResult);
-    });
-
-    it('event shall not overlap with other events', () => {
-        const calendar = {
-            allowedDateStart: '2022-02-07',
-            calendarEvents: [
+        it('current date (today) shall not be between tomorrow and the day after tomorrow', () => {
+            const result = isDateAvailable(
+                moment(),
                 {
-                    borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
-                    dateEnd: '2022-02-11',
-                    dateStart: '2022-02-09',
-                    status: 'reserved',
-                },
-            ],
-            allowedDateEnd: '2022-02-13',
-        };
+                    allowedDateStart: moment()
+                        .add(1, 'day')
+                        .format('YYYY-MM-DD'),
+                    allowedDateEnd: moment()
+                        .add(2, 'days')
+                        .format('YYYY-MM-DD'),
+                    calendarEvents: [],
+                } as unknown as AdvertBorrowCalendar,
+                1,
+                1,
+            );
 
-        const newEvent: ICalendarEvent = {
-            dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
-            eventType: 'reserved',
-        };
+            expect(result).toBeFalsy();
+        });
 
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-02-12',
-                dateStart: '2022-02-08',
-                status: 'reserved',
-            },
-            errorMessage:
-                'Prylen kan endast bokas under en sammanhängande period.',
-            updateSuccessful: false,
-            updatedCalendarResult: {
-                allowedDateEnd: '2022-02-13',
-                allowedDateStart: '2022-02-07',
+        it('only dates before and after an event shall be enabled', () => {
+            const calendarData = {
+                allowedDateStart: moment().format('YYYY-MM-DD'),
+                allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
                 calendarEvents: [
                     {
-                        borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
-                        dateEnd: '2022-02-11',
-                        dateStart: '2022-02-09',
+                        borrowedBySub: '11111-11111-11111-11111-11111',
                         status: 'reserved',
-                    },
+                        dateStart: moment().add(4, 'days').format('YYYY-MM-DD'),
+                        dateEnd: moment().add(5, 'days').format('YYYY-MM-DD'),
+                        quantity: 1,
+                    } as CalendarEvent,
                 ],
-            },
-        };
+            } as unknown as AdvertBorrowCalendar;
 
-        expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
-            expectedResult,
-        );
-    });
+            expect(
+                isDateAvailable(
+                    moment().utc(true).startOf('day'),
+                    calendarData,
+                    1,
+                    1,
+                ),
+            ).toBeTruthy();
+            expect(
+                isDateAvailable(
+                    moment().utc(true).startOf('day').add(4, 'days'),
+                    calendarData,
+                    1,
+                    1,
+                ),
+            ).toBeFalsy();
+            expect(
+                isDateAvailable(
+                    moment().utc(true).startOf('day').add(6, 'days'),
+                    calendarData,
+                    1,
+                    1,
+                ),
+            ).toBeTruthy();
+        });
 
-    it('event shall not overlap with other events in calendar with allowed dates set to null', () => {
-        const nullAllowedDateCalendar = {
-            allowedDateStart: null,
-            calendarEvents: [
-                {
-                    borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
-                    dateEnd: '2022-02-11',
-                    dateStart: '2022-02-09',
-                    status: 'reserved',
-                },
-            ],
-            allowedDateEnd: null,
-        };
+        it('calendar without events', () => {
+            const calendarData = {
+                allowedDateStart: moment().format('YYYY-MM-DD'),
+                allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
+                calendarEvents: [],
+            } as unknown as AdvertBorrowCalendar;
 
-        const newEvent: ICalendarEvent = {
-            dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
-            eventType: 'reserved',
-        };
+            expect(isDateAvailable(moment(), calendarData, 1, 1)).toBeTruthy();
+            expect(
+                isDateAvailable(moment().add(7, 'days'), calendarData, 1, 1),
+            ).toBeTruthy();
+        });
 
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-02-12',
-                dateStart: '2022-02-08',
-                status: 'reserved',
-            },
-            errorMessage:
-                'Prylen kan endast bokas under en sammanhängande period.',
-            updateSuccessful: false,
-            updatedCalendarResult: {
-                allowedDateEnd: null,
-                allowedDateStart: null,
+        it('event with status returned shall return dates available', () => {
+            const returnDate = moment().add(5, 'days');
+
+            const calendarWithReturnedEvent = {
+                allowedDateStart: moment().format('YYYY-MM-DD'),
+                allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
                 calendarEvents: [
                     {
-                        borrowedBySub: '3088c366-5092-4a70-a7f4-10cbe2fc6786',
-                        dateEnd: '2022-02-11',
-                        dateStart: '2022-02-09',
-                        status: 'reserved',
-                    },
-                ],
-            },
-        };
-
-        expect(
-            addDateRangeToEvents(nullAllowedDateCalendar, newEvent, userSub2),
-        ).toEqual(expectedResult);
-    });
-
-    it('new event is allowed to overlap with returned events', () => {
-        const calendar = {
-            allowedDateStart: '2022-02-08',
-            calendarEvents: [
-                {
-                    borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
-                    dateEnd: '2022-02-11',
-                    dateStart: '2022-02-08',
-                    status: 'returned',
-                },
-            ],
-            allowedDateEnd: '2022-02-28',
-        };
-
-        const newEvent: ICalendarEvent = {
-            dateRange: { startDate: '2022-02-08', endDate: '2022-02-12' },
-            eventType: 'reserved',
-        };
-
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-02-12',
-                dateStart: '2022-02-08',
-                status: 'reserved',
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
-                allowedDateEnd: '2022-02-28',
-                allowedDateStart: '2022-02-08',
-                calendarEvents: [
-                    {
-                        borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
-                        dateEnd: '2022-02-11',
-                        dateStart: '2022-02-08',
+                        borrowedBySub: '11111-11111-11111-11111-11111',
                         status: 'returned',
-                    },
-                    {
-                        borrowedBySub: '22222-22222-22222-22222-22222',
-                        dateEnd: '2022-02-12',
-                        dateStart: '2022-02-08',
-                        status: 'reserved',
+                        dateStart: moment().add(4, 'days').format('YYYY-MM-DD'),
+                        dateEnd: returnDate.format('YYYY-MM-DD'),
                     },
                 ],
-            },
-        };
+            } as unknown as AdvertBorrowCalendar;
 
-        expect(addDateRangeToEvents(calendar, newEvent, userSub2)).toEqual(
-            expectedResult,
-        );
-    });
+            const dateAvailableResult = isDateAvailable(
+                returnDate,
+                calendarWithReturnedEvent,
+                1,
+                1,
+            );
 
-    it('event shall not overlap with same dates', () => {
-        const eventWithDuplicateDates = {
-            dateRange: {
-                endDate: currentDay.format('YYYY-MM-DD'),
-                startDate: currentDay.format('YYYY-MM-DD'),
-            },
-            eventType: 'reserved',
-        };
-
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: userSub2,
-                dateEnd: eventWithDuplicateDates.dateRange.endDate,
-                dateStart: eventWithDuplicateDates.dateRange.startDate,
-                status: eventWithDuplicateDates.eventType,
-            },
-            updateSuccessful: false,
-            errorMessage:
-                'Prylen kan endast bokas under en sammanhängande period.',
-            updatedCalendarResult: {
-                ...singleCalendarEvent,
-            },
-        };
-
-        const tryAddingSameDates = addDateRangeToEvents(
-            singleCalendarEvent,
-            eventWithDuplicateDates,
-            userSub2,
-        );
-
-        expect(tryAddingSameDates).toEqual(expectedResult);
-    });
-
-    it('event shall not overlap with another event start date', () => {
-        const calendar = {
-            allowedDateStart: currentDay.format('YYYY-MM-DD'),
-            allowedDateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
-            calendarEvents: [
-                {
-                    borrowedBySub: userSub1,
-                    status: 'reserved',
-                    dateStart: twoDaysFromToday.format('YYYY-MM-DD'),
-                    dateEnd: sevenDaysFromToday.format('YYYY-MM-DD'),
-                },
-            ],
-        };
-
-        const newEvent: ICalendarEvent = {
-            dateRange: {
-                startDate: currentDay.format('YYYY-MM-DD'),
-                endDate: calendar.calendarEvents[0].dateStart,
-            },
-            eventType: 'reserved',
-        };
-
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: userSub2,
-                dateEnd: newEvent.dateRange.endDate,
-                dateStart: newEvent.dateRange.startDate,
-                status: newEvent.eventType,
-            },
-            updateSuccessful: false,
-            errorMessage:
-                'Prylen kan endast bokas under en sammanhängande period.',
-            updatedCalendarResult: {
-                ...calendar,
-            },
-        };
-
-        const addDateRangeToEventsResult = addDateRangeToEvents(
-            calendar,
-            newEvent,
-            userSub2,
-        );
-
-        expect(addDateRangeToEventsResult).toEqual(expectedResult);
-    });
-});
-
-describe('Is date available', () => {
-    it('current date between current date and tomorrow', () => {
-        const result = isDateAvailable(moment(), {
-            allowedDateStart: moment().format('YYYY-MM-DD'),
-            allowedDateEnd: moment().add(1, 'days').format('YYYY-MM-DD'),
-            calendarEvents: [],
+            expect(dateAvailableResult).toBeTruthy();
         });
-
-        expect(result).toBeTruthy();
     });
 
-    it('all dates shall be available if allowed dates set to null', () => {
-        const nullAllowedDateCalendar = {
-            allowedDateStart: null,
-            calendarEvents: [],
-            allowedDateEnd: null,
-        };
-
-        const result = isDateAvailable(moment(), nullAllowedDateCalendar);
-
-        expect(result).toBeTruthy();
-    });
-
-    it('current date (today) shall not be between tomorrow and the day after tomorrow', () => {
-        const result = isDateAvailable(moment(), {
-            allowedDateStart: moment().add(1, 'day').format('YYYY-MM-DD'),
-            allowedDateEnd: moment().add(2, 'days').format('YYYY-MM-DD'),
-            calendarEvents: [],
-        });
-
-        expect(result).toBeFalsy();
-    });
-
-    it('only dates before and after an event shall be enabled', () => {
-        const calendarData = {
-            allowedDateStart: moment().format('YYYY-MM-DD'),
-            allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
-            calendarEvents: [
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    status: 'reserved',
-                    dateStart: moment().add(4, 'days').format('YYYY-MM-DD'),
-                    dateEnd: moment().add(5, 'days').format('YYYY-MM-DD'),
-                },
-            ],
-        };
-
-        expect(isDateAvailable(moment(), calendarData)).toBeTruthy();
-        expect(
-            isDateAvailable(moment().add(4, 'days'), calendarData),
-        ).toBeFalsy();
-        expect(
-            isDateAvailable(moment().add(6, 'days'), calendarData),
-        ).toBeTruthy();
-    });
-
-    it('calendar without events', () => {
-        const calendarData = {
-            allowedDateStart: moment().format('YYYY-MM-DD'),
-            allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
-            calendarEvents: [],
-        };
-
-        expect(isDateAvailable(moment(), calendarData)).toBeTruthy();
-        expect(
-            isDateAvailable(moment().add(7, 'days'), calendarData),
-        ).toBeTruthy();
-    });
-
-    it('event with status returned shall return dates available', () => {
-        const returnDate = moment().add(5, 'days');
-
-        const calendarWithReturnedEvent = {
-            allowedDateStart: moment().format('YYYY-MM-DD'),
-            allowedDateEnd: moment().add(7, 'days').format('YYYY-MM-DD'),
-            calendarEvents: [
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    status: 'returned',
-                    dateStart: moment().add(4, 'days').format('YYYY-MM-DD'),
-                    dateEnd: returnDate.format('YYYY-MM-DD'),
-                },
-            ],
-        };
-
-        const dateAvailableResult = isDateAvailable(
-            returnDate,
-            calendarWithReturnedEvent,
-        );
-
-        expect(dateAvailableResult).toBeTruthy();
-    });
-});
-
-describe('Update event status', () => {
-    it('update event status to pickedUp', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-02',
-            calendarEvents: [
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-02-03',
-                    dateStart: '2022-02-02',
-                    status: 'reserved',
-                },
-                {
-                    borrowedBySub: '22222-22222-22222-22222-22222',
-                    dateEnd: '2022-02-05',
-                    dateStart: '2022-02-04',
-                    status: 'reserved',
-                },
-            ],
-            allowedDateEnd: '2022-02-06',
-        };
-        const calendarEvent = {
-            borrowedBySub: '22222-22222-22222-22222-22222',
-            dateEnd: '2022-02-05',
-            dateStart: '2022-02-04',
-            status: 'reserved',
-        };
-        const newStatus = 'pickedUp';
-
-        const expectedResult = {
-            currentEvent: {
-                borrowedBySub: '22222-22222-22222-22222-22222',
-                dateEnd: '2022-02-05',
-                dateStart: '2022-02-04',
-                status: 'pickedUp',
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
-                allowedDateEnd: '2022-02-06',
+    describe('Update event status', () => {
+        it('update event status to pickedUp', () => {
+            const adCalendar = {
                 allowedDateStart: '2022-02-02',
                 calendarEvents: [
                     {
@@ -525,80 +531,93 @@ describe('Update event status', () => {
                         borrowedBySub: '22222-22222-22222-22222-22222',
                         dateEnd: '2022-02-05',
                         dateStart: '2022-02-04',
-                        status: 'pickedUp',
+                        status: 'reserved',
                     },
                 ],
-            },
-        };
+                allowedDateEnd: '2022-02-06',
+            };
+            const calendarEvent = {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-05',
+                dateStart: '2022-02-04',
+                status: 'reserved',
+            };
+            const newStatus = 'pickedUp';
 
-        expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
-            expectedResult,
-        );
-    });
-
-    it('update event status to returned', () => {
-        const currentDateTime = moment().format('YYYY-MM-DD');
-        const tomorrowDateTime = moment().add(1, 'day').format('YYYY-MM-DD');
-
-        const adCalendar = {
-            allowedDateStart: currentDateTime,
-            calendarEvents: [
-                {
+            const expectedResult = {
+                currentEvent: {
                     borrowedBySub: '22222-22222-22222-22222-22222',
-                    dateEnd: tomorrowDateTime,
-                    dateStart: currentDateTime,
-                    status: 'reserved',
+                    dateEnd: '2022-02-05',
+                    dateStart: '2022-02-04',
+                    status: 'pickedUp',
                 },
-            ],
-            allowedDateEnd: tomorrowDateTime,
-        };
-        const calendarEvent = {
-            borrowedBySub: '22222-22222-22222-22222-22222',
-            dateEnd: tomorrowDateTime,
-            dateStart: currentDateTime,
-            status: 'reserved',
-        };
-        const newStatus = 'returned';
-
-        const updateEventStatusResult = updateEventStatus(
-            adCalendar,
-            calendarEvent,
-            newStatus,
-        );
-        const { returnDateTime, status } =
-            updateEventStatusResult.updatedCalendarResult.calendarEvents[0];
-
-        expect(updateEventStatusResult.updatedCalendarResult).toBeTruthy();
-        expect(status).toMatch('returned');
-        expect(moment(returnDateTime).diff(moment())).toBeLessThan(500);
-    });
-
-    it('events with status returned shall not be possible to change', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-08',
-            calendarEvents: [
-                {
-                    borrowedBySub: '1',
-                    dateEnd: '2022-02-10',
-                    dateStart: '2022-02-08',
-                    status: 'returned',
-                    returnDateTime: '2022-10-10T09:58:48.881Z',
+                updateSuccessful: true,
+                updatedCalendarResult: {
+                    allowedDateEnd: '2022-02-06',
+                    allowedDateStart: '2022-02-02',
+                    calendarEvents: [
+                        {
+                            borrowedBySub: '11111-11111-11111-11111-11111',
+                            dateEnd: '2022-02-03',
+                            dateStart: '2022-02-02',
+                            status: 'reserved',
+                        },
+                        {
+                            borrowedBySub: '22222-22222-22222-22222-22222',
+                            dateEnd: '2022-02-05',
+                            dateStart: '2022-02-04',
+                            status: 'pickedUp',
+                        },
+                    ],
                 },
-            ],
-            allowedDateEnd: '2022-02-28',
-        };
+            };
 
-        const calendarEvent = {
-            borrowedBySub: '1',
-            dateEnd: '2022-02-10',
-            dateStart: '2022-02-08',
-            status: 'reserved',
-        };
-        const newStatus = 'pickedUp';
+            expect(
+                updateEventStatus(adCalendar, calendarEvent, newStatus),
+            ).toEqual(expectedResult);
+        });
 
-        const expectedResult = {
-            updateSuccessful: false,
-            updatedCalendarResult: {
+        it('update event status to returned', () => {
+            const currentDateTime = moment().format('YYYY-MM-DD');
+            const tomorrowDateTime = moment()
+                .add(1, 'day')
+                .format('YYYY-MM-DD');
+
+            const adCalendar = {
+                allowedDateStart: currentDateTime,
+                calendarEvents: [
+                    {
+                        borrowedBySub: '22222-22222-22222-22222-22222',
+                        dateEnd: tomorrowDateTime,
+                        dateStart: currentDateTime,
+                        status: 'reserved',
+                    },
+                ],
+                allowedDateEnd: tomorrowDateTime,
+            };
+            const calendarEvent = {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: tomorrowDateTime,
+                dateStart: currentDateTime,
+                status: 'reserved',
+            };
+            const newStatus = 'returned';
+
+            const updateEventStatusResult = updateEventStatus(
+                adCalendar,
+                calendarEvent,
+                newStatus,
+            );
+            const { returnDateTime, status } =
+                updateEventStatusResult.updatedCalendarResult.calendarEvents[0];
+
+            expect(updateEventStatusResult.updatedCalendarResult).toBeTruthy();
+            expect(status).toMatch('returned');
+            expect(moment(returnDateTime).diff(moment())).toBeLessThan(500);
+        });
+
+        it('events with status returned shall not be possible to change', () => {
+            const adCalendar = {
                 allowedDateStart: '2022-02-08',
                 calendarEvents: [
                     {
@@ -610,52 +629,40 @@ describe('Update event status', () => {
                     },
                 ],
                 allowedDateEnd: '2022-02-28',
-            },
-        };
+            };
 
-        expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
-            expectedResult,
-        );
-    });
-
-    it('only change status for reserved event', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-08',
-            calendarEvents: [
-                {
-                    borrowedBySub: '1',
-                    dateEnd: '2022-02-10',
-                    dateStart: '2022-02-08',
-                    status: 'returned',
-                    returnDateTime: '2022-10-10T09:58:48.881Z',
-                },
-                {
-                    borrowedBySub: '1',
-                    dateEnd: '2022-02-10',
-                    dateStart: '2022-02-08',
-                    status: 'reserved',
-                },
-            ],
-            allowedDateEnd: '2022-02-28',
-        };
-
-        const calendarEvent = {
-            borrowedBySub: '1',
-            dateEnd: '2022-02-10',
-            dateStart: '2022-02-08',
-            status: 'reserved',
-        };
-        const newStatus = 'pickedUp';
-
-        const expectedResult = {
-            currentEvent: {
+            const calendarEvent = {
                 borrowedBySub: '1',
                 dateEnd: '2022-02-10',
                 dateStart: '2022-02-08',
-                status: 'pickedUp',
-            },
-            updateSuccessful: true,
-            updatedCalendarResult: {
+                status: 'reserved',
+            };
+            const newStatus = 'pickedUp';
+
+            const expectedResult = {
+                updateSuccessful: false,
+                updatedCalendarResult: {
+                    allowedDateStart: '2022-02-08',
+                    calendarEvents: [
+                        {
+                            borrowedBySub: '1',
+                            dateEnd: '2022-02-10',
+                            dateStart: '2022-02-08',
+                            status: 'returned',
+                            returnDateTime: '2022-10-10T09:58:48.881Z',
+                        },
+                    ],
+                    allowedDateEnd: '2022-02-28',
+                },
+            };
+
+            expect(
+                updateEventStatus(adCalendar, calendarEvent, newStatus),
+            ).toEqual(expectedResult);
+        });
+
+        it('only change status for reserved event', () => {
+            const adCalendar = {
                 allowedDateStart: '2022-02-08',
                 calendarEvents: [
                     {
@@ -669,156 +676,193 @@ describe('Update event status', () => {
                         borrowedBySub: '1',
                         dateEnd: '2022-02-10',
                         dateStart: '2022-02-08',
-                        status: 'pickedUp',
+                        status: 'reserved',
                     },
                 ],
                 allowedDateEnd: '2022-02-28',
-            },
-        };
+            };
 
-        expect(updateEventStatus(adCalendar, calendarEvent, newStatus)).toEqual(
-            expectedResult,
-        );
-    });
-});
+            const calendarEvent = {
+                borrowedBySub: '1',
+                dateEnd: '2022-02-10',
+                dateStart: '2022-02-08',
+                status: 'reserved',
+            };
+            const newStatus = 'pickedUp';
 
-describe('Get last event', () => {
-    it('get last event of multiple returned', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-02',
-            allowedDateEnd: '2022-02-06',
-            calendarEvents: [
-                {
-                    borrowedBySub: '22222-22222-22222-22222-22222',
-                    dateEnd: '2022-02-04',
-                    dateStart: '2022-02-05',
-                    status: 'returned',
-                    returnDateTime: '2022-05-17T09:58:48.881Z',
+            const expectedResult = {
+                currentEvent: {
+                    borrowedBySub: '1',
+                    dateEnd: '2022-02-10',
+                    dateStart: '2022-02-08',
+                    status: 'pickedUp',
                 },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-02-03',
-                    dateStart: '2022-02-02',
-                    status: 'returned',
-                    returnDateTime: '2022-03-17T09:58:48.881Z',
+                updateSuccessful: true,
+                updatedCalendarResult: {
+                    allowedDateStart: '2022-02-08',
+                    calendarEvents: [
+                        {
+                            borrowedBySub: '1',
+                            dateEnd: '2022-02-10',
+                            dateStart: '2022-02-08',
+                            status: 'returned',
+                            returnDateTime: '2022-10-10T09:58:48.881Z',
+                        },
+                        {
+                            borrowedBySub: '1',
+                            dateEnd: '2022-02-10',
+                            dateStart: '2022-02-08',
+                            status: 'pickedUp',
+                        },
+                    ],
+                    allowedDateEnd: '2022-02-28',
                 },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-02-03',
-                    dateStart: '2022-02-04',
-                    status: 'returned',
-                    returnDateTime: '2022-04-10T09:58:48.881Z',
-                },
-            ],
-        };
+            };
 
-        const expectedResult = {
-            borrowedBySub: '22222-22222-22222-22222-22222',
-            dateEnd: '2022-02-04',
-            dateStart: '2022-02-05',
-            status: 'returned',
-            returnDateTime: '2022-05-17T09:58:48.881Z',
-        };
-
-        expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(
-            expectedResult,
-        );
+            expect(
+                updateEventStatus(adCalendar, calendarEvent, newStatus),
+            ).toEqual(expectedResult);
+        });
     });
 
-    it('return last event with a returned date time', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-02',
-            allowedDateEnd: '2022-02-06',
-            calendarEvents: [
-                {
-                    borrowedBySub: '22222-22222-22222-22222-22222',
-                    dateEnd: '2022-02-04',
-                    dateStart: '2022-02-05',
-                    status: 'returned',
-                    returnDateTime: '2022-05-17T09:58:48.881Z',
-                },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-12-01',
-                    dateStart: '2022-12-02',
-                    status: 'reserved',
-                },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-02-03',
-                    dateStart: '2022-02-04',
-                    status: 'returned',
-                    returnDateTime: '2022-04-10T09:58:48.881Z',
-                },
-            ],
-        };
+    describe('Get last event', () => {
+        it('get last event of multiple returned', () => {
+            const adCalendar = {
+                allowedDateStart: '2022-02-02',
+                allowedDateEnd: '2022-02-06',
+                calendarEvents: [
+                    {
+                        borrowedBySub: '22222-22222-22222-22222-22222',
+                        dateEnd: '2022-02-04',
+                        dateStart: '2022-02-05',
+                        status: 'returned',
+                        returnDateTime: '2022-05-17T09:58:48.881Z',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-02-03',
+                        dateStart: '2022-02-02',
+                        status: 'returned',
+                        returnDateTime: '2022-03-17T09:58:48.881Z',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-02-03',
+                        dateStart: '2022-02-04',
+                        status: 'returned',
+                        returnDateTime: '2022-04-10T09:58:48.881Z',
+                    },
+                ],
+            };
 
-        const expectedResult = {
-            borrowedBySub: '22222-22222-22222-22222-22222',
-            dateEnd: '2022-02-04',
-            dateStart: '2022-02-05',
-            status: 'returned',
-            returnDateTime: '2022-05-17T09:58:48.881Z',
-        };
+            const expectedResult = {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-04',
+                dateStart: '2022-02-05',
+                status: 'returned',
+                returnDateTime: '2022-05-17T09:58:48.881Z',
+            };
 
-        expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(
-            expectedResult,
-        );
-    });
+            expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(
+                expectedResult,
+            );
+        });
 
-    it('return undefined if no object found with returned date time', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-02',
-            allowedDateEnd: '2022-02-06',
-            calendarEvents: [
-                {
-                    borrowedBySub: '22222-22222-22222-22222-22222',
-                    dateEnd: '2022-02-04',
-                    dateStart: '2022-02-05',
-                    status: 'reserved',
-                },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-12-01',
-                    dateStart: '2022-12-02',
-                    status: 'reserved',
-                },
-                {
-                    borrowedBySub: '11111-11111-11111-11111-11111',
-                    dateEnd: '2022-02-03',
-                    dateStart: '2022-02-04',
-                    status: 'reserved',
-                },
-            ],
-        };
+        it('return last event with a returned date time', () => {
+            const adCalendar = {
+                allowedDateStart: '2022-02-02',
+                allowedDateEnd: '2022-02-06',
+                calendarEvents: [
+                    {
+                        borrowedBySub: '22222-22222-22222-22222-22222',
+                        dateEnd: '2022-02-04',
+                        dateStart: '2022-02-05',
+                        status: 'returned',
+                        returnDateTime: '2022-05-17T09:58:48.881Z',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-12-01',
+                        dateStart: '2022-12-02',
+                        status: 'reserved',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-02-03',
+                        dateStart: '2022-02-04',
+                        status: 'returned',
+                        returnDateTime: '2022-04-10T09:58:48.881Z',
+                    },
+                ],
+            };
 
-        expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
-    });
+            const expectedResult = {
+                borrowedBySub: '22222-22222-22222-22222-22222',
+                dateEnd: '2022-02-04',
+                dateStart: '2022-02-05',
+                status: 'returned',
+                returnDateTime: '2022-05-17T09:58:48.881Z',
+            };
 
-    it('return undefined if empty', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-21',
-            allowedDateEnd: '2022-02-28',
-            calendarEvents: [],
-        };
+            expect(getLastReturnedCalendarEvent(adCalendar)).toEqual(
+                expectedResult,
+            );
+        });
 
-        expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
-    });
+        it('return undefined if no object found with returned date time', () => {
+            const adCalendar = {
+                allowedDateStart: '2022-02-02',
+                allowedDateEnd: '2022-02-06',
+                calendarEvents: [
+                    {
+                        borrowedBySub: '22222-22222-22222-22222-22222',
+                        dateEnd: '2022-02-04',
+                        dateStart: '2022-02-05',
+                        status: 'reserved',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-12-01',
+                        dateStart: '2022-12-02',
+                        status: 'reserved',
+                    },
+                    {
+                        borrowedBySub: '11111-11111-11111-11111-11111',
+                        dateEnd: '2022-02-03',
+                        dateStart: '2022-02-04',
+                        status: 'reserved',
+                    },
+                ],
+            };
 
-    it('one event', () => {
-        const adCalendar = {
-            allowedDateStart: '2022-02-21',
-            calendarEvents: [
-                {
-                    borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
-                    dateEnd: '2022-02-22',
-                    dateStart: '2022-02-21',
-                    status: 'reserved',
-                },
-            ],
-            allowedDateEnd: '2022-02-28',
-        };
+            expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+        });
 
-        expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+        it('return undefined if empty', () => {
+            const adCalendar = {
+                allowedDateStart: '2022-02-21',
+                allowedDateEnd: '2022-02-28',
+                calendarEvents: [],
+            };
+
+            expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+        });
+
+        it('one event', () => {
+            const adCalendar = {
+                allowedDateStart: '2022-02-21',
+                calendarEvents: [
+                    {
+                        borrowedBySub: '8409a340-a3a8-4aff-a6c4-55ae026d16a8',
+                        dateEnd: '2022-02-22',
+                        dateStart: '2022-02-21',
+                        status: 'reserved',
+                    },
+                ],
+                allowedDateEnd: '2022-02-28',
+            };
+
+            expect(getLastReturnedCalendarEvent(adCalendar)).toBeUndefined();
+        });
     });
 });

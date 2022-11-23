@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { MdNewReleases, MdSearch, MdTune, MdPhotoCamera } from 'react-icons/md';
 import { AuthState } from '@aws-amplify/ui-components';
+import { useReactPWAInstall } from 'react-pwa-install';
 import { ItemStatus } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
 import { advertTypes } from '../static/advertMeta';
@@ -163,6 +164,8 @@ interface Item {
 }
 
 const Home: FC = () => {
+    const { isInstalled } = useReactPWAInstall();
+
     const [searchValue, setSearchValue] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
@@ -271,12 +274,12 @@ const Home: FC = () => {
 
             const isUpdateAvailable = await checkUpdateAvailable;
             if (isUpdateAvailable) {
-                showUpdateAvailableToaster();
+                showUpdateAvailableToaster(isInstalled());
             }
         };
 
         updateServiceWorker();
-    }, []);
+    }, [isInstalled]);
 
     const filterOptions = [...advertTypes];
 

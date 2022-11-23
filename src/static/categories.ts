@@ -5,7 +5,7 @@ export interface Category {
 }
 
 const sortCategories = (unsortedCategories: Category[]) => {
-    const sortedCategories = unsortedCategories.sort((a, b) => {
+    return unsortedCategories.sort((a, b) => {
         if (a.title < b.title) {
             return -1;
         }
@@ -14,8 +14,6 @@ const sortCategories = (unsortedCategories: Category[]) => {
         }
         return 0;
     });
-
-    return sortedCategories;
 };
 
 export const borrowCategories = sortCategories([

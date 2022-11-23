@@ -9,7 +9,8 @@ import { createAdvert, updateAdvert } from '../graphql/mutations';
 import UserContext from '../contexts/UserContext';
 import PickUpModal from './ItemDetails/PickUpModal';
 import { useModal } from './Modal';
-import { Advert } from '../graphql/models';
+import { Advert, ItemAdvertType } from '../graphql/models';
+import { getRecycleInventory } from '../utils';
 
 interface Props {
     imageKey: string;
@@ -150,6 +151,10 @@ const Card: FC<Props> = ({
     const [itemUpdated, setItemUpdated] = useState(false);
     const [isPickUpModalVisible, togglePickUpModal] = useModal();
     const historyItem = filteredItem;
+    const currentInventory =
+        filteredItem.advertType === ItemAdvertType.recycle
+            ? getRecycleInventory(filteredItem)
+            : filteredItem.quantity ?? 1;
     const fetchImage = (): void => {
         Storage.get(imageKey).then((imageUrl: unknown | string) => {
             if (typeof imageUrl === 'string') {
@@ -264,7 +269,9 @@ const Card: FC<Props> = ({
                     )}
 
                     <h3>{filteredItem.title}</h3>
-                    <SubTitle>{filteredItem.quantity} stycken</SubTitle>
+                    <SubTitle>
+                        {currentInventory} {filteredItem.quantityUnit}
+                    </SubTitle>
                     <p className="desc">{filteredItem.description}</p>
                     {filteredItem.advertType === 'recycle' &&
                         filteredItem.status === 'reserved' &&

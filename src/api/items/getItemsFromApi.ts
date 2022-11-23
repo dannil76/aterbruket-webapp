@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API } from 'aws-amplify';
 import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
 import { Advert, ItemStatus, SearchAdvertsQuery } from '../../graphql/models';
@@ -49,47 +50,50 @@ export default async function getItemsFromApi(
         filter.advertType = { eq: 'recycle' };
     }
 
-    if (searchValue) {
-        filter.title = { wildcard: `*${searchValue}*` };
-    }
-
     const newList = [...currentItems];
     let first = newList.length === 0;
-    while ((currentItems.length <= pageStartIndex && fetchToken) || first) {
+    const query = {
+        filter,
+        sort,
+        limit: itemsToShow,
+    } as any;
+
+    if (searchValue) {
+        query.multi_match = {
+            query: searchValue,
+            fields: ['title^4', 'category', 'description', 'aterbruketId'],
+            minimum_should_match: 1,
+            operator: 'or',
+            slop: 3,
+        };
+    }
+
+    while ((newList.length <= pageStartIndex && fetchToken) || first) {
         if (fetchToken) {
-            // eslint-disable-next-line no-await-in-loop
-            result = (await API.graphql(
-                graphqlOperation(searchAdverts, {
-                    filter,
-                    sort,
-                    limit: itemsToShow,
-                    nextToken: fetchToken,
-                }),
-            )) as GraphQLResult<SearchAdvertsQuery>;
-        } else {
-            // eslint-disable-next-line no-await-in-loop
-            result = (await API.graphql(
-                graphqlOperation(searchAdverts, {
-                    filter,
-                    sort,
-                    limit: itemsToShow,
-                }),
-            )) as GraphQLResult<SearchAdvertsQuery>;
+            query.nextToken = fetchToken;
         }
 
-        first = false;
-        const searchResult =
-            result?.data?.searchAdverts?.items ?? ([] as Advert[]);
+        // eslint-disable-next-line no-await-in-loop
+        result = (await API.graphql(
+            graphqlOperation(searchAdverts, query),
+        )) as GraphQLResult<SearchAdvertsQuery>;
 
-        const foundItems = searchResult.filter(
-            (item) => item !== null,
-        ) as Advert[];
+        first = false;
+        const searchResult = result?.data?.searchAdverts
+            ?.items as (Advert | null)[];
+
+        const foundItems = searchResult.filter((item) => item) as Advert[];
 
         newList.push(...foundItems);
         fetchToken = result?.data?.searchAdverts?.nextToken ?? undefined;
     }
 
-    const advertTotal = result?.data?.searchAdverts?.total ?? 0;
+    // Amplify total shows items before filtering on search value.
+    // Use newlist length if it's less than page size and uses opensearch matching
+    const advertTotal =
+        searchValue && newList.length <= itemsToShow
+            ? newList.length
+            : result?.data?.searchAdverts?.total ?? 0;
     setPagination({
         amountToShow: itemsToShow,
         itemLength: advertTotal,

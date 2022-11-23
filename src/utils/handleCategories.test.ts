@@ -12,4 +12,10 @@ describe('Categories helpers', () => {
             category,
         );
     });
+
+    test('return category by title', () => {
+        expect(
+            handleCategories.getCategoryByKey('Soffor och Bänkar'),
+        ).toMatchObject(category);
+    });
 });

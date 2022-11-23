@@ -1,32 +1,44 @@
 import { isMobile } from 'react-device-detect';
 import { User } from '../contexts/UserContext';
-import { IAdvert, IReservation } from '../interfaces/IAdvert';
 import { administrations } from '../static/advertMeta';
-import { AdministrationInput } from '../graphql/models';
+import {
+    AdministrationInput,
+    Advert,
+    BorrowStatus,
+    CalendarEvent,
+    ItemAdvertType,
+    ItemStatus,
+} from '../graphql/models';
 
 export const getActiveReservation = (
-    item: IAdvert,
+    item: Advert | undefined,
     userSub: string,
-): IReservation | null => {
+): CalendarEvent | null => {
+    if (!item) {
+        return null;
+    }
+
     const allReservations = item?.advertBorrowCalendar?.calendarEvents
         ? item.advertBorrowCalendar.calendarEvents
         : [];
 
-    const userReservations = allReservations?.filter(
-        (reservation: IReservation) => {
-            return reservation.borrowedBySub === userSub;
-        },
-    );
+    const userReservations = allReservations?.filter((reservation) => {
+        return (
+            reservation.borrowedBySub === userSub &&
+            reservation.status !== BorrowStatus.cancelled &&
+            reservation.status !== BorrowStatus.returned
+        );
+    });
 
     if (userReservations?.length === 0) {
         return null;
     }
 
-    const mostRecentReservation = userReservations?.reduce(
-        (prev: IReservation, current: IReservation) => {
-            return prev.dateStart > current.dateStart ? prev : current;
-        },
-    );
+    const mostRecentReservation = userReservations?.reduce((prev, current) => {
+        const prevDateStart = new Date(prev.dateStart ?? 0);
+        const currDateStart = new Date(current.dateStart ?? 0);
+        return prevDateStart > currDateStart ? prev : current;
+    });
 
     if (mostRecentReservation.status === 'returned') {
         return null;
@@ -35,7 +47,7 @@ export const getActiveReservation = (
     return mostRecentReservation;
 };
 
-export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
+export const hasUserBorrowPermission = (user: User, advert: Advert) => {
     if (advert.accessRestriction !== 'selection') {
         return true;
     }
@@ -53,9 +65,41 @@ export const hasUserBorrowPermission = (user: User, advert: IAdvert) => {
     ];
 };
 
-export const getStatus = (item: IAdvert, user: User, date: Date): string => {
-    if (item.advertType === 'recycle') {
-        return item.status;
+export const getStatus = (
+    item: Advert | undefined,
+    user: User,
+    date: Date,
+): string => {
+    if (!item) {
+        return 'Retrieved undefined item';
+    }
+
+    if (item.advertType === ItemAdvertType.recycle) {
+        const reserved = item.advertPickUps?.some((pickUp) => {
+            return pickUp.reservedBySub === user.sub && !pickUp.pickedUp;
+        });
+
+        if (reserved) {
+            return ItemStatus.reserved;
+        }
+
+        const pickedUp = item.advertPickUps?.some((pickUp) => {
+            return pickUp.reservedBySub === user.sub && pickUp.pickedUp;
+        });
+
+        const quantityTaken =
+            item.advertPickUps?.reduce(
+                (partial, pickUp) => partial + pickUp.quantity,
+                0,
+            ) ?? 0;
+
+        // If everything is taken
+        if (pickedUp && (item.quantity ?? 1) <= quantityTaken) {
+            return ItemStatus.pickedUp;
+        }
+
+        // If there is still some items left
+        return ItemStatus.available;
     }
 
     const statuses = {
@@ -75,26 +119,29 @@ export const getStatus = (item: IAdvert, user: User, date: Date): string => {
         ? item.advertBorrowCalendar.calendarEvents
         : [];
 
-    const userReservations = allReservations?.filter(
-        (reservation: IReservation) => {
-            return reservation.borrowedBySub === user.sub;
-        },
-    );
+    const userReservations = allReservations?.filter((reservation) => {
+        return (
+            reservation.borrowedBySub === user.sub &&
+            reservation.status !== BorrowStatus.cancelled &&
+            reservation.status !== BorrowStatus.returned
+        );
+    });
 
     if (userReservations?.length === 0) {
         return statuses.available;
     }
 
-    const mostRecentReservation = userReservations?.reduce(
-        (prev: IReservation, current: IReservation) => {
-            return prev.dateStart > current.dateStart ? prev : current;
-        },
-    );
+    const mostRecentReservation = userReservations?.reduce((prev, current) => {
+        return new Date(prev.dateStart ?? 0).getTime() >
+            new Date(current.dateStart ?? 0).getTime()
+            ? prev
+            : current;
+    });
 
     if (mostRecentReservation?.status === statuses.reserved) {
         if (
-            date >= new Date(mostRecentReservation.dateStart) &&
-            date <= new Date(mostRecentReservation.dateEnd)
+            date >= new Date(mostRecentReservation.dateStart ?? 0) &&
+            date <= new Date(mostRecentReservation.dateEnd ?? '2100-01-01')
         ) {
             return statuses.pickUpAllowed;
         }

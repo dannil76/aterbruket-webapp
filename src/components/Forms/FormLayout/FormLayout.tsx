@@ -25,7 +25,11 @@ import {
     MultipleChoiceContainer,
 } from './styled';
 
-const Label: React.FC<LabelProps> = ({ required, children, ...props }) => {
+export const Label: React.FC<LabelProps> = ({
+    required,
+    children,
+    ...props
+}) => {
     return (
         <LabelWrapper {...props}>
             {children}
@@ -137,7 +141,7 @@ export default function FormLayout(props: {
         if (field.fieldType === 'select') {
             const data = field.options ? field.options : [];
             return (
-                <FieldSection key={field.name}>
+                <FieldSection key={field.name} inlineLabel={inlineLabel}>
                     <Label htmlFor={field.name} required={required}>
                         {field.title}
                     </Label>

@@ -20,7 +20,6 @@
   "accessRestriction": "none",
   "borrowDifficultyLevel": "",
   "color": "Blå",
-  "__typename": "Advert",
   "phoneNumber": "0701010191",
   "quantity": 1,
   "department": "Digitaliseringsavd - Verksamhetslösningar - Digital utvecklin",
@@ -48,13 +47,5 @@
   ],
   "description": "En kort text om prylen som gör den intressant att haffa. Detaljerad information om mått, färg mm lämnar du i nästa steg.",
   "revisions": 5,
-  "material": [
-    {
-      "metal": false,
-      "plastic": false,
-      "other": true,
-      "wood": true
-    }
-  ],
   "title": "Tavla"
 }

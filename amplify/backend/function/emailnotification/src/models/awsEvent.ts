@@ -1,4 +1,10 @@
-import { AdvertStatus, BorrowStatus, EventType, AdvertType } from './enums';
+import {
+    AdvertStatus,
+    BorrowStatus,
+    EventType,
+    AdvertType,
+    QuantityUnit,
+} from './enums';
 
 export interface NumberRecord {
     N: string;
@@ -24,6 +30,10 @@ export interface ModelRecord<T> {
     M: T;
 }
 
+export interface BooleanRecord {
+    B: boolean | undefined;
+}
+
 export interface ListRecord<T> {
     L: T[];
 }
@@ -46,12 +56,20 @@ export interface AdvertBorrowCalendarEvent {
     dateStart: DateRecord;
     returnDateTime: DateRecord;
     status: EnumRecord<BorrowStatus>;
+    quantity: NumberRecord;
 }
 
 export interface AdvertBorrowCalendar {
     allowedDateEnd: DateRecord | null;
     allowedDateStart: DateRecord | null;
     calendarEvents: ListRecord<ModelRecord<AdvertBorrowCalendarEvent>>;
+}
+
+export interface AdvertPickUp {
+    reservedBySub: StringRecord;
+    quantity: NumberRecord;
+    reservationDate: StringRecord;
+    pickedUp: BooleanRecord | undefined | null;
 }
 
 export interface Advert {
@@ -68,9 +86,12 @@ export interface Advert {
     city: StringRecord;
     missingAccessories: ListRecord<ModelRecord<MissingAccessory>>;
     advertBorrowCalendar: ModelRecord<AdvertBorrowCalendar>;
+    advertPickUps: ListRecord<ModelRecord<AdvertPickUp>>;
     reservedBySub: StringRecord;
     version: NumberRecord;
     updatedAt: DateRecord;
+    quantity: NumberRecord;
+    quantityUnit: EnumRecord<QuantityUnit>;
 }
 
 export interface DynamoDBEvent {

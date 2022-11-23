@@ -1,7 +1,7 @@
 export interface HaffaUser {
     username: string;
     userId: string;
-    name: string;
+    name: string | null | undefined;
     email: string;
     email_verified: string;
     address: string;

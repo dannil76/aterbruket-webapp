@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { IAdvert } from '../../../interfaces/IAdvert';
+import { Advert } from '../../../graphql/models';
 import { Card, SubTitle, AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: IAdvert;
+    advert: Advert | undefined;
 }
 
-const DifficultyIcon = styled.span<{ level?: string }>`
+const DifficultyIcon = styled.span<{ level?: string | null | undefined }>`
     width: 12px;
     height: 12px;
     border-radius: 50%;
@@ -27,6 +27,10 @@ const DifficultyIcon = styled.span<{ level?: string }>`
 `;
 
 const DefaultContent: FC<Props> = ({ advert }) => {
+    if (!advert) {
+        return <></>;
+    }
+
     return (
         <>
             <section>

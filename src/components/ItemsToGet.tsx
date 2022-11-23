@@ -8,20 +8,14 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { SearchAdvertsQuery } from '../graphql/models';
+import { Advert, BorrowStatus, SearchAdvertsQuery } from '../graphql/models';
 import UserContext from '../contexts/UserContext';
 import { searchAdverts } from '../graphql/queries';
-import { ICalendarDataEvent } from '../interfaces/IDateRange';
-import { IAdvert } from '../interfaces/IAdvert';
 import { PaginationOptions } from '../models/pagination';
 
 interface IListAdvertsFilter {
     not?: { status: { eq: string } };
-    and: (
-        | { reservedBySub: { eq: string | undefined } }
-        | { version: { eq: number } }
-        | { advertType: { eq: string } }
-    )[];
+    and: ({ version: { eq: number } } | { advertType: { eq: string } })[];
 }
 
 const AdvertContainer = React.lazy(() => import('./AdvertContainer'));
@@ -29,7 +23,7 @@ const Pagination = React.lazy(() => import('./Pagination'));
 
 const ItemsToGet: FC = () => {
     const { user } = useContext(UserContext);
-    const [reservedItems, setReservedItems] = useState([]) as any;
+    const [reservedItems, setReservedItems] = useState([] as Advert[]);
     const [activePage, setActivePage] = useState(1);
 
     const [paginationOption, setPaginationOption] = useState({
@@ -37,7 +31,7 @@ const ItemsToGet: FC = () => {
         amountToShow: 30,
         itemLength: 14, // Will change after the fetch
     } as PaginationOptions);
-    const [renderItems, setRenderItems] = useState([]) as any;
+    const [renderItems, setRenderItems] = useState([] as Advert[]);
 
     const handlePages = (updatePage: number) => {
         setActivePage(updatePage);
@@ -52,24 +46,47 @@ const ItemsToGet: FC = () => {
 
     const fetchListAdverts = async (
         searchAdvertsFilter: IListAdvertsFilter,
-    ): Promise<GraphQLResult<SearchAdvertsQuery>> => {
-        return (await API.graphql(
+    ): Promise<(Advert | null)[]> => {
+        const result = (await API.graphql(
             graphqlOperation(searchAdverts, {
                 filter: searchAdvertsFilter,
                 sort: { direction: 'desc', field: 'createdAt' },
             }),
         )) as GraphQLResult<SearchAdvertsQuery>;
+
+        if (!result.data?.searchAdverts?.nextToken) {
+            return result.data?.searchAdverts?.items ?? [];
+        }
+
+        const resultList = result.data?.searchAdverts?.items ?? [];
+        let token = result.data?.searchAdverts?.nextToken as
+            | string
+            | null
+            | undefined;
+        while (token) {
+            // eslint-disable-next-line no-await-in-loop
+            const nextResult = (await API.graphql(
+                graphqlOperation(searchAdverts, {
+                    filter: searchAdvertsFilter,
+                    sort: { direction: 'desc', field: 'createdAt' },
+                    nextToken: token,
+                }),
+            )) as GraphQLResult<SearchAdvertsQuery>;
+
+            token = nextResult.data?.searchAdverts?.nextToken;
+            const newList = nextResult.data?.searchAdverts?.items ?? [];
+            resultList.push(...newList);
+        }
+
+        return resultList;
     };
 
-    const storeFetchResult = (itemsToStore: [IAdvert]) => {
-        setReservedItems((currentReservedItems: [IAdvert]) => [
-            ...currentReservedItems,
-            ...itemsToStore,
-        ]);
+    const storeFetchResult = (itemsToStore: Advert[]) => {
+        setReservedItems(itemsToStore);
     };
 
     const filterBorrowedItems = (
-        advertBorrowedItems: any,
+        advertBorrowedItems: Advert[],
         filterUserSub: undefined | string,
         statusFilter: string[],
     ) => {
@@ -77,41 +94,68 @@ const ItemsToGet: FC = () => {
             return [];
         }
 
-        return advertBorrowedItems.filter((borrowedItem: IAdvert) => {
-            const foundElem =
-                borrowedItem?.advertBorrowCalendar?.calendarEvents.find(
-                    (event: ICalendarDataEvent) => {
-                        return (
-                            event.borrowedBySub === filterUserSub &&
-                            statusFilter.includes(event.status)
-                        );
-                    },
-                );
+        return advertBorrowedItems.filter((borrowedItem) => {
+            return borrowedItem?.advertBorrowCalendar?.calendarEvents?.some(
+                (event) => {
+                    return (
+                        borrowedItem.version === 0 &&
+                        event.borrowedBySub === user.sub &&
+                        statusFilter.some((status) => status === event.status)
+                    );
+                },
+            );
+        });
+    };
 
-            return foundElem && borrowedItem;
+    const filterReservedItems = (
+        advertReservedItems: Advert[],
+        filterUserSub: undefined | string,
+    ) => {
+        if (typeof filterUserSub === 'undefined') {
+            return [];
+        }
+
+        return advertReservedItems.filter((item) => {
+            return item?.advertPickUps?.some((event) => {
+                return event.reservedBySub === filterUserSub && !event.pickedUp;
+            });
         });
     };
 
     const fetchAllReservations = useCallback(async () => {
         const borrowedAdsFilter = {
-            and: [{ advertType: { eq: 'borrow' } }, { version: { eq: 0 } }],
+            and: [
+                {
+                    advertType: { eq: 'borrow' },
+                    version: { eq: 0 },
+                    status: { ne: 'pickedUp' },
+                },
+            ],
         };
         const reservedAdsFilter = {
-            and: [{ reservedBySub: { eq: user.sub } }, { version: { eq: 0 } }],
-            not: { status: { eq: 'available' } },
+            and: [
+                {
+                    version: { eq: 0 },
+                    advertType: { eq: 'recycle' },
+                    status: { ne: 'pickedUp' },
+                },
+            ],
         };
 
         const borrowedAds = await fetchListAdverts(borrowedAdsFilter);
-        const borrowedAdsItems: any = borrowedAds.data?.searchAdverts?.items;
+        const borrowedAdsItems =
+            (borrowedAds.filter((item) => item) as Advert[] | undefined) ?? [];
         const foundResult = filterBorrowedItems(borrowedAdsItems, user.sub, [
-            'reserved',
-            'pickedUp',
+            BorrowStatus.reserved,
+            BorrowStatus.pickedUp,
         ]);
-        storeFetchResult(foundResult);
 
         const reservedAds = await fetchListAdverts(reservedAdsFilter);
-        const reservedAdsItems: any = reservedAds.data?.searchAdverts?.items;
-        storeFetchResult(reservedAdsItems);
+        const reservedAdsItems =
+            (reservedAds.filter((item) => item) as Advert[] | undefined) ?? [];
+        const filtered = filterReservedItems(reservedAdsItems, user.sub);
+
+        storeFetchResult(foundResult.concat(filtered));
     }, [user.sub]);
 
     useEffect(() => {
@@ -134,24 +178,30 @@ const ItemsToGet: FC = () => {
     }, [reservedItems]);
 
     const listReservedItems = () => {
-        const haffaItems = renderItems.filter((renderItem: IAdvert) => {
-            return renderItem.status === 'reserved';
+        const haffaItems = renderItems.filter((renderItem: Advert) => {
+            return renderItem.advertPickUps?.some(
+                (pickUp) =>
+                    !pickUp.pickedUp && pickUp.reservedBySub === user.sub,
+            );
         });
 
         const borrowItems = filterBorrowedItems(renderItems, user.sub, [
-            'reserved',
+            BorrowStatus.reserved,
         ]);
 
         return [...haffaItems, ...borrowItems];
     };
 
     const listPickedUpItems = () => {
-        const haffaItems = renderItems.filter((renderItem: IAdvert) => {
-            return renderItem.status === 'pickedUp';
+        const haffaItems = renderItems.filter((renderItem: Advert) => {
+            return renderItem.advertPickUps?.some(
+                (pickUp) =>
+                    pickUp.pickedUp && pickUp.reservedBySub === user.sub,
+            );
         });
 
         const borrowItems = filterBorrowedItems(renderItems, user.sub, [
-            'pickedUp',
+            BorrowStatus.pickedUp,
         ]);
 
         return [...haffaItems, ...borrowItems];

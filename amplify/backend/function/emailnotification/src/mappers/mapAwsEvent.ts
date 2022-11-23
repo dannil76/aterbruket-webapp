@@ -1,8 +1,10 @@
 import {
+    QuantityUnit,
     Advert,
     AdvertBorrowCalendar,
     AdvertBorrowCalendarEvent,
-} from 'models/haffaAdvert';
+    AdvertPickUp,
+} from '../models';
 import {
     Advert as AwsAdvert,
     MissingAccessory,
@@ -10,6 +12,7 @@ import {
     StringRecord,
 } from '../models/awsEvent';
 import {
+    getBoolean,
     getDate,
     getEnum,
     getList,
@@ -52,6 +55,29 @@ export default function mapAwsEvent(
         });
     }
 
+    let advertPickUps = [];
+    if (event.advertPickUps) {
+        const pickUps = getList(event.advertPickUps, 'advertPickUpList');
+        advertPickUps = pickUps
+            .map((pickUp) => {
+                return getModel(pickUp, 'advertPickup');
+            })
+            .map((pickUp) => {
+                return {
+                    pickedUp: getBoolean(pickUp.pickedUp, 'pickedUp'),
+                    quantity: getNumber(pickUp.quantity, 'pickUpQuantity'),
+                    reservationDate: getDate(
+                        pickUp.reservationDate,
+                        'pickUpReservationDate',
+                    ),
+                    reservedBySub: getString(
+                        pickUp.reservedBySub,
+                        'pickUpReservedBySub',
+                    ),
+                } as AdvertPickUp;
+            });
+    }
+
     let advertBorrowCalendar = undefined as AdvertBorrowCalendar;
     if (event.advertBorrowCalendar) {
         const calendar = getModel(
@@ -87,7 +113,10 @@ export default function mapAwsEvent(
                 const returnDateTime = calendarEvent.returnDateTime
                     ? getDate(calendarEvent.returnDateTime, 'returnDateTime')
                     : null;
-
+                const quantity = getNumber(
+                    calendarEvent.quantity,
+                    'eventQuantity',
+                );
                 const status = getEnum(calendarEvent.status, 'borrowStatus');
 
                 return {
@@ -96,6 +125,7 @@ export default function mapAwsEvent(
                     dateEnd,
                     returnDateTime,
                     status,
+                    quantity,
                 } as AdvertBorrowCalendarEvent;
             }),
         };
@@ -120,5 +150,9 @@ export default function mapAwsEvent(
         updatedAt: getDate(event.updatedAt, 'updatedAt'),
         missingAccessories,
         advertBorrowCalendar,
+        advertPickUps,
+        quantity: getNumber(event.quantity, 'quantity'),
+        quantityUnit:
+            getEnum(event.quantityUnit, 'quantityUnit') ?? QuantityUnit.st,
     } as Advert;
 }

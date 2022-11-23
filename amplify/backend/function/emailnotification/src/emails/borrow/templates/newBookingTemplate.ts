@@ -7,7 +7,13 @@ export default function notifyAboutNewReservationEmail(
     fromDate: string,
     toDate: string,
     reservationEmail: string,
+    quantity: number,
+    quantityUnit: string,
+    totalQuantity: number,
 ): string {
+    const quantityText =
+        totalQuantity > 1 ? `Antal: ${quantity}${quantityUnit}<br>` : '';
+
     return `
   <html>
   <body>
@@ -15,7 +21,7 @@ export default function notifyAboutNewReservationEmail(
   <br>
   En kollega vill låna <a href="${link}">${title}</a>.</p>
   
-  <p>Utlåningsperiod: ${fromDate} - ${toDate}<br>
+  <p>Utlåningsperiod: ${fromDate} - ${toDate}<br>${quantityText}
   Bokad av: ${reservationPerson}<br>
   Förvaltning: ${department ?? ''} <br>
   Mejl: ${reservationEmail} <br>

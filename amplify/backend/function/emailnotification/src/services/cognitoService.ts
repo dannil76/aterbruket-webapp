@@ -1,4 +1,5 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
+import { validEmail } from '../utils';
 import { HaffaUser } from '../models/haffaUser';
 import { Hash } from '../models/hash';
 
@@ -30,10 +31,20 @@ export default class CognitoService {
             attributeHash[attribute.Name] = attribute.Value ?? '';
         });
 
+        let { email } = attributeHash;
+
+        if (!validEmail(email)) {
+            email = user.Username;
+        }
+
+        if (!validEmail(email)) {
+            email = undefined;
+        }
+
         return {
             username: user.Username,
             name: attributeHash.name,
-            email: attributeHash.email,
+            email,
             email_verified: attributeHash.email_verified,
             address: attributeHash.address,
             'custom:postalcode': attributeHash['custom:postalcode'],

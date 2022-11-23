@@ -1,5 +1,5 @@
 import { SES } from 'aws-sdk';
-import { Advert } from '../../models/haffaAdvert';
+import { Advert, AdvertPickUp } from '../../models/haffaAdvert';
 import {
     formatDateTime,
     getHaffaFirstName,
@@ -16,16 +16,24 @@ const config = new Config();
 
 export default async function sendPickedUpEmail(
     newItem: Advert,
+    changedReservation: AdvertPickUp,
 ): Promise<boolean> {
     logDebug(`[sendPickedUpEmail] Start sendPickedUpEmail.`);
 
-    // Borrowed items get user from event, recycle items get user directly from item
-    const { reservedBySub } = newItem;
+    if (!changedReservation.pickedUp) {
+        logDebug(
+            `[sendPickedUpEmail] reservation is not picked up. Don't send picked up e-mail. ID: ${newItem.id}`,
+        );
+
+        return true;
+    }
 
     const { title, contactPerson, id, email, updatedAt } = newItem;
 
     try {
-        const haffaUser = await getReservedByUser(reservedBySub);
+        const haffaUser = await getReservedByUser(
+            changedReservation.reservedBySub,
+        );
 
         const date = formatDateTime(updatedAt);
         const body = pickedUpTemplate(
@@ -36,6 +44,9 @@ export default async function sendPickedUpEmail(
             haffaUser ? haffaUser['custom:department'] ?? '' : '',
             date,
             haffaUser?.email,
+            changedReservation.quantity,
+            newItem.quantityUnit,
+            newItem.quantity,
         );
 
         logDebug(

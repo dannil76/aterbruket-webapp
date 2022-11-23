@@ -1,20 +1,25 @@
 import React, { FC } from 'react';
-import { IAdvert } from '../../../interfaces/IAdvert';
 import showDays from '../../../hooks/showDays';
 import { conditions, materials, areaOfUse } from '../../../static/advertMeta';
 import { IOption } from '../../../interfaces/IForm';
 import {
+    Advert,
     ItemAMaterialInput,
     ItemAreaOfUseInput,
 } from '../../../graphql/models';
 import { AddressCard, ContactCard } from '../Common';
 
 interface Props {
-    advert: IAdvert;
+    advert: Advert | undefined;
+    remainingInventory: number;
     status: string;
 }
 
-const DefaultContent: FC<Props> = ({ advert, status }) => {
+const DefaultContent: FC<Props> = ({ advert, remainingInventory, status }) => {
+    if (!advert) {
+        return <></>;
+    }
+
     const getMetaValues = (
         itemValues: ItemAMaterialInput | ItemAreaOfUseInput,
         allValues: IOption[],
@@ -42,6 +47,9 @@ const DefaultContent: FC<Props> = ({ advert, status }) => {
         : [];
     const areaOfUseString = itemAreaOfUseArray.join(', ');
 
+    const remaining =
+        remainingInventory === 0 ? 'okänt' : `${remainingInventory}`;
+
     return (
         <>
             <section>
@@ -59,6 +67,14 @@ const DefaultContent: FC<Props> = ({ advert, status }) => {
                             <td>Återbruk</td>
                         </tr>
 
+                        <tr>
+                            <td>
+                                <h4>Lagersaldo</h4>
+                            </td>
+                            <td>
+                                {remaining} <span>{advert.quantityUnit}</span>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <h4>Höjd</h4>
