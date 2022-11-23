@@ -11,10 +11,11 @@ import { AddressCard, ContactCard } from '../Common';
 
 interface Props {
     advert: Advert | undefined;
+    remainingInventory: number;
     status: string;
 }
 
-const DefaultContent: FC<Props> = ({ advert, status }) => {
+const DefaultContent: FC<Props> = ({ advert, remainingInventory, status }) => {
     if (!advert) {
         return <></>;
     }
@@ -46,6 +47,9 @@ const DefaultContent: FC<Props> = ({ advert, status }) => {
         : [];
     const areaOfUseString = itemAreaOfUseArray.join(', ');
 
+    const remaining =
+        remainingInventory === 0 ? 'okänt' : `${remainingInventory}`;
+
     return (
         <>
             <section>
@@ -68,8 +72,7 @@ const DefaultContent: FC<Props> = ({ advert, status }) => {
                                 <h4>Lagersaldo</h4>
                             </td>
                             <td>
-                                {advert.quantity}{' '}
-                                <span>{advert.quantityUnit}</span>
+                                {remaining} <span>{advert.quantityUnit}</span>
                             </td>
                         </tr>
                         <tr>

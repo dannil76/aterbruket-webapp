@@ -60,6 +60,7 @@ import {
     returnItem,
 } from '../api';
 import { AdvertAccessory } from '../models/accessory';
+import { getRecycleInventory } from '../utils';
 
 const CarouselComp = React.lazy(() => import('../components/CarouselComp'));
 const EditItemForm = React.lazy(
@@ -135,6 +136,17 @@ const ItemDetails: FC<ParamTypes> = () => {
     const [isRecycleType, setIsRecycleType] = useState(false);
     const [isBorrowType, setIsBorrowType] = useState(false);
     const [isReturnModalVisible, toggleReturnModal] = useModal();
+    const [requestedQuantity, setRequestedQuantity] = useState(0);
+    const [recycleInventory, setRecycleInventory] = useState(0);
+    const [reservationDateRange, setReservationDateRange] = useState<{
+        startDate: string | null;
+        endDate: string | null;
+        bookingType: string;
+    }>({
+        startDate: null,
+        endDate: null,
+        bookingType: '',
+    });
 
     const itemCategory = getCategoryByKey(item?.category);
 
@@ -165,6 +177,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         setItem(advertItem);
         setIsRecycleType(advertItem.advertType === ItemAdvertType.recycle);
         setIsBorrowType(advertItem.advertType === ItemAdvertType.borrow);
+        setRecycleInventory(getRecycleInventory(advertItem));
     };
 
     const closeEditformAndFetchItem = async () => {
@@ -240,16 +253,6 @@ const ItemDetails: FC<ParamTypes> = () => {
         };
     });
 
-    const [reservationDateRange, setReservationDateRange] = useState<{
-        startDate: string | null;
-        endDate: string | null;
-        bookingType: string;
-    }>({
-        startDate: null,
-        endDate: null,
-        bookingType: '',
-    });
-
     const callApi = async (
         call: Promise<string | undefined>,
     ): Promise<string | undefined> => {
@@ -263,8 +266,9 @@ const ItemDetails: FC<ParamTypes> = () => {
     };
 
     // RECYCLE
-    const onClickReservBtn = async () => {
-        return callApi(reserveAdvert(item, user, 1, setItemUpdated));
+    const onClickReserveBtn = async () => {
+        const requested = item?.quantity === 1 ? 1 : requestedQuantity;
+        return callApi(reserveAdvert(item, user, requested, setItemUpdated));
     };
 
     const onClickUnreserveBtn = () => {
@@ -283,7 +287,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                 user,
                 reservationDateRange.startDate,
                 reservationDateRange.endDate,
-                1,
+                requestedQuantity,
             ),
         );
     };
@@ -299,7 +303,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                 reservationDateRange.startDate,
                 reservationDateRange.endDate,
                 user,
-                1,
+                requestedQuantity,
             ),
         );
     };
@@ -326,6 +330,12 @@ const ItemDetails: FC<ParamTypes> = () => {
     const status = getStatus(item, user, new Date());
     const activeReservation = getActiveReservation(item, userSub);
 
+    const handleRequestedQuantity = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        setRequestedQuantity(Number.parseInt(event.target.value, 10));
+    };
+
     const handleReservationDateRange = (
         changeEvent: IDateRange,
         bookingType: string,
@@ -337,21 +347,54 @@ const ItemDetails: FC<ParamTypes> = () => {
     const components: IComponents = {
         recycle: {
             modal: {
+                available: (item && (
+                    <ReservationModal
+                        isVisible={isReservationModalVisible}
+                        toggleModal={toggleReservationModal}
+                        handleRequestedQuantity={handleRequestedQuantity}
+                        availableInventory={recycleInventory ?? 1}
+                        unitType={item.quantityUnit ?? 'st'}
+                        onFinish={() => {
+                            onClickReserveBtn().then((message) => {
+                                if (!message) {
+                                    toast('Snyggt! Prylen är nu haffad!');
+                                } else {
+                                    toast(
+                                        `Prylen kunde tyvärr inte reserveras. ${message}`,
+                                    );
+                                }
+                            });
+                        }}
+                    />
+                )) ?? <></>,
                 reserved: (item && (
                     <PickUpModal
                         advert={item}
                         isVisible={isPickUpModalVisible}
                         toggleModal={togglePickUpModal}
                         onFinish={() => {
-                            onClickPickUpBtn();
-                            toast('Snyggt! Prylen är nu haffad!');
+                            onClickPickUpBtn().then((message) => {
+                                if (!message) {
+                                    toast('Snyggt! Prylen är nu haffad!');
+                                } else {
+                                    toast(
+                                        `Prylen kunde tyvärr inte haffas. ${message}`,
+                                    );
+                                }
+                            });
                         }}
                     />
                 )) ?? <></>,
                 default: null,
             },
             content: {
-                default: <RecycleContent advert={item} status={status} />,
+                default: (
+                    <RecycleContent
+                        advert={item}
+                        status={status}
+                        remainingInventory={recycleInventory}
+                    />
+                ),
             },
             bottom: {
                 default: [
@@ -371,8 +414,10 @@ const ItemDetails: FC<ParamTypes> = () => {
                     <ReservationModal
                         isVisible={isReservationModalVisible}
                         toggleModal={toggleReservationModal}
+                        handleRequestedQuantity={handleRequestedQuantity}
+                        availableInventory={item?.quantity ?? 1}
+                        unitType={item?.quantityUnit ?? 'st'}
                         setDateRange={handleReservationDateRange}
-                        quantity={1}
                         onFinish={() => {
                             onClickAddBookingBtn().then((error) => {
                                 return !error
@@ -513,7 +558,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         <HeaderButton
                             size="sm"
                             onClick={() => {
-                                onClickReservBtn();
+                                onClickReserveBtn();
                             }}
                             type="button"
                         >
@@ -630,7 +675,11 @@ const ItemDetails: FC<ParamTypes> = () => {
                             setRefVisible(!!el);
                         }}
                         onClick={() => {
-                            onClickReservBtn();
+                            if (item?.quantity === 1) {
+                                onClickReserveBtn();
+                            } else {
+                                toggleReservationModal();
+                            }
                         }}
                         type="button"
                     >

@@ -20,6 +20,21 @@ export default async function ReserveAdvert(
     }
 
     const advertPickUps = mapPickUpsToInput(item.advertPickUps);
+
+    const alreadyReserved = advertPickUps.reduce((acc, current) => {
+        return acc + current.quantity;
+    }, 0);
+
+    if (
+        item.quantity &&
+        item.quantity > 0 &&
+        alreadyReserved + quantity > item.quantity
+    ) {
+        return `du försöker ta mer än det finns tillgängligt. 
+        Det finns ${item.quantity - alreadyReserved}${item.quantityUnit} kvar.
+        Du försökte hämta ${quantity}${item.quantityUnit}.`;
+    }
+
     advertPickUps.push({
         reservedBySub: user.sub,
         quantity,

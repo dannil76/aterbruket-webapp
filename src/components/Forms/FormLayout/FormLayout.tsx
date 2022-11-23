@@ -25,7 +25,11 @@ import {
     MultipleChoiceContainer,
 } from './styled';
 
-const Label: React.FC<LabelProps> = ({ required, children, ...props }) => {
+export const Label: React.FC<LabelProps> = ({
+    required,
+    children,
+    ...props
+}) => {
     return (
         <LabelWrapper {...props}>
             {children}

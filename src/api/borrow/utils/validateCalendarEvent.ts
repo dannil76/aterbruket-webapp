@@ -13,7 +13,7 @@ export default function validateCalendarEvent(
     }
 
     if (!newEvent.dateStart || !newEvent.dateEnd) {
-        return 'Datum ej valda, både start och slut datum behöver väljas.';
+        return 'Datum ej valda, både start- och slutdatum behöver väljas.';
     }
 
     if (

@@ -32,7 +32,7 @@ describe('validate calendar event', () => {
         );
 
         expect(actual).toBe(
-            'Datum ej valda, både start och slut datum behöver väljas.',
+            'Datum ej valda, både start- och slutdatum behöver väljas.',
         );
     });
 
@@ -50,7 +50,7 @@ describe('validate calendar event', () => {
         );
 
         expect(actual).toBe(
-            'Datum ej valda, både start och slut datum behöver väljas.',
+            'Datum ej valda, både start- och slutdatum behöver väljas.',
         );
     });
 
