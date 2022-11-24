@@ -36,9 +36,9 @@ export async function onModify(
 
     if (!changedReservation) {
         logWarning(
-            '[recycleEventHandler] reservation is undefined. Return false',
+            '[recycleEventHandler] reservation is undefined. Return true and skip email',
         );
-        return false;
+        return true;
     }
 
     logDebug(

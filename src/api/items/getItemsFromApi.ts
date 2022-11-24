@@ -6,6 +6,7 @@ import { HaffaFilter } from '../../models/filter';
 import { SortSelection } from '../../models/sort';
 import { searchAdverts } from '../../graphql/queries';
 import { PaginationOptions } from '../../models/pagination';
+import { allCategories, allCategoryTitles } from '../../static/categories';
 
 export default async function getItemsFromApi(
     activePage: number,
@@ -59,13 +60,35 @@ export default async function getItemsFromApi(
     } as any;
 
     if (searchValue) {
-        query.multi_match = {
-            query: searchValue,
-            fields: ['title^4', 'category', 'description', 'aterbruketId'],
-            minimum_should_match: 1,
-            operator: 'or',
-            slop: 3,
-        };
+        query.filter.or = [
+            {
+                title: {
+                    wildcard: `*${searchValue}*`,
+                },
+            },
+            {
+                description: {
+                    wildcard: `*${searchValue}* `,
+                },
+            },
+            {
+                aterbruketId: {
+                    match: `${searchValue}`,
+                },
+            },
+        ];
+
+        if (allCategoryTitles[searchValue.toLowerCase()]) {
+            const categoryKey = allCategories.find(
+                (cat) => cat.title.toLowerCase() === searchValue.toLowerCase(),
+            )?.key;
+
+            query.filter.or.push({
+                category: {
+                    match: categoryKey,
+                },
+            });
+        }
     }
 
     while ((newList.length <= pageStartIndex && fetchToken) || first) {
@@ -94,12 +117,18 @@ export default async function getItemsFromApi(
         searchValue && newList.length <= itemsToShow
             ? newList.length
             : result?.data?.searchAdverts?.total ?? 0;
-    setPagination({
+    const pagination = {
         amountToShow: itemsToShow,
         itemLength: advertTotal,
         totalPages: Math.ceil(advertTotal / itemsToShow),
-    });
+    };
+
+    console.log(JSON.stringify(pagination));
+
+    setPagination(pagination);
 
     setToken(fetchToken);
-    return newList.filter((item) => item !== null) as Advert[];
+    const filteredItems = newList.filter((item) => item !== null) as Advert[];
+    console.log(`filtered items ${filteredItems.length}`);
+    return filteredItems;
 }

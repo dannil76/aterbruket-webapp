@@ -68,26 +68,6 @@ const AdvertContainer: FC<IAdvert> = ({
     activeSorting,
     fetchReservedAdverts,
 }: IAdvert) => {
-    let filteredItems = [];
-    if (searchValue) {
-        filteredItems = items.filter((item: any) => {
-            return (
-                item.title
-                    .toLowerCase()
-                    .indexOf(searchValue.toLocaleLowerCase()) !== -1 ||
-                item.description
-                    .toLowerCase()
-                    .indexOf(searchValue.toLocaleLowerCase()) !== -1 ||
-                (item.aterbruketId &&
-                    item.aterbruketId
-                        .toLowerCase()
-                        .indexOf(searchValue.toLocaleLowerCase()) !== -1)
-            );
-        });
-    } else {
-        filteredItems = items;
-    }
-
     return (
         <AdvertContainerDiv>
             <Suspense fallback={<div>Loading...</div>}>
@@ -115,7 +95,7 @@ const AdvertContainer: FC<IAdvert> = ({
                             <OptionWrapper>
                                 {searchValue ? (
                                     <h3>
-                                        {`Sökning "${searchValue}" gav ${filteredItems.length} annonser`}
+                                        {`Sökning "${searchValue}" gav ${items.length} annonser`}
                                     </h3>
                                 ) : (
                                     <h3>Alla annonser</h3>
@@ -149,8 +129,8 @@ const AdvertContainer: FC<IAdvert> = ({
                     )}
                     {itemsFrom === 'myAdds' && <h3>Mina annonser</h3>}
                 </div>
-                {filteredItems &&
-                    filteredItems.map((filteredItem: any) => (
+                {items &&
+                    items.map((filteredItem: any) => (
                         <Card
                             key={filteredItem.id}
                             imageKey={filteredItem.images[0].src}

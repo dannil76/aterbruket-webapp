@@ -30,7 +30,7 @@
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-release-103017-deployment",
-          "s3Key": "amplify-builds/emailnotification-594d73384f39557a2f4e-build.zip",
+          "s3Key": "amplify-builds/emailnotification-2b582f6f3162394f4c76-build.zip",
           "sesAppUrl": "https://develop.d21bj89y0jdxx1.amplifyapp.com",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "sesRecycleRecipientEmail": "Niclas.Ranlind@helsingborg.se",
@@ -75,13 +75,13 @@
       "function": {
         "migrateADUser": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/migrateADUser-513958416a775974374e-build.zip",
+          "s3Key": "amplify-builds/migrateADUser-31346948323134427144-build.zip",
           "cognitoUserPoolId": "eu-west-1_9Qg6o7POD",
           "cognitoUserPoolClientId": "15rojv7pkqvagkakpm70ku7dlh"
         },
         "emailnotification": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/emailnotification-6d6b6852772b72694333-build.zip",
+          "s3Key": "amplify-builds/emailnotification-2b582f6f3162394f4c76-build.zip",
           "sesSenderEmail": "aterbruket.amf@helsingborg.se",
           "sesRecycleRecipientEmail": "Aterbruket.Haffa@helsingborg.se,Niclas.Ranlind@helsingborg.se,Tommy.Boije@helsingborg.se,Maria.Sjodin@helsingborg.se",
           "sesAppUrl": "https://main.d21bj89y0jdxx1.amplifyapp.com",
@@ -90,11 +90,11 @@
         },
         "addUserToGroup": {
           "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
-          "s3Key": "amplify-builds/addUserToGroup-2b6b766531724d636b4c-build.zip"
+          "s3Key": "amplify-builds/addUserToGroup-376169397959496e2b38-build.zip"
         },
         "scheduledNotifications": {
-          "deploymentBucketName": "amplify-aterbruketwebapp-prod-103017-deployment",
-          "s3Key": "amplify-builds/scheduledNotifications-30386e5a4c715a777757-build.zip",
+          "deploymentBucketName": "amplify-aterbruketwebapp-prod-143009-deployment",
+          "s3Key": "amplify-builds/scheduledNotifications-49444367454e76775550-build.zip",
           "reservationDaysUntilNotifications": "7",
           "reservationDaysUntilCancellation": "14",
           "sesSenderEmail": "Aterbruket.Haffa@helsingborg.se",
