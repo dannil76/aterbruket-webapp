@@ -63,12 +63,12 @@ export default async function getItemsFromApi(
         query.filter.or = [
             {
                 title: {
-                    wildcard: `*${searchValue}*`,
+                    matchPhrasePrefix: `${searchValue}`,
                 },
             },
             {
                 description: {
-                    wildcard: `*${searchValue}* `,
+                    matchPhrasePrefix: `${searchValue}`,
                 },
             },
             {
@@ -123,12 +123,9 @@ export default async function getItemsFromApi(
         totalPages: Math.ceil(advertTotal / itemsToShow),
     };
 
-    console.log(JSON.stringify(pagination));
-
     setPagination(pagination);
 
     setToken(fetchToken);
     const filteredItems = newList.filter((item) => item !== null) as Advert[];
-    console.log(`filtered items ${filteredItems.length}`);
     return filteredItems;
 }
