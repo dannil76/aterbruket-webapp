@@ -162,3 +162,10 @@ export const allCategories = sortCategories([
     ...borrowCategories,
     ...recycleCategories,
 ]);
+
+const categoryTitles = {} as { [key: string]: boolean };
+allCategories.forEach((cat) => {
+    categoryTitles[cat.title.toLowerCase()] = true;
+});
+
+export const allCategoryTitles = categoryTitles;

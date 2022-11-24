@@ -214,7 +214,7 @@ const Home: FC = () => {
 
     useEffect(() => {
         // Sanity check don't handle page change before first fetch
-        if (activePage === 0) {
+        if (activePage < 2) {
             return;
         }
 
