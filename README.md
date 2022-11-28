@@ -54,6 +54,8 @@ npm install -g @aws-amplify/cli
 
 ### Run app
 
+*NOTE:* use Node v. 16
+
 ```
 npm run start
 ```
