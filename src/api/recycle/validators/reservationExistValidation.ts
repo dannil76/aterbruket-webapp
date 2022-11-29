@@ -1,9 +1,9 @@
 import { User } from '../../../contexts/UserContext';
-import { AdvertPickUp } from '../../../graphql/models';
+import { AdvertPickUpInput } from '../../../graphql/models';
 import { localization } from '../../../localizations';
 
 export default function reservationExistValidation(
-    pickupList: AdvertPickUp[],
+    pickupList: AdvertPickUpInput[],
     user: User,
 ): string | undefined {
     const userHasReservation = pickupList.some((pickUp) => {

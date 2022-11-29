@@ -1,8 +1,8 @@
-import { AdvertPickUp } from '../../../graphql/models';
+import { AdvertPickUpInput } from '../../../graphql/models';
 import { localization } from '../../../localizations';
 
 export default function reservationOverflowValidation(
-    pickupList: AdvertPickUp[],
+    pickupList: AdvertPickUpInput[],
     reservationQuantity: number,
     totalQuantity: number,
     quantityUnit: string | undefined | null,

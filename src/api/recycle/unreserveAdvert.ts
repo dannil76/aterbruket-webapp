@@ -27,16 +27,14 @@ export default async function UnreserveAdvert(
         return localization.itemMissingPickupList;
     }
 
-    const missingReservation = reservationExistValidation(
-        item.advertPickUps,
-        user,
-    );
+    let advertPickUps = mapPickUpsToInput(item.advertPickUps);
+
+    const missingReservation = reservationExistValidation(advertPickUps, user);
 
     if (missingReservation) {
         return missingReservation;
     }
 
-    let advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps = removeFromPickupList(advertPickUps, user);
 
     const updateResult = (await API.graphql(

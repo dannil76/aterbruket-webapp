@@ -1,5 +1,5 @@
 import { User } from '../../../contexts/UserContext';
-import { AdvertPickUp } from '../../../graphql/models';
+import { AdvertPickUpInput } from '../../../graphql/models';
 import duplicateReservationValidation from './duplicateReservationValidation';
 
 describe('Check if there is a duplicate reservation', () => {
@@ -18,7 +18,7 @@ describe('Check if there is a duplicate reservation', () => {
                 reservedBySub: 'abc',
                 pickedUp: false,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = duplicateReservationValidation(items, user);
         expect(actual).not.toBeUndefined();
         expect(actual).toBe(
@@ -32,7 +32,7 @@ describe('Check if there is a duplicate reservation', () => {
                 reservedBySub: 'def',
                 pickedUp: false,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = duplicateReservationValidation(items, user);
         expect(actual).toBeUndefined();
     });

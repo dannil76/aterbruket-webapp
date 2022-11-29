@@ -1,5 +1,5 @@
 import { User } from '../../../contexts/UserContext';
-import { AdvertPickUp } from '../../../graphql/models';
+import { AdvertPickUpInput } from '../../../graphql/models';
 import reservationExistValidation from './reservationExistValidation';
 
 describe('Check if reservation exist', () => {
@@ -18,7 +18,7 @@ describe('Check if reservation exist', () => {
                 reservedBySub: 'abc',
                 pickedUp: false,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationExistValidation(items, user);
         expect(actual).toBeUndefined();
     });
@@ -29,7 +29,7 @@ describe('Check if reservation exist', () => {
                 reservedBySub: 'def',
                 pickedUp: false,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationExistValidation(items, user);
         expect(actual).not.toBeUndefined();
     });

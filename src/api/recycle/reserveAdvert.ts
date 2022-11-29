@@ -26,13 +26,10 @@ export default async function ReserveAdvert(
         return localization.getBookingFromServerError;
     }
 
-    if (!item.advertPickUps) {
-        return localization.itemMissingPickupList;
-    }
     const advertPickUps = mapPickUpsToInput(item.advertPickUps);
 
     const overflow = reservationOverflowValidation(
-        item.advertPickUps,
+        advertPickUps,
         quantity,
         item.quantity ?? 0,
         item.quantityUnit,
@@ -43,7 +40,7 @@ export default async function ReserveAdvert(
     }
 
     const duplicateReservation = duplicateReservationValidation(
-        item.advertPickUps,
+        advertPickUps,
         user,
     );
 

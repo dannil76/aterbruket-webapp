@@ -26,16 +26,14 @@ export default async function pickUpAdvert(
         return localization.itemMissingPickupList;
     }
 
-    const missingReservation = reservationExistValidation(
-        item.advertPickUps,
-        user,
-    );
+    let advertPickUps = mapPickUpsToInput(item.advertPickUps);
+
+    const missingReservation = reservationExistValidation(advertPickUps, user);
 
     if (missingReservation) {
         return missingReservation;
     }
 
-    let advertPickUps = mapPickUpsToInput(item.advertPickUps);
     advertPickUps = addPickedUpStatus(advertPickUps, user);
 
     const updateResult = (await API.graphql(

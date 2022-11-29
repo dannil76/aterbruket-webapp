@@ -1,4 +1,4 @@
-import { AdvertPickUp } from '../../../graphql/models';
+import { AdvertPickUpInput } from '../../../graphql/models';
 import reservationOverflowValidation from './reservationOverflowValidation';
 
 describe('Check if there is a overflow', () => {
@@ -19,7 +19,7 @@ describe('Check if there is a overflow', () => {
                 pickedUp: false,
                 quantity: 1,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationOverflowValidation(items, 1, 2, 'st');
         expect(actual).toBeUndefined();
     });
@@ -31,7 +31,7 @@ describe('Check if there is a overflow', () => {
                 pickedUp: false,
                 quantity: 1,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationOverflowValidation(items, 2, 2, 'st');
         expect(actual).not.toBeUndefined();
         expect(actual).toBe(
@@ -51,7 +51,7 @@ describe('Check if there is a overflow', () => {
                 pickedUp: true,
                 quantity: 1,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationOverflowValidation(items, 1, 3, 'st');
         expect(actual).toBeUndefined();
     });
@@ -68,7 +68,7 @@ describe('Check if there is a overflow', () => {
                 pickedUp: true,
                 quantity: 1,
             },
-        ] as AdvertPickUp[];
+        ] as AdvertPickUpInput[];
         const actual = reservationOverflowValidation(items, 2, 3, 'st');
         expect(actual).not.toBeUndefined();
     });
