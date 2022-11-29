@@ -74,34 +74,6 @@ export const getStatus = (
         return 'Retrieved undefined item';
     }
 
-    if (item.advertType === ItemAdvertType.recycle) {
-        const reserved = item.advertPickUps?.some((pickUp) => {
-            return pickUp.reservedBySub === user.sub && !pickUp.pickedUp;
-        });
-
-        if (reserved) {
-            return ItemStatus.reserved;
-        }
-
-        const pickedUp = item.advertPickUps?.some((pickUp) => {
-            return pickUp.reservedBySub === user.sub && pickUp.pickedUp;
-        });
-
-        const quantityTaken =
-            item.advertPickUps?.reduce(
-                (partial, pickUp) => partial + pickUp.quantity,
-                0,
-            ) ?? 0;
-
-        // If everything is taken
-        if (pickedUp && (item.quantity ?? 1) <= quantityTaken) {
-            return ItemStatus.pickedUp;
-        }
-
-        // If there is still some items left
-        return ItemStatus.available;
-    }
-
     const statuses = {
         available: 'available',
         reserved: 'reserved',
@@ -110,6 +82,44 @@ export const getStatus = (
         returned: 'returned',
         borrowPermissionDenied: 'borrowPermissionDenied',
     };
+
+    if (item.advertType === ItemAdvertType.recycle) {
+        if (!item.advertPickUps) {
+            return ItemStatus.available;
+        }
+
+        const reservedByUser = item.advertPickUps.some((pickUp) => {
+            return pickUp.reservedBySub === user.sub && !pickUp.pickedUp;
+        });
+
+        if (reservedByUser) {
+            return ItemStatus.reserved;
+        }
+
+        if (!item.quantity) {
+            return ItemStatus.available;
+        }
+
+        const alreadyPickedUp = item.advertPickUps?.reduce((acc, pickUp) => {
+            return acc + (pickUp.pickedUp ? pickUp.quantity : 0);
+        }, 0);
+
+        const all = item.advertPickUps?.reduce((acc, pickUp) => {
+            return acc + pickUp.quantity;
+        }, 0);
+
+        if (alreadyPickedUp >= item.quantity) {
+            return ItemStatus.pickedUp;
+        }
+
+        // TODO Maybe should have another status for not available
+        if (all >= item.quantity) {
+            return ItemStatus.pickedUp;
+        }
+
+        // If there is still some items left
+        return ItemStatus.available;
+    }
 
     if (!hasUserBorrowPermission(user, item)) {
         return statuses.borrowPermissionDenied;

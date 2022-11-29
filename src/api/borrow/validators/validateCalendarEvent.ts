@@ -1,5 +1,6 @@
 import { CalendarEventInput } from '../../../graphql/models';
-import overlappingDays from './overlappingDays';
+import { localization } from '../../../localizations';
+import { overlappingDays } from '../utils';
 
 export default function validateCalendarEvent(
     calendarEvents: CalendarEventInput[] | undefined | null,
@@ -9,18 +10,18 @@ export default function validateCalendarEvent(
     totalQuantity: number,
 ): string | undefined {
     if (!calendarEvents) {
-        return 'Saknar kalender för bokningen';
+        return localization.itemMissingCalendar;
     }
 
     if (!newEvent.dateStart || !newEvent.dateEnd) {
-        return 'Datum ej valda, både start- och slutdatum behöver väljas.';
+        return localization.dateNotSelected;
     }
 
     if (
         (startDate && new Date(startDate) > new Date(newEvent.dateStart)) ||
         (endDate && new Date(endDate) < new Date(newEvent.dateEnd))
     ) {
-        return 'Bokningen kan inte vara utanför annonsens datumintervall';
+        return localization.dateOutsideAdvertInterval;
     }
 
     const isOverlappingDays = overlappingDays(
@@ -30,7 +31,7 @@ export default function validateCalendarEvent(
     );
 
     if (isOverlappingDays) {
-        return 'Prylen kan endast bokas under en sammanhängande period.';
+        return localization.dateOverlap;
     }
 
     return undefined;

@@ -3,18 +3,28 @@ import { API } from 'aws-amplify';
 import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, BorrowStatus, CalendarEventInput } from '../../graphql/models';
-import { mapCalendarToInput, validateCalendarEvent } from './utils';
+import { BorrowStatus, CalendarEventInput } from '../../graphql/models';
+import { mapCalendarToInput } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
 import { HaffaApiError } from '../../models/ApiError';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
+import {
+    duplicateBookingValidation,
+    validateCalendarEvent,
+} from './validators';
 
 export default async function addBooking(
-    item: Advert | undefined,
+    itemId: string,
     user: User,
     startDate: string | null | undefined,
     endDate: string | null | undefined,
     quantity: number | null | undefined = 1,
 ): Promise<string | undefined> {
+    if (!quantity || quantity < 1) {
+        return localization.addBookingQuantityError;
+    }
+
     const calendarEvent = {
         borrowedBySub: user.sub,
         dateStart: startDate,
@@ -23,18 +33,28 @@ export default async function addBooking(
         quantity,
     } as CalendarEventInput;
 
+    const item = await getItemFromApi(itemId);
     if (!item) {
-        return 'Retrieved undefined item';
+        return localization.getBookingFromServerError;
     }
 
     if (!item.advertBorrowCalendar) {
-        return 'Bokningen saknar kalender';
+        return localization.itemMissingCalendar;
     }
 
     const { allowedDateStart, allowedDateEnd, calendarEvents } =
         item.advertBorrowCalendar;
 
     const calendarEventInputs = mapCalendarToInput(calendarEvents);
+
+    const duplicateBookings = duplicateBookingValidation(
+        calendarEventInputs,
+        user,
+    );
+
+    if (duplicateBookings) {
+        return duplicateBookings;
+    }
 
     const validationMessage = validateCalendarEvent(
         calendarEventInputs,
@@ -44,7 +64,6 @@ export default async function addBooking(
         item.quantity ?? 1,
     );
 
-    // Validation error return message
     if (validationMessage) {
         return validationMessage;
     }
@@ -74,7 +93,7 @@ export default async function addBooking(
 
         return (
             err?.errors[0]?.message ??
-            `okänt fel inträffade vid sparande: ${err?.errors[0]?.message}`
+            `${localization.unknownSaveError} ${err?.errors[0]?.message}`
         );
     }
 

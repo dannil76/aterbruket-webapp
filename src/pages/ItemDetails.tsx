@@ -1,5 +1,4 @@
-import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
-import { API, Storage } from 'aws-amplify';
+import { Storage } from 'aws-amplify';
 import React, {
     FC,
     Suspense,
@@ -14,12 +13,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Moment } from 'moment';
-import {
-    Advert,
-    BorrowStatus,
-    GetAdvertQuery,
-    ItemAdvertType,
-} from '../graphql/models';
+import { Advert, BorrowStatus, ItemAdvertType } from '../graphql/models';
 import Button from '../components/Button';
 import {
     DefaultContent as BorrowContent,
@@ -39,8 +33,6 @@ import RecycleContent from '../components/ItemDetails/Recycle/DefaultContent';
 import { useModal } from '../components/Modal';
 import QRCode from '../components/QRCodeContainer';
 import UserContext from '../contexts/UserContext';
-import { deleteAdvert } from '../graphql/mutations';
-import { getAdvert } from '../graphql/queries';
 import { IDateRange } from '../interfaces/IDateRange';
 import {
     convertToSwedishDate,
@@ -58,9 +50,12 @@ import {
     changeBooking,
     borrowItem,
     returnItem,
+    getItemFromApi,
+    deleteItem,
 } from '../api';
 import { AdvertAccessory } from '../models/accessory';
 import { getRecycleInventory } from '../utils';
+import { localization } from '../localizations';
 
 const CarouselComp = React.lazy(() => import('../components/CarouselComp'));
 const EditItemForm = React.lazy(
@@ -136,8 +131,9 @@ const ItemDetails: FC<ParamTypes> = () => {
     const [isRecycleType, setIsRecycleType] = useState(false);
     const [isBorrowType, setIsBorrowType] = useState(false);
     const [isReturnModalVisible, toggleReturnModal] = useModal();
-    const [requestedQuantity, setRequestedQuantity] = useState(0);
+    const [requestedQuantity, setRequestedQuantity] = useState(1);
     const [recycleInventory, setRecycleInventory] = useState(0);
+    const [itemId, setItemId] = useState('');
     const [reservationDateRange, setReservationDateRange] = useState<{
         startDate: string | null;
         endDate: string | null;
@@ -163,18 +159,19 @@ const ItemDetails: FC<ParamTypes> = () => {
         // eslint-disable-next-line @typescript-eslint/ban-types
         Storage.get(advert.images[0].src).then((url: Object | string) => {
             setImage(url);
-            setItem(advert);
         });
     };
 
     const fetchItem = async () => {
-        const result = (await API.graphql(
-            graphqlOperation(getAdvert, { id, version: 0 }),
-        )) as GraphQLResult<GetAdvertQuery>;
-        const advertItem = result.data?.getAdvert as Advert;
+        const advertItem = await getItemFromApi(id);
+        if (!advertItem) {
+            toast.error(`Prylen kunde tyvärr inte laddas in.`);
+            return;
+        }
 
         fetchImage(advertItem);
         setItem(advertItem);
+        setItemId(advertItem.id);
         setIsRecycleType(advertItem.advertType === ItemAdvertType.recycle);
         setIsBorrowType(advertItem.advertType === ItemAdvertType.borrow);
         setRecycleInventory(getRecycleInventory(advertItem));
@@ -226,6 +223,7 @@ const ItemDetails: FC<ParamTypes> = () => {
         setItemUpdated(false);
     }, [itemUpdated]);
 
+    const history = useHistory();
     let handler: any;
     const scrollFunc = () => {
         handler = () => {
@@ -255,72 +253,114 @@ const ItemDetails: FC<ParamTypes> = () => {
 
     const callApi = async (
         call: Promise<string | undefined>,
-    ): Promise<string | undefined> => {
+        successText: string,
+        errorText: string,
+    ): Promise<void> => {
         const error = await call;
-        if (!error) {
-            setShowHeaderBtn(false);
-            fetchItem();
+        if (error) {
+            toast.warn(`${errorText} ${error}`);
+            return;
         }
 
-        return error;
+        setShowHeaderBtn(false);
+        fetchItem();
+        toast(successText);
     };
 
     // RECYCLE
-    const onClickReserveBtn = async () => {
-        const requested = item?.quantity === 1 ? 1 : requestedQuantity;
-        return callApi(reserveAdvert(item, user, requested, setItemUpdated));
+    const onClickReserveBtn = () => {
+        callApi(
+            reserveAdvert(itemId, user, requestedQuantity, setItemUpdated),
+            localization.successfullyReserved,
+            localization.unsuccessfullyReserved,
+        );
     };
 
     const onClickUnreserveBtn = () => {
-        return callApi(unreserveAdvert(item, user, setItemUpdated));
+        callApi(
+            unreserveAdvert(itemId, user, setItemUpdated),
+            localization.successfullyUnReserved,
+            localization.unsuccessfullyUnReserved,
+        );
     };
 
     const onClickPickUpBtn = () => {
-        return callApi(pickUpAdvert(item, user, setItemUpdated));
+        callApi(
+            pickUpAdvert(itemId, user, setItemUpdated),
+            localization.successfullyPickedUp,
+            localization.unsuccessfullyPickedUp,
+        );
     };
 
     // BORROW
     const onClickAddBookingBtn = async () => {
-        return callApi(
+        callApi(
             addBooking(
-                item,
+                itemId,
                 user,
                 reservationDateRange.startDate,
                 reservationDateRange.endDate,
                 requestedQuantity,
             ),
+            localization.successfullyBooked,
+            localization.unsuccessfullyBooked,
         );
     };
 
     const onClickCancelBtn = async () => {
-        return callApi(cancelBooking(item, user));
+        callApi(
+            cancelBooking(itemId, user),
+            localization.successfullyCancelled,
+            localization.unknownError,
+        );
     };
 
     const onClickChangeBooking = async () => {
-        return callApi(
+        callApi(
             changeBooking(
-                item,
+                itemId,
                 reservationDateRange.startDate,
                 reservationDateRange.endDate,
                 user,
                 requestedQuantity,
             ),
+            localization.successfullyChanged,
+            localization.unsuccessfullyChanged,
         );
     };
 
     const onClickBorrowBtn = async (
         missingAccessories: string[] | undefined,
     ) => {
-        return callApi(borrowItem(item, user, missingAccessories));
+        callApi(
+            borrowItem(itemId, user, missingAccessories),
+            localization.successfullyBorrowed,
+            localization.unsuccessfullyBorrowed,
+        );
     };
 
     const onClickReturnBtn = async (
         accessories: AdvertAccessory[] | undefined,
     ) => {
-        return callApi(returnItem(item, user, accessories));
+        callApi(
+            returnItem(itemId, user, accessories),
+            localization.successfullyReturned,
+            localization.unknownError,
+        );
     };
 
-    const history = useHistory();
+    const onClickDelete = async () => {
+        deleteItem(itemId, () => {
+            history.push('/app');
+        }).then((message) => {
+            if (message) {
+                console.log(message);
+                toast.warn(localization.unknownError);
+            } else {
+                toast(localization.successfullyRemovedItem);
+            }
+        });
+    };
 
     const goBackFunc = () => {
         history.goBack();
@@ -355,15 +395,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         availableInventory={recycleInventory ?? 1}
                         unitType={item.quantityUnit ?? 'st'}
                         onFinish={() => {
-                            onClickReserveBtn().then((message) => {
-                                if (!message) {
-                                    toast('Snyggt! Prylen är nu haffad!');
-                                } else {
-                                    toast(
-                                        `Prylen kunde tyvärr inte reserveras. ${message}`,
-                                    );
-                                }
-                            });
+                            onClickReserveBtn();
                         }}
                     />
                 )) ?? <></>,
@@ -373,15 +405,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         isVisible={isPickUpModalVisible}
                         toggleModal={togglePickUpModal}
                         onFinish={() => {
-                            onClickPickUpBtn().then((message) => {
-                                if (!message) {
-                                    toast('Snyggt! Prylen är nu haffad!');
-                                } else {
-                                    toast(
-                                        `Prylen kunde tyvärr inte haffas. ${message}`,
-                                    );
-                                }
-                            });
+                            onClickPickUpBtn();
                         }}
                     />
                 )) ?? <></>,
@@ -419,13 +443,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         unitType={item?.quantityUnit ?? 'st'}
                         setDateRange={handleReservationDateRange}
                         onFinish={() => {
-                            onClickAddBookingBtn().then((error) => {
-                                return !error
-                                    ? toast('Prylen är nu bokad!')
-                                    : toast.error(
-                                          `Prylen kunde tyvärr inte bokas. ${error}`,
-                                      );
-                            });
+                            onClickAddBookingBtn();
                         }}
                         availableCalendarDates={(quantity: number) => {
                             return (date: Moment) =>
@@ -445,17 +463,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         isVisible={isPickUpModalVisible}
                         toggleModal={togglePickUpModal}
                         onFinish={(missingAccessories) => {
-                            onClickBorrowBtn(missingAccessories).then(
-                                (error) => {
-                                    return !error
-                                        ? toast(
-                                              'Snyggt! Prylen är nu lånad och i ditt ansvar!',
-                                          )
-                                        : toast.error(
-                                              `Prylen kunde tyvärr inte lånas. ${error}`,
-                                          );
-                                },
-                            );
+                            onClickBorrowBtn(missingAccessories);
                         }}
                     />
                 )) ?? <></>,
@@ -466,13 +474,7 @@ const ItemDetails: FC<ParamTypes> = () => {
                         isVisible={isReturnModalVisible}
                         toggleModal={toggleReturnModal}
                         onFinish={(accessories) => {
-                            onClickReturnBtn(accessories).then((error) => {
-                                return !error
-                                    ? toast('Snyggt! Prylen är nu återlämnad!')
-                                    : toast.error(
-                                          `Prylen kunde tyvärr inte lämnas tillbaka. ${error}`,
-                                      );
-                            });
+                            onClickReturnBtn(accessories);
                         }}
                     />
                 )) ?? <></>,
@@ -512,18 +514,8 @@ const ItemDetails: FC<ParamTypes> = () => {
             return;
         }
 
-        if (window.confirm('Är du säker på att du vill ta bort annonsen?')) {
-            try {
-                await API.graphql({
-                    query: deleteAdvert,
-                    variables: { input: { id: advertId, version: 0 } },
-                });
-                history.push('/app');
-                toast.success('Annonsen är nu borttagen!');
-            } catch (error) {
-                console.error(error);
-                toast.warn('Ett okänt fel inträffade 😵 Försök igen!');
-            }
+        if (window.confirm(localization.removePrompt)) {
+            onClickDelete();
         }
     };
 
@@ -532,16 +524,8 @@ const ItemDetails: FC<ParamTypes> = () => {
             return;
         }
 
-        if (window.confirm('Är du säker på att du vill ångra reservationen?')) {
-            const message = await cancelBooking(advert, user);
-            fetchItem();
-            if (message) {
-                toast.warn(
-                    `Ett okänt fel inträffade 😵 Försök igen! ${message}`,
-                );
-            } else {
-                toast.success('Reservationen är nu borttagen!');
-            }
+        if (window.confirm(localization.unregisterPrompt)) {
+            onClickCancelBtn();
         }
     };
 
@@ -831,16 +815,12 @@ const ItemDetails: FC<ParamTypes> = () => {
 
                 {isBorrowType &&
                     (status === BorrowStatus.reserved ||
-                        status === 'pickUpAllowed' ||
-                        status === BorrowStatus.pickedUp) && (
+                        status === 'pickUpAllowed') && (
                         <>
                             <ReservationSection>
                                 {(status === BorrowStatus.reserved ||
                                     status === 'pickUpAllowed') && (
                                     <SubTitle>Reserverad av dig</SubTitle>
-                                )}
-                                {status === 'pickedUp' && (
-                                    <SubTitle>Uthämtad av dig</SubTitle>
                                 )}
                                 <p>
                                     {convertToSwedishDate(
@@ -863,6 +843,25 @@ const ItemDetails: FC<ParamTypes> = () => {
                             </Button>
                         </>
                     )}
+
+                {isBorrowType && status === BorrowStatus.pickedUp && (
+                    <>
+                        <ReservationSection>
+                            {status === 'pickedUp' && (
+                                <SubTitle>Uthämtad av dig</SubTitle>
+                            )}
+                            <p>
+                                {convertToSwedishDate(
+                                    activeReservation?.dateStart ?? '',
+                                )}{' '}
+                                -{' '}
+                                {convertToSwedishDate(
+                                    activeReservation?.dateEnd ?? '',
+                                )}
+                            </p>
+                        </ReservationSection>
+                    </>
+                )}
             </TopSection>
 
             <MainSection>

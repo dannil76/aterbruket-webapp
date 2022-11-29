@@ -3,37 +3,40 @@ import { API } from 'aws-amplify';
 import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert } from '../../graphql/models';
 import {
     getUserBookings,
     mapCalendarToInput,
     removeCalendarEvent,
-    validateCalendarEvent,
 } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
+import { validateCalendarEvent } from './validators';
 
 export default async function changeBooking(
-    advert: Advert | undefined,
+    itemId: string,
     startDate: string | null | undefined,
     endDate: string | null | undefined,
     user: User,
     quantity: number | null | undefined = 1,
 ): Promise<string | undefined> {
-    if (!advert) {
-        return 'Retrieved undefined item';
+    const item = await getItemFromApi(itemId);
+
+    if (!item) {
+        return localization.getBookingFromServerError;
     }
 
-    if (!advert.advertBorrowCalendar) {
-        return 'Bokningen saknar kalender';
+    if (!item.advertBorrowCalendar) {
+        return localization.itemMissingCalendar;
     }
 
     const { allowedDateStart, allowedDateEnd, calendarEvents } =
-        advert.advertBorrowCalendar;
+        item.advertBorrowCalendar;
     const events = mapCalendarToInput(calendarEvents);
 
     const userBookings = getUserBookings(events, user);
     if (userBookings.length === 0) {
-        return 'Du saknar bokning att ändra';
+        return localization.missingPermissions;
     }
 
     // Only able to have 1 booking at a time
@@ -57,14 +60,14 @@ export default async function changeBooking(
         return validationMessage;
     }
 
-    const updateInput = mapAdvertToUpdateInput(advert);
+    const updateInput = mapAdvertToUpdateInput(item);
 
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
                 ...updateInput,
                 advertBorrowCalendar: {
-                    ...advert.advertBorrowCalendar,
+                    ...item.advertBorrowCalendar,
                     calendarEvents: calendarEventInput,
                 },
             },

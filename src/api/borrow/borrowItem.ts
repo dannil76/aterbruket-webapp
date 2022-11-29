@@ -3,7 +3,7 @@ import { API } from 'aws-amplify';
 import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, BorrowStatus, UpdateAdvertInput } from '../../graphql/models';
+import { BorrowStatus, UpdateAdvertInput } from '../../graphql/models';
 import {
     getUserBookings,
     mapCalendarToInput,
@@ -11,27 +11,29 @@ import {
     updateMissingAccessories,
 } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
 
 export default async function borrowItem(
-    advert: Advert | undefined,
+    itemId: string,
     user: User,
     missing: string[] | undefined,
 ): Promise<string | undefined> {
-    if (!advert) {
-        return 'Retrieved undefined item';
+    const item = await getItemFromApi(itemId);
+
+    if (!item) {
+        return localization.getBookingFromServerError;
     }
 
-    if (!advert.advertBorrowCalendar) {
-        return 'Bokningen saknar kalender';
+    if (!item.advertBorrowCalendar) {
+        return localization.itemMissingCalendar;
     }
-
-    const { calendarEvents } = advert.advertBorrowCalendar;
+    const { calendarEvents } = item.advertBorrowCalendar;
     const events = mapCalendarToInput(calendarEvents);
-
     const userBookings = getUserBookings(events, user);
 
     if (userBookings.length === 0) {
-        return 'Du saknar bokning att hämta';
+        return localization.missingBooking;
     }
 
     // Only able to have 1 booking at a time
@@ -42,13 +44,13 @@ export default async function borrowItem(
     calendarEventInput.push(booking);
 
     const missingAccessories = updateMissingAccessories(
-        advert.missingAccessories,
+        item.missingAccessories,
         missing,
-        advert.advertBorrowCalendar.calendarEvents,
+        item.advertBorrowCalendar.calendarEvents,
         user,
     );
 
-    const updateInput = mapAdvertToUpdateInput(advert);
+    const updateInput = mapAdvertToUpdateInput(item);
 
     await API.graphql(
         graphqlOperation(updateAdvert, {
@@ -56,7 +58,7 @@ export default async function borrowItem(
                 ...updateInput,
                 missingAccessories,
                 advertBorrowCalendar: {
-                    ...advert.advertBorrowCalendar,
+                    ...item.advertBorrowCalendar,
                     calendarEvents: calendarEventInput,
                 },
             } as UpdateAdvertInput,

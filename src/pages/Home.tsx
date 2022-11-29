@@ -17,8 +17,6 @@ import { HaffaFilter } from '../models/filter';
 import { getItemsFromApi } from '../api/items';
 import { PaginationOptions } from '../models/pagination';
 
-const tokenInitialValue = 'initial';
-
 const AdvertContainer = React.lazy(
     () => import('../components/AdvertContainer'),
 );
@@ -188,9 +186,7 @@ const Home: FC = () => {
         {} as HaffaFilter,
     );
     const [error, setError] = useState(false);
-    const [nextToken, setToken] = useState<string | undefined>(
-        tokenInitialValue,
-    );
+    const [nextToken, setToken] = useState<string | undefined>(undefined);
     const [filterValue, setFilterValue] = useState({
         version: { eq: 0 },
         status: { eq: ItemStatus.available },

@@ -4,35 +4,51 @@ import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
 import React from 'react';
 import { createAdvert, updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, UpdateAdvertMutation } from '../../graphql/models';
+import { UpdateAdvertMutation } from '../../graphql/models';
 import { dayToDateString } from '../../utils';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
 import { getUpdatedItemStatus } from './utils';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
+import {
+    duplicateReservationValidation,
+    reservationOverflowValidation,
+} from './validators';
 
 export default async function ReserveAdvert(
-    item: Advert | undefined,
+    itemId: string,
     user: User,
     quantity: number,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
 ): Promise<string | undefined> {
+    const item = await getItemFromApi(itemId);
     if (!item) {
-        return 'missing item';
+        return localization.getBookingFromServerError;
     }
 
+    if (!item.advertPickUps) {
+        return localization.itemMissingPickupList;
+    }
     const advertPickUps = mapPickUpsToInput(item.advertPickUps);
 
-    const alreadyReserved = advertPickUps.reduce((acc, current) => {
-        return acc + current.quantity;
-    }, 0);
+    const overflow = reservationOverflowValidation(
+        item.advertPickUps,
+        quantity,
+        item.quantity ?? 0,
+        item.quantityUnit,
+    );
 
-    if (
-        item.quantity &&
-        item.quantity > 0 &&
-        alreadyReserved + quantity > item.quantity
-    ) {
-        return `du försöker ta mer än det finns tillgängligt. 
-        Det finns ${item.quantity - alreadyReserved}${item.quantityUnit} kvar.
-        Du försökte hämta ${quantity}${item.quantityUnit}.`;
+    if (overflow) {
+        return overflow;
+    }
+
+    const duplicateReservation = duplicateReservationValidation(
+        item.advertPickUps,
+        user,
+    );
+
+    if (duplicateReservation) {
+        return duplicateReservation;
     }
 
     advertPickUps.push({

@@ -3,7 +3,7 @@ import { API } from 'aws-amplify';
 import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, BorrowStatus, MissingAccessories } from '../../graphql/models';
+import { BorrowStatus, MissingAccessories } from '../../graphql/models';
 import {
     getUserBookings,
     mapCalendarToInput,
@@ -11,26 +11,29 @@ import {
 } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
 import { AdvertAccessory } from '../../models/accessory';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
 
 export default async function returnItem(
-    advert: Advert | undefined,
+    itemId: string,
     user: User,
     accessories: AdvertAccessory[] | undefined,
 ): Promise<string | undefined> {
-    if (!advert) {
-        return 'Retrieved undefined item';
+    const item = await getItemFromApi(itemId);
+    if (!item) {
+        return localization.getBookingFromServerError;
     }
 
-    if (!advert.advertBorrowCalendar) {
-        return 'Bokningen saknar kalender';
+    if (!item.advertBorrowCalendar) {
+        return localization.itemMissingCalendar;
     }
 
-    const { calendarEvents } = advert.advertBorrowCalendar;
+    const { calendarEvents } = item.advertBorrowCalendar;
     const events = mapCalendarToInput(calendarEvents);
     const userBookings = getUserBookings(events, user);
 
     if (userBookings.length === 0) {
-        return 'Du saknar bokning att lämna';
+        return localization.missingPermissions;
     }
 
     // Only able to have 1 booking at a time
@@ -49,7 +52,7 @@ export default async function returnItem(
                 }
 
                 const missingBySub =
-                    advert.missingAccessories?.filter(
+                    item.missingAccessories?.filter(
                         (missing) => missing?.reportedBy === user.sub,
                     ) ?? [];
 
@@ -83,8 +86,8 @@ export default async function returnItem(
         lastReturnedBy: user.sub,
     } as MissingAccessories;
 
-    const updateInput = mapAdvertToUpdateInput(advert);
-    updateInput.missingAccessories = (advert.missingAccessories ?? []).concat([
+    const updateInput = mapAdvertToUpdateInput(item);
+    updateInput.missingAccessories = (item.missingAccessories ?? []).concat([
         missingAccessories,
     ]);
 
@@ -93,7 +96,7 @@ export default async function returnItem(
             input: {
                 ...updateInput,
                 advertBorrowCalendar: {
-                    ...advert.advertBorrowCalendar,
+                    ...item.advertBorrowCalendar,
                     calendarEvents: calendarEventInput,
                 },
             },

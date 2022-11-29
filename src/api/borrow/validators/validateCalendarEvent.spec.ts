@@ -1,8 +1,9 @@
 import { CalendarEventInput } from '../../../graphql/models';
 import validateCalendarEvent from './validateCalendarEvent';
-import overlappingDays from './overlappingDays';
+import overlappingDays from '../utils/overlappingDays';
+import { localization } from '../../../localizations';
 
-jest.mock('./overlappingDays');
+jest.mock('../utils/overlappingDays');
 
 describe('validate calendar event', () => {
     it('should handle empty list', () => {
@@ -15,7 +16,7 @@ describe('validate calendar event', () => {
             5,
         );
 
-        expect(actual).toBe('Saknar kalender för bokningen');
+        expect(actual).toBe(localization.itemMissingCalendar);
     });
 
     it('should handle no start date', () => {
@@ -68,9 +69,7 @@ describe('validate calendar event', () => {
             5,
         );
 
-        expect(actual).toBe(
-            'Bokningen kan inte vara utanför annonsens datumintervall',
-        );
+        expect(actual).toBe(localization.dateOutsideAdvertInterval);
     });
 
     it('should not be outside borrow interval date end', () => {
@@ -87,9 +86,7 @@ describe('validate calendar event', () => {
             5,
         );
 
-        expect(actual).toBe(
-            'Bokningen kan inte vara utanför annonsens datumintervall',
-        );
+        expect(actual).toBe(localization.dateOutsideAdvertInterval);
     });
 
     it('can be date start', () => {
@@ -143,7 +140,7 @@ describe('validate calendar event', () => {
         );
 
         expect(actual).toBe(
-            'Prylen kan endast bokas under en sammanhängande period.',
+            'Prylen kan endast bokas under en sammanhängande period där det finns tillräckligt antal tillgängligt.',
         );
         expect(mock).toHaveBeenCalledWith(event, events, 5);
     });
