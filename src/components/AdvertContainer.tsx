@@ -13,6 +13,7 @@ interface Props {
     activeFilterOptions: IOption[];
     activeSorting: SortSelection | undefined;
     fetchReservedAdverts?: any;
+    greyOut?: boolean;
 }
 
 const AdvertContainerDiv = styled.div`
@@ -73,6 +74,7 @@ const AdvertContainer: FC<Props> = ({
     activeFilterOptions,
     activeSorting,
     fetchReservedAdverts,
+    greyOut,
 }: Props) => {
     return (
         <AdvertContainerDiv>
@@ -143,10 +145,16 @@ const AdvertContainer: FC<Props> = ({
                             filteredItem={filteredItem}
                             fetchReservedAdverts={fetchReservedAdverts}
                             itemsFrom={itemsFrom}
+                            greyOut={greyOut}
                         />
                     ))}
             </Suspense>
         </AdvertContainerDiv>
     );
 };
+
+AdvertContainer.defaultProps = {
+    greyOut: false,
+};
+
 export default AdvertContainer;

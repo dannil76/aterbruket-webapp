@@ -17,6 +17,7 @@ interface Props {
     filteredItem: Advert;
     fetchReservedAdverts: any;
     itemsFrom: string;
+    greyOut?: boolean;
 }
 
 const CardDiv = styled.div`
@@ -145,6 +146,7 @@ const Card: FC<Props> = ({
     filteredItem,
     fetchReservedAdverts,
     itemsFrom,
+    greyOut,
 }: Props) => {
     const [url, setURL] = useState('');
     const { user } = useContext(UserContext);
@@ -231,9 +233,12 @@ const Card: FC<Props> = ({
                 to={`/item/${filteredItem.id}`}
                 id={filteredItem.id}
                 style={{
-                    opacity: filteredItem.status === 'pickedUp' ? '0.5' : '1',
+                    opacity:
+                        filteredItem.status === 'pickedUp' || greyOut
+                            ? '0.5'
+                            : '1',
                     filter:
-                        filteredItem.status === 'pickedUp'
+                        filteredItem.status === 'pickedUp' || greyOut
                             ? 'grayscale(1)'
                             : 'none',
                 }}
@@ -292,6 +297,10 @@ const Card: FC<Props> = ({
             </CardDiv>
         </>
     );
+};
+
+Card.defaultProps = {
+    greyOut: false,
 };
 
 export default Card;

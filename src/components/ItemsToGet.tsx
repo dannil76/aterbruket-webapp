@@ -92,6 +92,7 @@ const ItemsToGet: FC = () => {
                     items={renderPickedupItems}
                     itemsFrom="pickedUp"
                     activeSorting={DEFAULTSORTVALUE}
+                    greyOut
                 />
                 {renderPickedupItems.length > 0 && (
                     <Pagination
