@@ -4,7 +4,6 @@ import {
     BorrowStatus,
     CalendarEvent,
 } from '../graphql/models';
-import { IReservation } from '../interfaces/IAdvert';
 import {
     ICalendarUpdateResult,
     ICalendarData,
@@ -95,7 +94,7 @@ const isDateAvailable = (
  */
 const updateEventStatus = (
     adCalendar: ICalendarData,
-    calendarEvent: IReservation | null,
+    calendarEvent: CalendarEvent | null,
     newStatus: string,
 ): ICalendarUpdateResult => {
     const adCalendarCopy = JSON.parse(JSON.stringify(adCalendar));

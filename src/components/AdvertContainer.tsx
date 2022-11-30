@@ -5,7 +5,7 @@ import { SortSelection } from '../models/sort';
 
 const Card = React.lazy(() => import('./Card'));
 
-interface IAdvert {
+interface Props {
     items: any;
     searchValue: any;
     itemsFrom: string;
@@ -60,14 +60,14 @@ const OptionWrapper = styled.div`
     }
 `;
 
-const AdvertContainer: FC<IAdvert> = ({
+const AdvertContainer: FC<Props> = ({
     items,
     searchValue,
     itemsFrom,
     activeFilterOptions,
     activeSorting,
     fetchReservedAdverts,
-}: IAdvert) => {
+}: Props) => {
     return (
         <AdvertContainerDiv>
             <Suspense fallback={<div>Loading...</div>}>
