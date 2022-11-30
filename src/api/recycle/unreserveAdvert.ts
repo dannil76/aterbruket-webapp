@@ -4,21 +4,37 @@ import { graphqlOperation, GraphQLResult } from '@aws-amplify/api';
 import React from 'react';
 import { createAdvert, updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
-import { Advert, UpdateAdvertMutation } from '../../graphql/models';
+import { UpdateAdvertMutation } from '../../graphql/models';
 import { dayToDateString } from '../../utils';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
 import { getUpdatedItemStatus, removeFromPickupList } from './utils';
+import { getItemFromApi } from '../items';
+import { localization } from '../../localizations';
+import { reservationExistValidation } from './validators';
 
 export default async function UnreserveAdvert(
-    item: Advert | undefined,
+    itemId: string,
     user: User,
     setUpdated: (value: React.SetStateAction<boolean>) => void,
 ): Promise<string | undefined> {
+    const item = await getItemFromApi(itemId);
+
     if (!item) {
-        return 'Retrieved undefined item';
+        return localization.getBookingFromServerError;
+    }
+
+    if (!item.advertPickUps) {
+        return localization.itemMissingPickupList;
     }
 
     let advertPickUps = mapPickUpsToInput(item.advertPickUps);
+
+    const missingReservation = reservationExistValidation(advertPickUps, user);
+
+    if (missingReservation) {
+        return missingReservation;
+    }
+
     advertPickUps = removeFromPickupList(advertPickUps, user);
 
     const updateResult = (await API.graphql(

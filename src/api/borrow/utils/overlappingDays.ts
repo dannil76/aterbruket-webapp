@@ -7,7 +7,7 @@ export default function overlappingDays(
     events: CalendarEventInput[],
     totalInventory: number,
 ): boolean {
-    if (!newEvent.dateEnd || !newEvent.dateStart) {
+    if (!newEvent.dateEnd || !newEvent.dateStart || !newEvent.quantity) {
         return false;
     }
 
@@ -29,7 +29,7 @@ export default function overlappingDays(
             return att + (current.quantity ?? 1);
         }, 0);
 
-        if ((newEvent.quantity ?? 1) + alreadyReserved > totalInventory) {
+        if (newEvent.quantity + alreadyReserved > totalInventory) {
             return true;
         }
 

@@ -154,4 +154,21 @@ describe('overlapping days', () => {
         const actual = overlappingDays(event, events, 5);
         expect(actual).toBeTruthy();
     });
+
+    it('should return false when missing quantity', () => {
+        const event = {
+            dateStart: '2022-01-29',
+            dateEnd: '2022-01-30',
+        } as CalendarEventInput;
+
+        const events = [
+            {
+                dateStart: '2022-01-29',
+                dateEnd: '2022-01-30',
+                quantity: 1,
+            },
+        ] as CalendarEventInput[];
+        const actual = overlappingDays(event, events, 1);
+        expect(actual).toBeFalsy();
+    });
 });

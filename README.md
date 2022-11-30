@@ -59,8 +59,10 @@ npm install -g @aws-amplify/cli
 ```
 npm run start
 ```
+
 ### Deploy
-Push to __develop__ or __prod__ branches to automatically trigger a new build.
+Push to __develop__ builds to staging environment. 
+Merge __develop__ to __main__ to create a depoy to production environment
 
 ## Contributing
 
@@ -68,8 +70,37 @@ Push to __develop__ or __prod__ branches to automatically trigger a new build.
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+    - When you have pushed the branch Amplify will create a new site
+    - with url like https://feature-amazingfeature.d21bj89y0jdxx1.amplifyapp.com
+5. Open a Pull Request to develop branch
 
+## Notes
+
+### Backend
+Backend is built using typescript. Because Amplify uses src/ as build folder .js files is ignored and created at runtime from typescript built.
+To don't show build files while developing VS Code has .js files ignored in backend folders. 
+
+To help Amplify compile typescript you need to add a build script in package.json
+e.g. "amplify:amazingfeature": "cd amplify/backend/function/amazingfeature/src && npm install && npm run build && cd -",
+
+To run tests create a package.json script for unit testing. Jest files are added in a /spec folder. 
+
+"test:amazingfeature": "cd amplify/backend/function/amazingfeature/src && npm install && npm run test && cd -",
+
+### Frontend
+Frontend is built using typescript. Jest tests are included in same folders as code files. 
+
+Amplify generates a folder in /src/grapqhl 
+Unless required please use one of the different models generated. To help intellisense and auto generation of types from BE.
+  - Typescript models
+  - Queries
+  - Mutations
+
+### Guides and documentation
+
+OPENSEARCH: https://docs.amplify.aws/cli/graphql/search-and-result-aggregations/
+BACKEND models: https://docs.amplify.aws/cli/graphql/data-modeling/
+CODE GENERATION: https://docs.amplify.aws/cli/graphql/client-code-generation/#modify-graphql-schema-push-then-automatically-generate-code
 
 
 ## License

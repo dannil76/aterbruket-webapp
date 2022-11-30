@@ -67,8 +67,18 @@ export default async function getItemsFromApi(
                 },
             },
             {
+                title: {
+                    wildcard: `*${searchValue}`,
+                },
+            },
+            {
                 description: {
                     matchPhrasePrefix: `${searchValue}`,
+                },
+            },
+            {
+                description: {
+                    wildcard: `*${searchValue}`,
                 },
             },
             {
