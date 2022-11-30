@@ -1,17 +1,19 @@
 import React, { FC, Suspense } from 'react';
 import styled from 'styled-components';
+import { Advert } from '../graphql/models';
 import { IOption } from '../interfaces/IForm';
 import { SortSelection } from '../models/sort';
 
 const Card = React.lazy(() => import('./Card'));
 
-interface IAdvert {
-    items: any;
+interface Props {
+    items: Advert[];
     searchValue: any;
     itemsFrom: string;
     activeFilterOptions: IOption[];
     activeSorting: SortSelection | undefined;
     fetchReservedAdverts?: any;
+    greyOut?: boolean;
 }
 
 const AdvertContainerDiv = styled.div`
@@ -60,14 +62,20 @@ const OptionWrapper = styled.div`
     }
 `;
 
-const AdvertContainer: FC<IAdvert> = ({
+const Placeholder = styled.p`
+    margin: 0;
+    color: ${(props) => props.theme.colors.dark};
+`;
+
+const AdvertContainer: FC<Props> = ({
     items,
     searchValue,
     itemsFrom,
     activeFilterOptions,
     activeSorting,
     fetchReservedAdverts,
-}: IAdvert) => {
+    greyOut,
+}: Props) => {
     return (
         <AdvertContainerDiv>
             <Suspense fallback={<div>Loading...</div>}>
@@ -115,32 +123,38 @@ const AdvertContainer: FC<IAdvert> = ({
                             </span>
                         </OptionWrapper>
                     )}
-                    {itemsFrom === 'haffat' && items.length !== 0 && (
-                        <h3>Saker att hämta</h3>
-                    )}
+                    {itemsFrom === 'haffat' && <h3>Saker att hämta</h3>}
                     {itemsFrom === 'haffat' && items.length === 0 && (
-                        <h3>Inga saker att hämta</h3>
+                        <Placeholder>Inget att hämta</Placeholder>
                     )}
-                    {itemsFrom === 'pickedUp' && items.length !== 0 && (
-                        <h3>Saker som har hämtats</h3>
-                    )}
+                    {itemsFrom === 'pickedUp' && <h3>Saker som har hämtats</h3>}
                     {itemsFrom === 'pickedUp' && items.length === 0 && (
-                        <h3>Inga saker har hämtats</h3>
+                        <Placeholder>Inget har hämtats</Placeholder>
                     )}
                     {itemsFrom === 'myAdds' && <h3>Mina annonser</h3>}
                 </div>
                 {items &&
-                    items.map((filteredItem: any) => (
+                    items.map((filteredItem: Advert) => (
                         <Card
                             key={filteredItem.id}
-                            imageKey={filteredItem.images[0].src}
+                            imageKey={
+                                filteredItem.images
+                                    ? filteredItem.images[0].src ?? ''
+                                    : ''
+                            }
                             filteredItem={filteredItem}
                             fetchReservedAdverts={fetchReservedAdverts}
                             itemsFrom={itemsFrom}
+                            greyOut={greyOut}
                         />
                     ))}
             </Suspense>
         </AdvertContainerDiv>
     );
 };
+
+AdvertContainer.defaultProps = {
+    greyOut: false,
+};
+
 export default AdvertContainer;

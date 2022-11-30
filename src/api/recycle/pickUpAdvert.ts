@@ -6,7 +6,12 @@ import { createAdvert, updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
 import { UpdateAdvertMutation } from '../../graphql/models';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
-import { addPickedUpStatus, getUpdatedItemStatus } from './utils';
+import {
+    addPickedUpStatus,
+    addUserToPickupHistory,
+    getUpdatedItemStatus,
+    removeUserFromPickupList,
+} from './utils';
 import { getItemFromApi } from '../items';
 import { localization } from '../../localizations';
 import { reservationExistValidation } from './validators';
@@ -36,6 +41,9 @@ export default async function pickUpAdvert(
 
     advertPickUps = addPickedUpStatus(advertPickUps, user);
 
+    const toPickUpBySubs = removeUserFromPickupList(item, user);
+    const pickedUpBySubs = addUserToPickupHistory(item, user);
+
     const updateResult = (await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
@@ -44,6 +52,8 @@ export default async function pickUpAdvert(
                 advertPickUps,
                 status: getUpdatedItemStatus(advertPickUps, item.quantity),
                 revisions: (item.revisions ?? 0) + 1,
+                toPickUpBySubs,
+                pickedUpBySubs,
             },
         }),
     )) as GraphQLResult<UpdateAdvertMutation>;

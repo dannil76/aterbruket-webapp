@@ -5,9 +5,11 @@ import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
 import { BorrowStatus, MissingAccessories } from '../../graphql/models';
 import {
+    addUserToPickupHistory,
     getUserBookings,
     mapCalendarToInput,
     removeCalendarEvent,
+    removeUserFromPickupList,
 } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
 import { AdvertAccessory } from '../../models/accessory';
@@ -91,6 +93,9 @@ export default async function returnItem(
         missingAccessories,
     ]);
 
+    const toPickUpBySubs = removeUserFromPickupList(item, user);
+    const pickedUpBySubs = addUserToPickupHistory(item, user);
+
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
@@ -99,6 +104,8 @@ export default async function returnItem(
                     ...item.advertBorrowCalendar,
                     calendarEvents: calendarEventInput,
                 },
+                toPickUpBySubs,
+                pickedUpBySubs,
             },
         }),
     );

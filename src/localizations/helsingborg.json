@@ -32,5 +32,10 @@
   "unregisterPrompt": "Är du säker på att du vill ångra reservationen?",
   "duplicateReservations": "Du har redan en oupphämtad reservation! Ladda om sidan för att se aktuell information.",
   "duplicateBooking": "Du har redan en pågående bokning! Ladda om sidan för att se aktuell information.",
-  "missingReservedBooking": "Du saknar bokning att avboka. Den kan ena vara uthämtad eller redan avbokad. Ladda om sidan för att se aktuell information."
+  "missingReservedBooking": "Du saknar bokning att avboka. Den kan ena vara uthämtad eller redan avbokad. Ladda om sidan för att se aktuell information.",
+  "wrongUsernamePassword": "Fel användarnamn eller lösenord!",
+  "passwordAttemptsExceeded": "För många felaktiga försök. Vänta en stund!",
+  "loginText": "Logga in",
+  "passwordText": "Lösenord",
+  "userNameText": "Användarnamn"
 }

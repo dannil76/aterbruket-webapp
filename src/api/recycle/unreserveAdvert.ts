@@ -7,7 +7,11 @@ import { User } from '../../contexts/UserContext';
 import { UpdateAdvertMutation } from '../../graphql/models';
 import { dayToDateString } from '../../utils';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
-import { getUpdatedItemStatus, removeFromPickupList } from './utils';
+import {
+    getUpdatedItemStatus,
+    removeFromPickupList,
+    removeUserFromPickupList,
+} from './utils';
 import { getItemFromApi } from '../items';
 import { localization } from '../../localizations';
 import { reservationExistValidation } from './validators';
@@ -37,6 +41,8 @@ export default async function UnreserveAdvert(
 
     advertPickUps = removeFromPickupList(advertPickUps, user);
 
+    const toPickUpBySubs = removeUserFromPickupList(item, user);
+
     const updateResult = (await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
@@ -48,6 +54,7 @@ export default async function UnreserveAdvert(
                 version: 0,
                 advertPickUps,
                 revisions: (item.revisions ?? 0) + 1,
+                toPickUpBySubs,
             },
         }),
     )) as GraphQLResult<UpdateAdvertMutation>;

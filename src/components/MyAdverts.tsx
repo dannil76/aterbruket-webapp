@@ -72,7 +72,7 @@ const MyAdverts: FC = () => {
             />
             {renderItems.length > 0 && (
                 <Pagination
-                    paginationOption={paginationOption}
+                    totalPages={paginationOption.totalPages}
                     activePage={activePage}
                     handlePagination={handlePages}
                 />

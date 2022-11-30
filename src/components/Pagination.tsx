@@ -2,7 +2,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { PaginationOptions } from '../models/pagination';
 
 const Button = styled.button`
     background-color: ${(props) => props.theme.appTheme.primaryColor};
@@ -44,20 +43,20 @@ const ButtonContainer = styled.div`
 `;
 
 interface Props {
-    paginationOption: PaginationOptions;
+    totalPages: number;
     activePage: number;
     handlePagination: (activePage: number) => void;
 }
 
 const Pagination: FC<Props> = ({
-    paginationOption,
+    totalPages,
     activePage,
     handlePagination,
 }) => {
     // eslint-disable-next-line prefer-const
     let buttonArray: any = [];
 
-    for (let i = 0; i < paginationOption.totalPages; i += 1) {
+    for (let i = 0; i < totalPages; i += 1) {
         buttonArray.push(i + 1);
     }
 
@@ -85,7 +84,7 @@ const Pagination: FC<Props> = ({
                 </Button>
             )}
             {buttons}
-            {activePage !== paginationOption.totalPages && (
+            {activePage !== totalPages && (
                 <Button
                     onClick={() => handlePagination(activePage + 1)}
                     className="endButtons"
