@@ -7,7 +7,7 @@ import { User } from '../../contexts/UserContext';
 import { UpdateAdvertMutation } from '../../graphql/models';
 import { dayToDateString } from '../../utils';
 import { mapAdvertToCreateInput, mapPickUpsToInput } from './mappers';
-import { getUpdatedItemStatus } from './utils';
+import { addUserToPickupList, getUpdatedItemStatus } from './utils';
 import { getItemFromApi } from '../items';
 import { localization } from '../../localizations';
 import {
@@ -54,6 +54,8 @@ export default async function ReserveAdvert(
         reservationDate: dayToDateString(),
     });
 
+    const toPickUpBySubs = addUserToPickupList(item, user);
+
     const updateResult = (await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
@@ -62,6 +64,7 @@ export default async function ReserveAdvert(
                 advertPickUps,
                 status: getUpdatedItemStatus(advertPickUps, item.quantity),
                 revisions: (item.revisions ?? 0) + 1,
+                toPickUpBySubs,
             },
         }),
     )) as GraphQLResult<UpdateAdvertMutation>;

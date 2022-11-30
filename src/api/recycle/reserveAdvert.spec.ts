@@ -16,6 +16,7 @@ jest.mock('./utils', () => {
     return {
         isAllQuantityReserved: jest.fn(),
         getUpdatedItemStatus: jest.fn(),
+        addUserToPickupList: jest.fn(),
     };
 });
 jest.mock('./mappers', () => {

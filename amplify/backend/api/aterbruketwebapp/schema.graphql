@@ -42,6 +42,8 @@ type Advert @model @searchable
   pickUpInstructions: String
   accessories: [String!]!
   borrowDifficultyLevel: String
+  toPickUpBySubs: [String!]
+  pickedUpBySubs: [String!]
   advertBorrowCalendar: AdvertBorrowCalendar
   advertPickUps: [AdvertPickUp!]
   accessRestriction: String

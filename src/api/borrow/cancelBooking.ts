@@ -8,6 +8,7 @@ import {
     mapCalendarToInput,
     getUserBookings,
     removeCalendarEvent,
+    removeUserFromPickupList,
 } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
 import { getItemFromApi } from '../items';
@@ -48,6 +49,9 @@ export default async function cancelBooking(
     calendarEventInput.push(booking);
 
     const updateInput = mapAdvertToUpdateInput(item);
+
+    const toPickUpBySubs = removeUserFromPickupList(item, user);
+
     await API.graphql(
         graphqlOperation(updateAdvert, {
             input: {
@@ -56,6 +60,7 @@ export default async function cancelBooking(
                     ...item.advertBorrowCalendar,
                     calendarEvents: calendarEventInput,
                 },
+                toPickUpBySubs,
             },
         }),
     );

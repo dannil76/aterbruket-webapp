@@ -364,7 +364,7 @@ const Home: FC = () => {
                 />
                 {items.length > 0 && (
                     <Pagination
-                        paginationOption={paginationOption}
+                        totalPages={paginationOption.totalPages}
                         activePage={activePage}
                         handlePagination={setActivePage}
                     />

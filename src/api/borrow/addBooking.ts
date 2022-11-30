@@ -4,7 +4,7 @@ import { graphqlOperation } from '@aws-amplify/api';
 import { updateAdvert } from '../../graphql/mutations';
 import { User } from '../../contexts/UserContext';
 import { BorrowStatus, CalendarEventInput } from '../../graphql/models';
-import { mapCalendarToInput } from './utils';
+import { addUserToPickupList, mapCalendarToInput } from './utils';
 import { mapAdvertToUpdateInput } from './mappers';
 import { HaffaApiError } from '../../models/ApiError';
 import { getItemFromApi } from '../items';
@@ -68,6 +68,8 @@ export default async function addBooking(
         return validationMessage;
     }
 
+    const toPickUpBySubs = addUserToPickupList(item, user);
+
     calendarEventInputs.push(calendarEvent);
 
     const createAdvert = mapAdvertToUpdateInput(item);
@@ -81,6 +83,7 @@ export default async function addBooking(
                         ...item.advertBorrowCalendar,
                         calendarEvents: calendarEventInputs,
                     },
+                    toPickUpBySubs,
                 },
             }),
         );

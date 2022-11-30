@@ -14,6 +14,7 @@ jest.mock('./utils', () => {
         isAllQuantityReserved: jest.fn(),
         removeFromPickupList: jest.fn(),
         getUpdatedItemStatus: jest.fn(),
+        removeUserFromPickupList: jest.fn(),
     };
 });
 jest.mock('./validators', () => {

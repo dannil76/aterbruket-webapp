@@ -72,6 +72,8 @@ export const searchAdverts = /* GraphQL */ `
         pickUpInstructions
         accessories
         borrowDifficultyLevel
+        toPickUpBySubs
+        pickedUpBySubs
         advertBorrowCalendar {
           allowedDateStart
           allowedDateEnd
@@ -188,6 +190,8 @@ export const getAdvert = /* GraphQL */ `
       pickUpInstructions
       accessories
       borrowDifficultyLevel
+      toPickUpBySubs
+      pickedUpBySubs
       advertBorrowCalendar {
         allowedDateStart
         allowedDateEnd
@@ -302,6 +306,8 @@ export const listAdverts = /* GraphQL */ `
         pickUpInstructions
         accessories
         borrowDifficultyLevel
+        toPickUpBySubs
+        pickedUpBySubs
         advertBorrowCalendar {
           allowedDateStart
           allowedDateEnd
