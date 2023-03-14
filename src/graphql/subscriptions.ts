@@ -3,8 +3,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateAdvert = /* GraphQL */ `
-  subscription OnCreateAdvert {
-    onCreateAdvert {
+  subscription OnCreateAdvert($filter: ModelSubscriptionAdvertFilterInput) {
+    onCreateAdvert(filter: $filter) {
       id
       title
       description
@@ -104,8 +104,8 @@ export const onCreateAdvert = /* GraphQL */ `
   }
 `;
 export const onUpdateAdvert = /* GraphQL */ `
-  subscription OnUpdateAdvert {
-    onUpdateAdvert {
+  subscription OnUpdateAdvert($filter: ModelSubscriptionAdvertFilterInput) {
+    onUpdateAdvert(filter: $filter) {
       id
       title
       description
@@ -205,8 +205,8 @@ export const onUpdateAdvert = /* GraphQL */ `
   }
 `;
 export const onDeleteAdvert = /* GraphQL */ `
-  subscription OnDeleteAdvert {
-    onDeleteAdvert {
+  subscription OnDeleteAdvert($filter: ModelSubscriptionAdvertFilterInput) {
+    onDeleteAdvert(filter: $filter) {
       id
       title
       description
@@ -306,8 +306,8 @@ export const onDeleteAdvert = /* GraphQL */ `
   }
 `;
 export const onCreatePage = /* GraphQL */ `
-  subscription OnCreatePage {
-    onCreatePage {
+  subscription OnCreatePage($filter: ModelSubscriptionPageFilterInput) {
+    onCreatePage(filter: $filter) {
       id
       slug
       title
@@ -318,8 +318,8 @@ export const onCreatePage = /* GraphQL */ `
   }
 `;
 export const onUpdatePage = /* GraphQL */ `
-  subscription OnUpdatePage {
-    onUpdatePage {
+  subscription OnUpdatePage($filter: ModelSubscriptionPageFilterInput) {
+    onUpdatePage(filter: $filter) {
       id
       slug
       title
@@ -330,8 +330,8 @@ export const onUpdatePage = /* GraphQL */ `
   }
 `;
 export const onDeletePage = /* GraphQL */ `
-  subscription OnDeletePage {
-    onDeletePage {
+  subscription OnDeletePage($filter: ModelSubscriptionPageFilterInput) {
+    onDeletePage(filter: $filter) {
       id
       slug
       title

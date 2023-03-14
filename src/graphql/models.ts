@@ -854,6 +854,106 @@ export type ModelPageConnection = {
   nextToken?: string | null,
 };
 
+export type ModelSubscriptionAdvertFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  height?: ModelSubscriptionStringInput | null,
+  width?: ModelSubscriptionStringInput | null,
+  length?: ModelSubscriptionStringInput | null,
+  borrowStatus?: ModelSubscriptionStringInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  category?: ModelSubscriptionStringInput | null,
+  condition?: ModelSubscriptionStringInput | null,
+  conditionValue?: ModelSubscriptionStringInput | null,
+  color?: ModelSubscriptionStringInput | null,
+  quantity?: ModelSubscriptionIntInput | null,
+  quantityUnit?: ModelSubscriptionStringInput | null,
+  department?: ModelSubscriptionStringInput | null,
+  instructions?: ModelSubscriptionStringInput | null,
+  contactPerson?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  phoneNumber?: ModelSubscriptionStringInput | null,
+  giver?: ModelSubscriptionStringInput | null,
+  version?: ModelSubscriptionIntInput | null,
+  climateImpact?: ModelSubscriptionIntInput | null,
+  reservedBySub?: ModelSubscriptionStringInput | null,
+  reservedByName?: ModelSubscriptionStringInput | null,
+  revisions?: ModelSubscriptionIntInput | null,
+  purchasePrice?: ModelSubscriptionStringInput | null,
+  company?: ModelSubscriptionStringInput | null,
+  aterbruketId?: ModelSubscriptionStringInput | null,
+  advertType?: ModelSubscriptionStringInput | null,
+  missingItemsInformation?: ModelSubscriptionStringInput | null,
+  pickUpInformation?: ModelSubscriptionStringInput | null,
+  lockerCodeInformation?: ModelSubscriptionStringInput | null,
+  lockerCode?: ModelSubscriptionStringInput | null,
+  returnInformation?: ModelSubscriptionStringInput | null,
+  reservationDate?: ModelSubscriptionStringInput | null,
+  pickUpInstructions?: ModelSubscriptionStringInput | null,
+  accessories?: ModelSubscriptionStringInput | null,
+  borrowDifficultyLevel?: ModelSubscriptionStringInput | null,
+  toPickUpBySubs?: ModelSubscriptionStringInput | null,
+  pickedUpBySubs?: ModelSubscriptionStringInput | null,
+  accessRestriction?: ModelSubscriptionStringInput | null,
+  address?: ModelSubscriptionStringInput | null,
+  city?: ModelSubscriptionStringInput | null,
+  postalCode?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionAdvertFilterInput | null > | null,
+  or?: Array< ModelSubscriptionAdvertFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionPageFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  slug?: ModelSubscriptionStringInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  content?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPageFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPageFilterInput | null > | null,
+};
+
 export type CreateAdvertMutationVariables = {
   input: CreateAdvertInput,
   condition?: ModelAdvertConditionInput | null,
@@ -1662,6 +1762,10 @@ export type ListPagesQuery = {
   } | null,
 };
 
+export type OnCreateAdvertSubscriptionVariables = {
+  filter?: ModelSubscriptionAdvertFilterInput | null,
+};
+
 export type OnCreateAdvertSubscription = {
   onCreateAdvert?:  {
     __typename: "Advert",
@@ -1769,6 +1873,10 @@ export type OnCreateAdvertSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
+};
+
+export type OnUpdateAdvertSubscriptionVariables = {
+  filter?: ModelSubscriptionAdvertFilterInput | null,
 };
 
 export type OnUpdateAdvertSubscription = {
@@ -1880,6 +1988,10 @@ export type OnUpdateAdvertSubscription = {
   } | null,
 };
 
+export type OnDeleteAdvertSubscriptionVariables = {
+  filter?: ModelSubscriptionAdvertFilterInput | null,
+};
+
 export type OnDeleteAdvertSubscription = {
   onDeleteAdvert?:  {
     __typename: "Advert",
@@ -1989,6 +2101,10 @@ export type OnDeleteAdvertSubscription = {
   } | null,
 };
 
+export type OnCreatePageSubscriptionVariables = {
+  filter?: ModelSubscriptionPageFilterInput | null,
+};
+
 export type OnCreatePageSubscription = {
   onCreatePage?:  {
     __typename: "Page",
@@ -2001,6 +2117,10 @@ export type OnCreatePageSubscription = {
   } | null,
 };
 
+export type OnUpdatePageSubscriptionVariables = {
+  filter?: ModelSubscriptionPageFilterInput | null,
+};
+
 export type OnUpdatePageSubscription = {
   onUpdatePage?:  {
     __typename: "Page",
@@ -2011,6 +2131,10 @@ export type OnUpdatePageSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
+};
+
+export type OnDeletePageSubscriptionVariables = {
+  filter?: ModelSubscriptionPageFilterInput | null,
 };
 
 export type OnDeletePageSubscription = {
