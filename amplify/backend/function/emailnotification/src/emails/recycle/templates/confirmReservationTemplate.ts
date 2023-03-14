@@ -16,16 +16,16 @@ export default function confirmNewReservationEmail(
   <html>
   <body>
   <p>Hej ${reservationPerson}!</p>
-  <p>Hello Dude!</p>
 
   <p>Du har reserverat ${quantityText}<a href="${link}">${title}</a> i Haffa.</p>
-  <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson. </p>
+  <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson.</p>
+  </br>
+  <p><strong>Finns din pryl på Återbruket kommer du få ett mejl med bekräftelse att prylen finns kvar i lager. Du har sen 14 dagar på dig att hämta din reservation innan den släpps för någon annan att haffa.<strong></p>
+  </br>
   <p>${contactPerson}<br>
   ${department}<br>
   Mejl: ${contactEmail}<br>
   Telefon: ${phone}</p>
-  </br>
-  <p>Finns din pryl på Återbruket har du 14 dagar på dig att hämta den innan din reservation släpps.</p>
   </br>
   <p>Gör så här när du ska hämta prylen: </p>
   <ul>
@@ -39,8 +39,7 @@ export default function confirmNewReservationEmail(
 
   <p>
     Mvh<br>
-    Haffa-teamet genom<br>
-    <a href="mailto:tommy.boije@helsingborg.se">Tommy Boije</a> & <a href="mailto:emma.sjoberg@helsingborg.se">Emma Sjöberg</a>
+    Haffa-teamet<br>
   </p>
   </body>
   </html>
