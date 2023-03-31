@@ -51,9 +51,6 @@
           "opensearchUrl": "https://search-amplify-opense-9v8syau2vha5-7lieox3uiy5e3kmf5k2mpjb4ae.eu-west-1.es.amazonaws.com/",
           "borrowDaysBeforeReminder": "0"
         }
-      },
-      "storage": {
-        "storage": {}
       }
     }
   },
