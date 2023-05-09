@@ -23,7 +23,7 @@ export default function confirmNewReservationEmail(
       <p>Du har reserverat ${quantityText}<a href="${link}">${title}</a> i Haffa.</p>
       <p>Har du några frågor eller behöver bestämma när och hur prylen ska hämtas kontakta prylens kontaktperson.</br></p>
       <p>
-        <strong>Finns din pryl på Återbruket kommer du få ett mejl med bekräftelse att prylen finns kvar i lager. Du har sen 14 dagar på dig att hämta din reservation innan den släpps för någon annan att haffa.<strong></br>
+        <strong>Finns din pryl på Återbruket kommer du få ett mejl med bekräftelse att prylen finns kvar i lager. Du har sen 14 dagar på dig att hämta din reservation innan den släpps för någon annan att haffa.</strong></br>
       </p>
       <p>
         ${contactPerson}<br>
