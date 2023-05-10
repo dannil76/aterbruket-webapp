@@ -1,8 +1,8 @@
 export interface AWSUserAttribute {
-    key: string;
+  key: string;
 }
 
 export interface AWSUser {
-    Username: string;
-    Attributes: AWSUserAttribute[];
+  Username: string;
+  Attributes: AWSUserAttribute[];
 }

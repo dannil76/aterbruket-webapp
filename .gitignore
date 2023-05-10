@@ -48,11 +48,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+
+# Some bug where auth isn't rebuilding in pipeline. This causes amplify build pipeline to fail.. TODO to fix
+!amplify/backend/auth/aterbruketwebapp75287c9a/build
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
 amplify/mock-data
+amplify/mock-api-resources
 amplify/backend/amplify-meta.json
 amplify/backend/.temp
 build/
@@ -68,6 +73,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-# Some bug where auth isn't rebuilding in pipeline. This causes amplify build pipeline to fail.. TODO to fix
-!amplify/backend/auth/aterbruketwebapp75287c9a/build

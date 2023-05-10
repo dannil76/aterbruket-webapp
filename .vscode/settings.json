@@ -12,15 +12,17 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["typescript"],
+  "eslint.validate": [
+    "typescript"
+  ],
   "[javascript]": {
-      "editor.tabSize": 4
+    "editor.tabSize": 4
   },
   "[typescript]": {
-      "editor.tabSize": 4
+    "editor.tabSize": 4
   },
   "[json]": {
-      "editor.tabSize": 2
+    "editor.tabSize": 2
   },
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false

@@ -1,217 +1,217 @@
 {
-    "Records": [
-        {
-            "eventID": "1",
-            "eventName": "MODIFY",
-            "eventVersion": "1.0",
-            "eventSource": "aws:dynamodb",
-            "awsRegion": "us-east-1",
-            "dynamodb": {
-                "Keys": {
-                    "Id": {
-                        "N": "101"
-                    }
-                },
-                "NewImage": {
-                    "id": {
-                        "S": "abcDEF"
-                    },
-                    "advertType": {
-                        "S": "borrow"
-                    },
-                    "contactPerson": {
-                        "S": "Anna Andersson"
-                    },
-                    "department": {
-                        "S": "Återbruket"
-                    },
-                    "address": {
-                        "S": "Stortorget 17"
-                    },
-                    "postalCode": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "email": {
-                        "S": "hbgworkshbg@gmail.com"
-                    },
-                    "phoneNumber": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "city": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "missingAccessories": {
-                        "L": [
-                            {
-                                "reportedBy": {
-                                    "S": "atla1000@helsingborg.se"
-                                },
-                                "reportedDate": {
-                                    "D": "2020-01-01T01:01:000"
-                                },
-                                "lastReturnedBy": {
-                                    "D": "2020-01-01T01:01:000"
-                                },
-                                "accessories": {
-                                    "L": [
-                                        {
-                                            "S": "Skiftnyckel"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "version": {
-                        "N": "1"
-                    }
-                },
-                "OldImage": {
-                    "id": {
-                        "S": "abcDEF"
-                    },
-                    "advertType": {
-                        "S": "borrow"
-                    },
-                    "contactPerson": {
-                        "S": "Anna Andersson"
-                    },
-                    "department": {
-                        "S": "Återbruket"
-                    },
-                    "address": {
-                        "S": "Stortorget 17"
-                    },
-                    "postalCode": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "email": {
-                        "S": "hbgworkshbg@gmail.com"
-                    },
-                    "phoneNumber": {
-                        "S": "042-10 50 00"
-                    },
-                    "city": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "missingAccessories": {
-                        "L": []
-                    },
-                    "version": {
-                        "N": "0"
-                    }
-                },
-                "SequenceNumber": "111",
-                "SizeBytes": 26,
-                "StreamViewType": "NEW_AND_OLD_IMAGES"
-            },
-            "eventSourceARN": "stream-ARN"
+  "Records": [
+    {
+      "eventID": "1",
+      "eventName": "MODIFY",
+      "eventVersion": "1.0",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": {
+            "N": "101"
+          }
         },
-        {
-            "eventID": "2",
-            "eventName": "INSERT",
-            "eventVersion": "1.0",
-            "eventSource": "aws:dynamodb",
-            "awsRegion": "us-east-1",
-            "dynamodb": {
-                "Keys": {
-                    "Id": {
-                        "N": "101"
-                    }
+        "NewImage": {
+          "id": {
+            "S": "abcDEF"
+          },
+          "advertType": {
+            "S": "borrow"
+          },
+          "contactPerson": {
+            "S": "Anna Andersson"
+          },
+          "department": {
+            "S": "Återbruket"
+          },
+          "address": {
+            "S": "Stortorget 17"
+          },
+          "postalCode": {
+            "S": "252 20 Helsingborg"
+          },
+          "email": {
+            "S": "hbgworkshbg@gmail.com"
+          },
+          "phoneNumber": {
+            "S": "252 20 Helsingborg"
+          },
+          "city": {
+            "S": "252 20 Helsingborg"
+          },
+          "missingAccessories": {
+            "L": [
+              {
+                "reportedBy": {
+                  "S": "atla1000@helsingborg.se"
                 },
-                "NewImage": {
-                    "id": {
-                        "S": "abcDEF"
-                    },
-                    "advertType": {
-                        "S": "borrow"
-                    },
-                    "contactPerson": {
-                        "S": "Anna Andersson"
-                    },
-                    "department": {
-                        "S": "Återbruket"
-                    },
-                    "address": {
-                        "S": "Stortorget 17"
-                    },
-                    "postalCode": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "email": {
-                        "S": "hbgworkshbg@gmail.com"
-                    },
-                    "phoneNumber": {
-                        "S": "042-10 50 00"
-                    },
-                    "city": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "missingAccessories": {
-                        "L": []
-                    },
-                    "version": {
-                        "N": "0"
-                    }
+                "reportedDate": {
+                  "D": "2020-01-01T01:01:000"
                 },
-                "SequenceNumber": "1",
-                "SizeBytes": 59,
-                "StreamViewType": "NEW_AND_OLD_IMAGES"
-            },
-            "eventSourceARN": "stream-ARN"
+                "lastReturnedBy": {
+                  "D": "2020-01-01T01:01:000"
+                },
+                "accessories": {
+                  "L": [
+                    {
+                      "S": "Skiftnyckel"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "version": {
+            "N": "1"
+          }
         },
-        {
-            "eventID": "3",
-            "eventName": "REMOVE",
-            "eventVersion": "1.0",
-            "eventSource": "aws:dynamodb",
-            "awsRegion": "us-east-1",
-            "dynamodb": {
-                "Keys": {
-                    "Id": {
-                        "N": "101"
-                    }
-                },
-                "OldImage": {
-                    "id": {
-                        "S": "abcDEF"
-                    },
-                    "advertType": {
-                        "S": "borrow"
-                    },
-                    "contactPerson": {
-                        "S": "Anna Andersson"
-                    },
-                    "department": {
-                        "S": "Återbruket"
-                    },
-                    "address": {
-                        "S": "Stortorget 17"
-                    },
-                    "postalCode": {
-                        "S": "252 20 Helsingborg"
-                    },
-                    "email": {
-                        "S": "hbgworkshbg@gmail.com"
-                    },
-                    "phoneNumber": {
-                        "S": "042-10 50 00"
-                    },
-                    "city": {
-                        "S": "Helsingborg"
-                    },
-                    "missingAccessories": {
-                        "L": []
-                    },
-                    "version": {
-                        "N": "0"
-                    }
-                },
-                "SequenceNumber": "333",
-                "SizeBytes": 38,
-                "StreamViewType": "NEW_AND_OLD_IMAGES"
-            },
-            "eventSourceARN": "stream-ARN"
-        }
-    ]
+        "OldImage": {
+          "id": {
+            "S": "abcDEF"
+          },
+          "advertType": {
+            "S": "borrow"
+          },
+          "contactPerson": {
+            "S": "Anna Andersson"
+          },
+          "department": {
+            "S": "Återbruket"
+          },
+          "address": {
+            "S": "Stortorget 17"
+          },
+          "postalCode": {
+            "S": "252 20 Helsingborg"
+          },
+          "email": {
+            "S": "hbgworkshbg@gmail.com"
+          },
+          "phoneNumber": {
+            "S": "042-10 50 00"
+          },
+          "city": {
+            "S": "252 20 Helsingborg"
+          },
+          "missingAccessories": {
+            "L": []
+          },
+          "version": {
+            "N": "0"
+          }
+        },
+        "SequenceNumber": "111",
+        "SizeBytes": 26,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "stream-ARN"
+    },
+    {
+      "eventID": "2",
+      "eventName": "INSERT",
+      "eventVersion": "1.0",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": {
+            "N": "101"
+          }
+        },
+        "NewImage": {
+          "id": {
+            "S": "abcDEF"
+          },
+          "advertType": {
+            "S": "borrow"
+          },
+          "contactPerson": {
+            "S": "Anna Andersson"
+          },
+          "department": {
+            "S": "Återbruket"
+          },
+          "address": {
+            "S": "Stortorget 17"
+          },
+          "postalCode": {
+            "S": "252 20 Helsingborg"
+          },
+          "email": {
+            "S": "hbgworkshbg@gmail.com"
+          },
+          "phoneNumber": {
+            "S": "042-10 50 00"
+          },
+          "city": {
+            "S": "252 20 Helsingborg"
+          },
+          "missingAccessories": {
+            "L": []
+          },
+          "version": {
+            "N": "0"
+          }
+        },
+        "SequenceNumber": "1",
+        "SizeBytes": 59,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "stream-ARN"
+    },
+    {
+      "eventID": "3",
+      "eventName": "REMOVE",
+      "eventVersion": "1.0",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": {
+            "N": "101"
+          }
+        },
+        "OldImage": {
+          "id": {
+            "S": "abcDEF"
+          },
+          "advertType": {
+            "S": "borrow"
+          },
+          "contactPerson": {
+            "S": "Anna Andersson"
+          },
+          "department": {
+            "S": "Återbruket"
+          },
+          "address": {
+            "S": "Stortorget 17"
+          },
+          "postalCode": {
+            "S": "252 20 Helsingborg"
+          },
+          "email": {
+            "S": "hbgworkshbg@gmail.com"
+          },
+          "phoneNumber": {
+            "S": "042-10 50 00"
+          },
+          "city": {
+            "S": "Helsingborg"
+          },
+          "missingAccessories": {
+            "L": []
+          },
+          "version": {
+            "N": "0"
+          }
+        },
+        "SequenceNumber": "333",
+        "SizeBytes": 38,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "stream-ARN"
+    }
+  ]
 }

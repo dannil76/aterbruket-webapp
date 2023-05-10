@@ -1,4 +1,4 @@
 export enum AdvertType {
-    BORROW = 'borrow',
-    RECYCLE = 'recycle',
+  BORROW = 'borrow',
+  RECYCLE = 'recycle',
 }

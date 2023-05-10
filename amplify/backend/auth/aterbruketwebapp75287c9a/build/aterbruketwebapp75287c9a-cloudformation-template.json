@@ -245,6 +245,11 @@
         "SmsVerificationMessage": {
           "Ref": "smsVerificationMessage"
         },
+        "UserAttributeUpdateSettings": {
+          "AttributesRequireVerificationBeforeUpdate": [
+            "email"
+          ]
+        },
         "UserPoolName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
@@ -365,7 +370,7 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "ZipFile": "const response = require('cfn-response');\nconst aws = require('aws-sdk');\nconst identity = new aws.CognitoIdentityServiceProvider();\nexports.handler = (event, context, callback) => {\n  if (event.RequestType == 'Delete') {\n    response.send(event, context, response.SUCCESS, {});\n  }\n  if (event.RequestType == 'Update' || event.RequestType == 'Create') {\n    const params = {\n      ClientId: event.ResourceProperties.clientId,\n      UserPoolId: event.ResourceProperties.userpoolId,\n    };\n    identity\n      .describeUserPoolClient(params)\n      .promise()\n      .then(res => {\n        response.send(event, context, response.SUCCESS, { appSecret: res.UserPoolClient.ClientSecret });\n      })\n      .catch(err => {\n        response.send(event, context, response.FAILED, { err });\n      });\n  }\n};\n"
+          "ZipFile": "const response = require('cfn-response');\nconst aws = require('aws-sdk');\nconst identity = new aws.CognitoIdentityServiceProvider();\nexports.handler = (event, context, callback) => {\n  if (event.RequestType == 'Delete') {\n    response.send(event, context, response.SUCCESS, {});\n  }\n  if (event.RequestType == 'Update' || event.RequestType == 'Create') {\n    const params = {\n      ClientId: event.ResourceProperties.clientId,\n      UserPoolId: event.ResourceProperties.userpoolId,\n    };\n    identity\n      .describeUserPoolClient(params)\n      .promise()\n      .then((res) => {\n        response.send(event, context, response.SUCCESS, { appSecret: res.UserPoolClient.ClientSecret });\n      })\n      .catch((err) => {\n        response.send(event, context, response.FAILED, { err });\n      });\n  }\n};\n"
         },
         "Role": {
           "Fn::GetAtt": [

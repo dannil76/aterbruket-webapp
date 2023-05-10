@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "target": "es2017",
-        "module": "commonJS",
-        "noImplicitAny": false,
-        "allowJs": true,
-        "types": ["node", "jest"],
-        "moduleResolution": "node"
-    },
-    "include": ["."],
-    "exclude": ["node_modules", "**/*.spec.ts", "jest.config.ts"]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2017",
+    "module": "commonJS",
+    "noImplicitAny": false,
+    "allowJs": true,
+    "types": ["node", "jest"],
+    "moduleResolution": "node"
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "**/*.spec.ts", "jest.config.ts"]
 }

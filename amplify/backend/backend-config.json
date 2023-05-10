@@ -1,132 +1,310 @@
 {
   "api": {
     "aterbruketwebapp": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
       "output": {
         "authConfig": {
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
               "userPoolId": "authaterbruketwebapp75287c9a"
             }
-          },
-          "additionalAuthenticationProviders": []
+          }
         }
-      }
-    }
-  },
-  "function": {
-    "migrateADUser": {
-      "build": true,
+      },
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "aterbruketwebapp",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
-    "emailnotification": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "aterbruketwebapp",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
-    "addUserToGroup": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
-    },
-    "scheduledNotifications": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "aterbruketwebapp",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "aterbruketwebapp75287c9a",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
+      "service": "AppSync"
     }
   },
   "auth": {
     "aterbruketwebapp75287c9a": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
+      "customAuth": false,
       "dependsOn": [],
-      "customAuth": false
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
     },
     "userPoolGroups": {
-      "service": "Cognito-UserPool-Groups",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "aterbruketwebapp75287c9a",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
             "AppClientID",
             "IdentityPoolId"
-          ]
+          ],
+          "category": "auth",
+          "resourceName": "aterbruketwebapp75287c9a"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "addUserToGroup": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "emailnotification": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "aterbruketwebapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "migrateADUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "aterbruketwebapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "scheduledNotifications": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "aterbruketwebapp"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "aterbruketwebapp75287c9a"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_api_aterbruketwebapp_OpenSearchInstanceType": {
+      "usedBy": [
+        {
+          "category": "api",
+          "resourceName": "aterbruketwebapp"
+        }
+      ]
+    },
+    "AMPLIFY_function_addUserToGroup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "addUserToGroup"
+        }
+      ]
+    },
+    "AMPLIFY_function_addUserToGroup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "addUserToGroup"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_cognitoUserPoolId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_sesAppUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_sesBorrowRecipientEmail": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_sesRecycleRecipientEmail": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailnotification_sesSenderEmail": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailnotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_migrateADUser_cognitoUserPoolClientId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "migrateADUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_migrateADUser_cognitoUserPoolId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "migrateADUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_migrateADUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "migrateADUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_migrateADUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "migrateADUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_borrowDaysBeforeReminder": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_opensearchUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_reservationDaysUntilCancellation": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_reservationDaysUntilNotifications": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_sesAppUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
+        }
+      ]
+    },
+    "AMPLIFY_function_scheduledNotifications_sesSenderEmail": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "scheduledNotifications"
         }
       ]
     }
   },
   "storage": {
     "storage": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "aterbruketwebapp75287c9a",
           "attributes": [
             "UserPoolId"
-          ]
+          ],
+          "category": "auth",
+          "resourceName": "aterbruketwebapp75287c9a"
         },
         {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
           "attributes": [
             "userGroupRole"
-          ]
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         },
         {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
           "attributes": [
             "administratorGroupRole"
-          ]
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

@@ -1,9 +1,9 @@
 import { getChangedPickUp, logDebug, logWarning } from '../utils';
 import {
-    confirmNewReservationEmail,
-    notifyAboutNewReservationEmail,
-    newAdvertEmail,
-    pickedUpEmail,
+  confirmNewReservationEmail,
+  notifyAboutNewReservationEmail,
+  newAdvertEmail,
+  pickedUpEmail,
 } from '../emails';
 import { AdvertStatus } from '../models/enums';
 import { Advert } from '../models/haffaAdvert';
@@ -17,58 +17,56 @@ import { Advert } from '../models/haffaAdvert';
  * @returns true if all handlers was successful
  */
 export async function onModify(
-    previousItem: Advert | undefined,
-    newItem: Advert | undefined,
+  previousItem: Advert | undefined,
+  newItem: Advert | undefined,
 ): Promise<boolean> {
-    if (!previousItem || !newItem) {
-        logWarning(
-            `[recycleEventHandler] New or previous item is undefined. Return false.`,
-        );
-        return false;
-    }
-
-    const emails = [] as Promise<boolean>[];
-
-    const changedReservation = getChangedPickUp(
-        previousItem.advertPickUps,
-        newItem.advertPickUps,
+  if (!previousItem || !newItem) {
+    logWarning(
+      `[recycleEventHandler] New or previous item is undefined. Return false.`,
     );
+    return false;
+  }
 
-    if (!changedReservation) {
-        logWarning(
-            '[recycleEventHandler] reservation is undefined. Return true and skip email',
-        );
-        return true;
-    }
+  const emails = [] as Promise<boolean>[];
 
-    logDebug(
-        `found reservation: 
+  const changedReservation = getChangedPickUp(
+    previousItem.advertPickUps,
+    newItem.advertPickUps,
+  );
+
+  if (!changedReservation) {
+    logWarning(
+      '[recycleEventHandler] reservation is undefined. Return true and skip email',
+    );
+    return true;
+  }
+
+  logDebug(
+    `found reservation: 
             by ${changedReservation.reservedBySub} 
             on ${changedReservation.reservationDate} 
             for ${changedReservation.quantity} 
             picked up ${changedReservation.pickedUp}`,
-    );
+  );
 
-    if (!changedReservation.pickedUp) {
-        emails.push(confirmNewReservationEmail(newItem, changedReservation));
-        emails.push(
-            notifyAboutNewReservationEmail(newItem, changedReservation),
-        );
-    }
+  if (!changedReservation.pickedUp) {
+    emails.push(confirmNewReservationEmail(newItem, changedReservation));
+    emails.push(notifyAboutNewReservationEmail(newItem, changedReservation));
+  }
 
-    if (changedReservation.pickedUp) {
-        emails.push(pickedUpEmail(newItem, changedReservation));
-    }
+  if (changedReservation.pickedUp) {
+    emails.push(pickedUpEmail(newItem, changedReservation));
+  }
 
-    if (
-        previousItem.status === AdvertStatus.PICKEDUP &&
-        newItem.status === AdvertStatus.AVAILABLE
-    ) {
-        emails.push(newAdvertEmail(newItem));
-    }
+  if (
+    previousItem.status === AdvertStatus.PICKEDUP &&
+    newItem.status === AdvertStatus.AVAILABLE
+  ) {
+    emails.push(newAdvertEmail(newItem));
+  }
 
-    const responses = await Promise.all(emails);
-    return responses.length === 0 || responses.every((response) => response);
+  const responses = await Promise.all(emails);
+  return responses.length === 0 || responses.every((response) => response);
 }
 
 /**
@@ -77,17 +75,17 @@ export async function onModify(
  * @returns true if all handlers was successful
  */
 export async function onDelete(
-    previousItem: Advert | undefined,
+  previousItem: Advert | undefined,
 ): Promise<boolean> {
-    if (!previousItem) {
-        logWarning(`[recycleEventHandler] Item is undefined. Return false.`);
-        return false;
-    }
+  if (!previousItem) {
+    logWarning(`[recycleEventHandler] Item is undefined. Return false.`);
+    return false;
+  }
 
-    const emails = [] as Promise<boolean>[];
-    logDebug(`[recycleEventHandler] Do nothing on delete.`);
-    const responses = await Promise.all(emails);
-    return responses.length === 0 || responses.every((response) => response);
+  const emails = [] as Promise<boolean>[];
+  logDebug(`[recycleEventHandler] Do nothing on delete.`);
+  const responses = await Promise.all(emails);
+  return responses.length === 0 || responses.every((response) => response);
 }
 
 /**
@@ -96,25 +94,25 @@ export async function onDelete(
  * @returns true if all handlers was successful
  */
 export async function onInsert(newItem: Advert | undefined): Promise<boolean> {
-    if (!newItem) {
-        logWarning(`[recycleEventHandler] Item is undefined. Return false.`);
-        return false;
-    }
+  if (!newItem) {
+    logWarning(`[recycleEventHandler] Item is undefined. Return false.`);
+    return false;
+  }
 
-    const emails = [] as Promise<boolean>[];
+  const emails = [] as Promise<boolean>[];
 
-    if (newItem.version > 0) {
-        logDebug(
-            '[recycleEventHandler] received history-log item. Ignore history posts',
-        );
-        return true;
-    }
+  if (newItem.version > 0) {
+    logDebug(
+      '[recycleEventHandler] received history-log item. Ignore history posts',
+    );
+    return true;
+  }
 
-    // Ignore drafts
-    if (newItem.status === AdvertStatus.AVAILABLE) {
-        emails.push(newAdvertEmail(newItem));
-    }
+  // Ignore drafts
+  if (newItem.status === AdvertStatus.AVAILABLE) {
+    emails.push(newAdvertEmail(newItem));
+  }
 
-    const responses = await Promise.all(emails);
-    return responses.length === 0 || responses.every((response) => response);
+  const responses = await Promise.all(emails);
+  return responses.length === 0 || responses.every((response) => response);
 }

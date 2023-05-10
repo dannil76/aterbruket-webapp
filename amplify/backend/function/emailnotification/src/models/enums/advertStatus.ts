@@ -1,5 +1,5 @@
 export enum AdvertStatus {
-    PICKEDUP = 'pickedUp',
-    AVAILABLE = 'available',
-    RESERVED = 'reserved',
+  PICKEDUP = 'pickedUp',
+  AVAILABLE = 'available',
+  RESERVED = 'reserved',
 }
