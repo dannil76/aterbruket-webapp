@@ -62,6 +62,9 @@
     "debug:emailnotification": "NODE_OPTIONS='' amplify mock function emailnotification",
     "debug:migrateADUser": "NODE_OPTIONS='' amplify mock function migrateADUser"
   },
+  "engines": {
+    "node": "~16"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
