@@ -34,7 +34,6 @@ const borrowFormFields = (editing?: boolean): IFields[] => {
             title: 'Lägg till en bild',
             attributes: {
                 accept: 'image/png, image/jpeg',
-                capture: true,
             },
         },
         {
